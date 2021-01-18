@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "158580980056",
+    "firebase_url": "https://csv-android-app-f0353-default-rtdb.firebaseio.com",
+    "project_id": "csv-android-app-f0353",
+    "storage_bucket": "csv-android-app-f0353.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:158580980056:android:753a53a0fb777c95924d2d",
+        "android_client_info": {
+          "package_name": "com.choicely.csvcompanion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "158580980056-s4opk089tf21opkb9ipl72f42tb3j0me.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxx--8gER1rh7py1o6jYLWb_FiN5kvom4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "158580980056-s4opk089tf21opkb9ipl72f42tb3j0me.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
