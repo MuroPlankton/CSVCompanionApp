@@ -2,12 +2,15 @@ package com.choicely.csvcompanion;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,6 +36,7 @@ public class FirebaseUIActivity extends AppCompatActivity {
         // Choose authentication providers
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.GoogleBuilder().build());
+
 
         // Create and launch sign-in intent
         startActivityForResult(
@@ -119,5 +123,10 @@ public class FirebaseUIActivity extends AppCompatActivity {
                         .build(),
                 RC_SIGN_IN);
         // [END auth_fui_pp_tos]
+    }
+
+    public void onclick(View view) {
+        Intent intent = new Intent(this, CreateLibraryActivity.class);
+        startActivity(intent);
     }
 }
