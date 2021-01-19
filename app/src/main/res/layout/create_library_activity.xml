@@ -3,22 +3,30 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
     >
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/create_library_activity_edit_text"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:hint="name"
+        android:paddingTop="16dp"
+        android:textSize="28sp"
         />
 
+
     <Button
+        android:id="@+id/create_library_activity_create_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="@string/new_library"
-        android:onClick="onclick"
-        />
+        android:layout_marginBottom="40dp"
+        android:onClick="onCreateButtonClicked"
+        android:text="Create"
 
+        />
 </RelativeLayout>

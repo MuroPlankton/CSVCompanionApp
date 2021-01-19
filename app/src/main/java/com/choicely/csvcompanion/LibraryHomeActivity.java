@@ -1,6 +1,8 @@
 package com.choicely.csvcompanion;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,5 +13,10 @@ public class LibraryHomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_library_home);
 
+    }
+
+    public void onclick(View view) {
+        Intent intent = new Intent(this, CreateLibraryActivity.class);
+        startActivity(intent);
     }
 }
