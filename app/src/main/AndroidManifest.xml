@@ -21,6 +21,7 @@
         </activity>
         <activity android:name=".CreateLibraryActivity" android:windowSoftInputMode="adjustResize"></activity>
         <activity android:name=".LibraryHomeActivity"/>
+        <activity android:name=".EditTranslationActivity"/>
     </application>
 
 </manifest>

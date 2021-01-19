@@ -3,4 +3,9 @@
     <string name="new_library">New library</string>
     <string name="add_lang">Add language</string>
     <string name="type_lang">Lang code e.g. "en"</string>
+    <string name="add_another_translation">Add another translation</string>
+    <string name="android_key">android key</string>
+    <string name="ios_key">ios key</string>
+    <string name="web_key">web key</string>
+    <string name="submit_translation">Submit translation</string>
 </resources>

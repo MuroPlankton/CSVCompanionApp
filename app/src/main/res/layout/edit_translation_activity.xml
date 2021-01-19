@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+    <Button
+        android:id="@+id/edit_translation_act_another_translation_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="@string/add_another_translation"
+        android:textSize="12sp"
+        />
+
+    <EditText
+        android:id="@+id/edit_translation_act_translation_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="34dp"
+        tools:text="jdakshdhgs"
+        />
+
+    <EditText
+        android:id="@+id/edit_translation_act_translation_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="12dp"
+        tools:text="jdakshdhgsasiujdhgisdbgjsjkldngnsadhnggnsandgng"
+        />
+
+    <EditText
+        android:id="@+id/edit_translation_act_android_key"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:hint="@string/android_key"
+        />
+
+    <EditText
+        android:id="@+id/edit_translation_act_ios_key"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:hint="@string/ios_key"
+        />
+
+    <EditText
+        android:id="@+id/edit_translation_act_web_key"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:hint="@string/web_key"
+        />
+
+    <Spinner
+        android:id="@+id/edit_translation_act_language_dropdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+    <Button
+        android:id="@+id/edit_translation_act_submit_translation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/submit_translation"
+        />
+
+
+</LinearLayout>
