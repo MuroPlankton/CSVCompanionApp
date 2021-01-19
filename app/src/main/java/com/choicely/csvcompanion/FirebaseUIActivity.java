@@ -2,6 +2,7 @@ package com.choicely.csvcompanion;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import java.util.List;
 public class FirebaseUIActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 123;
+    private static final String TAG = "FirebaseUIActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +53,15 @@ public class FirebaseUIActivity extends AppCompatActivity {
 
         if (requestCode == RC_SIGN_IN) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
+            Log.d(TAG, "request code equaled sign-in");
 
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                Log.d(TAG, "result code was ok");
+                Intent libraryHomeIntent = new Intent(getApplicationContext(), LibraryHomeActivity.class);
+                startActivity(libraryHomeIntent);
+
                 // ...
             } else {
                 // Sign in failed. If response is null the user canceled the
