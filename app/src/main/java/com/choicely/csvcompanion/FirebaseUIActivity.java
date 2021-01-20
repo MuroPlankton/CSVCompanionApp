@@ -131,8 +131,4 @@ public class FirebaseUIActivity extends AppCompatActivity {
         // [END auth_fui_pp_tos]
     }
 
-    public void onclick(View view) {
-        Intent intent = new Intent(this, CreateLibraryActivity.class);
-        startActivity(intent);
-    }
 }
