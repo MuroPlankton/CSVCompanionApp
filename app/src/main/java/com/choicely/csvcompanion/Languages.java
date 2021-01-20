@@ -15,7 +15,7 @@ public class Languages {
     }
 
 
-    public Languages(String languageKey,String lang) {
+    public Languages(String languageKey, String lang) {
         this.languageKey = languageKey;
         this.lang = lang;
     }
