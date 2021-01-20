@@ -22,19 +22,19 @@
         android:layout_centerHorizontal="true"
         android:layout_above="@id/edit_translation_act_translation_desc"
         android:layout_marginTop="34dp"
-        tools:text="jdakshdhgs"
+        android:hint="@string/translation_name"
         />
 
     <EditText
         android:id="@+id/edit_translation_act_translation_desc"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:lines="5"
         android:gravity="top"
         android:layout_marginTop="12dp"
         android:layout_centerVertical="true"
-        tools:text="jdakshdhgsasiujdhgisdbgjsjkldngnsadhnggnsandgng"
+        android:hint="@string/translation_description"
         />
 
     <EditText

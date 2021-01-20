@@ -10,4 +10,6 @@
     <string name="web_key">web key</string>
     <string name="submit_translation">Submit translation</string>
     <string name="translation">Translation</string>
+    <string name="translation_name">Translation name</string>
+    <string name="translation_description">Translation description</string>
 </resources>
