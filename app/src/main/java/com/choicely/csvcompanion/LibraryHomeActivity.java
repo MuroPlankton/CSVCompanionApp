@@ -1,5 +1,6 @@
 package com.choicely.csvcompanion;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -18,6 +19,13 @@ public class LibraryHomeActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.library_home_activity);
+
+        newLibraryButton = findViewById(R.id.activity_library_home_new_library);
+
+        newLibraryButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, LibraryActivity.class);
+            startActivity(intent);
+        });
 
         libraryRecycler = findViewById(R.id.library_home_activity_recycler);
         libraryRecycler.setLayoutManager(new LinearLayoutManager(this));

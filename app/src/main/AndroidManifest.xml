@@ -20,6 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".LibraryHomeActivity"/>
+        <activity android:name=".LibraryActivity"/>
         <activity android:name=".EditTranslationActivity"/>
     </application>
 
