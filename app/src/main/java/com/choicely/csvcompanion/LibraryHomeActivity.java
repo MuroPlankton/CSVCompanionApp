@@ -19,6 +19,12 @@ public class LibraryHomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_library_home);
 
+        newLibraryButton = findViewById(R.id.activity_library_home_new_library);
+
+        newLibraryButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, LibraryProfileActivity.class);
+            startActivity(intent);
+        });
     }
 
 }
