@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="8dp"
+        android:layout_marginTop="8dp"
         >
 
         <EditText
@@ -47,5 +47,22 @@
             android:text="@string/add_lang"
             />
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="amount of languages"
+        android:gravity="center_horizontal"
+        android:id="@+id/activity_library_profile_language_button"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="96dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/new_translation"
+        android:id="@+id/activity_library_profile_new_translation_button"
+        />
 
 </LinearLayout>

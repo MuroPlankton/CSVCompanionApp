@@ -3,4 +3,5 @@
     <string name="new_library">New library</string>
     <string name="add_lang">Add language</string>
     <string name="type_lang">Lang code e.g. "en"</string>
+    <string name="new_translation">New translation</string>
 </resources>
