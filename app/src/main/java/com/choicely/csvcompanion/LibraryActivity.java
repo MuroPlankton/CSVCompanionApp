@@ -17,7 +17,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LibraryProfileActivity extends AppCompatActivity {
+public class LibraryActivity extends AppCompatActivity {
     private static final String TAG = "LibraryProfileAct";
 
     private EditText libraryName;

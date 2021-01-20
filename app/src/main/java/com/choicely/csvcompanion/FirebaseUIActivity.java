@@ -2,7 +2,6 @@ package com.choicely.csvcompanion;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -10,13 +9,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,6 +27,7 @@ public class FirebaseUIActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 123;
     private static final String TAG = "FirebaseUIActivity";
+    private static final String ROOT_USER_ELEMENT = "users";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +66,10 @@ public class FirebaseUIActivity extends AppCompatActivity {
                 // Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 Log.d(TAG, "result code was ok");
+
+                DatabaseReference UIDReference = FirebaseDatabase.getInstance().getReference();
+                UIDReference.addListenerForSingleValueEvent(UIDListener);
+
                 Intent libraryHomeIntent = new Intent(getApplicationContext(), LibraryHomeActivity.class);
                 startActivity(libraryHomeIntent);
 
@@ -77,6 +83,22 @@ public class FirebaseUIActivity extends AppCompatActivity {
         }
     }
     // [END auth_fui_result]
+
+    ValueEventListener UIDListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+            if (!snapshot.hasChild(ROOT_USER_ELEMENT) || !snapshot.child(ROOT_USER_ELEMENT).hasChild(userID)) {
+                FirebaseDatabase.getInstance().getReference().child(ROOT_USER_ELEMENT).child(userID).child("name").setValue(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+
+        }
+    };
 
     public void signOut() {
         // [START auth_fui_signout]
