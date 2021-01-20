@@ -14,13 +14,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class LibraryActivity extends AppCompatActivity {
     private static final String TAG = "LibraryProfileAct";
 
     private EditText libraryName;
+    private List<String> langList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,6 +32,11 @@ public class LibraryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_library_profile);
         libraryName = findViewById(R.id.activity_library_profile_name);
 
+        langList = new ArrayList<>();
+        langList.add("en");
+        langList.add("fi");
+        langList.add("it");
+        langList.add("sv");
 
         createNewLibrary();
     }
@@ -42,27 +51,31 @@ public class LibraryActivity extends AppCompatActivity {
 //        updateChild();
         addLanguage();
 
-        librariesRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.d(TAG, "onDataChange: things have changed");
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
+//        librariesRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                Log.d(TAG, "onDataChange: things have changed " + snapshot.getValue());
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//
+//    }
     }
 
     private void addLanguage() {
+        DatabaseReference librariesRef = ref.child("libraries/Library1/languages");
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("Language1", new Languages("fi", "suomi"));
-        map.put("Language2", new Languages("en", "english"));
-        map.put("Language3", new Languages("sv", "svenska"));
-        librariesRef.updateChildren(map);
+        Map<String, Object> langMap = new HashMap<>();
+
+        for(int i = 0; i < langList.size(); i++){
+            langMap.put(UUID.randomUUID().toString(), langList.get(i));
+        }
+
+        librariesRef.setValue(langMap);
 
     }
 

@@ -10,6 +10,11 @@ public class Languages {
 
     }
 
+    public Languages(String languageKey){
+        this.languageKey = languageKey;
+    }
+
+
     public Languages(String languageKey,String lang) {
         this.languageKey = languageKey;
         this.lang = lang;
