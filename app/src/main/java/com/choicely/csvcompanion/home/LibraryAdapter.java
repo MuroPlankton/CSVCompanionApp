@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.choicely.csvcompanion.LibraryData;
+import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.R;
 
 import java.util.ArrayList;
