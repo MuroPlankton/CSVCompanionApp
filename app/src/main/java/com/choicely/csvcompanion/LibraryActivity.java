@@ -26,7 +26,7 @@ import io.realm.RealmModel;
 import io.realm.RealmResults;
 
 public class LibraryActivity extends AppCompatActivity {
-    private static final String TAG = "LibraryProfileAct";
+    private static final String TAG = "LibraryActivity";
 
     private EditText libraryName;
     private EditText langCodeEditText;

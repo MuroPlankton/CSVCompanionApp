@@ -12,4 +12,5 @@
     <string name="translation">Translation</string>
     <string name="translation_name">Translation name</string>
     <string name="translation_description">Translation description</string>
+    <string name="libraries">Libraries</string>
 </resources>
