@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.choicely.csvcompanion.LibraryData;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -17,11 +18,11 @@ import io.realm.Realm;
 public class FirebaseDBHelper {
 
     private static final String TAG = "FirebaseDBHelper";
-
     private static FirebaseDBHelper instance;
 
-    private FirebaseDBHelper(){
+    private onDatabaseUpdateListener listener;
 
+    private FirebaseDBHelper(){
     }
 
     public static void init(){
@@ -53,7 +54,7 @@ public class FirebaseDBHelper {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.d(TAG, "Failed to read value", error.toException());
             }
         });
     }
@@ -68,17 +69,32 @@ public class FirebaseDBHelper {
 
             realm.executeTransaction(realm1 -> {
                 for(String key : librariesMap.keySet()){
-
                     Object libraryObject = librariesMap.get(key);
                     final Map<String, Object> libraryMap = (Map<String, Object>) libraryObject;
 
+                    LibraryData library = new LibraryData();
+
                     if(libraryMap != null) {
-                        libraryMap.get("libraryName");
+//                        if(libraryMap.get("id") != null && libraryMap.get("libraryName") != null)
+//                        library.setLibraryID((Integer) libraryMap.get("id"));
+                        library.setLibraryName((String) libraryMap.get("libraryName"));
+                        Log.d(TAG, "libraryName: " + libraryMap.get("libraryName"));
                     }
+
+                    realm.copyToRealmOrUpdate(library);
                 }
             });
+            if(listener != null) {
+                listener.onDatabaseUpdate();
+            }
         }
     }
 
+    public void setListener(onDatabaseUpdateListener listener) {
+        this.listener = listener;
+    }
 
+    public interface onDatabaseUpdateListener{
+        void onDatabaseUpdate();
+    }
 }

@@ -1,18 +1,19 @@
 package com.choicely.csvcompanion;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class LibraryData extends RealmObject {
 
+    @PrimaryKey
+    private int libraryID;
+    private String libraryName;
 
-    private int id;
+    public int getLibraryID() { return libraryID; }
 
-    public int getId() {
-        return id;
-    }
+    public void setLibraryID(int libraryID) { this.libraryID = libraryID; }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-    //TODO: add ID and other variables
+    public String getLibraryName() { return libraryName; }
+
+    public void setLibraryName(String libraryName) { this.libraryName = libraryName; }
 }
