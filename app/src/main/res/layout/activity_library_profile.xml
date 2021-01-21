@@ -1,49 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     >
 
     <EditText
+        android:id="@+id/activity_library_profile_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="Library name"
-        android:textSize="32sp"
         android:gravity="center_horizontal"
-        android:id="@+id/activity_library_profile_name"
+        android:textSize="32sp"
+        tools:text="Library name"
         />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/activity_library_profile_recycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:id="@+id/activity_library_profile_recycler"
         />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
+        android:orientation="horizontal"
         >
 
         <EditText
+            android:background="#EBFCFF"
+            android:id="@+id/activity_library_profile_language_field"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/activity_library_profile_language_field"
             android:hint="@string/type_lang"
+            android:maxLength="2"
             android:maxLines="1"
             />
 
         <Button
+            android:id="@+id/activity_library_profile_language_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="onAddLanguageClicked"
             android:text="@string/add_lang"
             />
     </LinearLayout>
@@ -51,18 +55,17 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="amount of languages"
         android:gravity="center_horizontal"
-        android:id="@+id/activity_library_profile_language_button"
+        tools:text="amount of languages"
         />
 
     <Button
+        android:id="@+id/activity_library_profile_new_translation_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="96dp"
         android:layout_marginTop="16dp"
         android:text="@string/new_translation"
-        android:id="@+id/activity_library_profile_new_translation_button"
         />
 
 </LinearLayout>
