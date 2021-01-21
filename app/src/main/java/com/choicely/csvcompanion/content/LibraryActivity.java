@@ -29,7 +29,7 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class LibraryActivity extends AppCompatActivity {
-    private static final String TAG = "LibraryProfileAct";
+    private static final String TAG = "LibraryActivity";
 
     private EditText libraryNameEditText;
     private EditText langCodeEditText;
@@ -117,7 +117,6 @@ public class LibraryActivity extends AppCompatActivity {
         Realm realm = RealmHelper.getInstance().getRealm();
         RealmResults<LanguageData> languages = realm.where(LanguageData.class).findAll();
 
-        languageCount = languages.size();
         for (LanguageData language : languages) {
             if (langCode.equals(language.getLang())) {
                 return true;

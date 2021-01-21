@@ -9,9 +9,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.choicely.csvcompanion.content.LibraryActivity;
-import com.choicely.csvcompanion.LibraryData;
 import com.choicely.csvcompanion.R;
+import com.choicely.csvcompanion.content.LibraryActivity;
+import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.db.FirebaseDBHelper;
 import com.choicely.csvcompanion.db.RealmHelper;
 
