@@ -14,15 +14,15 @@ public class LibraryData extends RealmObject {
     private int libraryID;
     private String libraryName;
     private Map<String, String> languages = new HashMap<>();
-    private List<TranslationData> texts = new ArrayList<>();
+    private Map<String, TranslationData> texts = new HashMap<>();
 
-    public List<TranslationData> getTexts() {
-        return texts;
-    }
+    public int getLibraryID() { return libraryID; }
 
-    public void setTexts(List<TranslationData> texts) {
-        this.texts = texts;
-    }
+    public void setLibraryID(int libraryID) { this.libraryID = libraryID; }
+
+    public String getLibraryName() { return libraryName; }
+
+    public void setLibraryName(String libraryName) { this.libraryName = libraryName; }
 
     public Map<String, String> getLanguages() {
         return languages;
@@ -32,11 +32,15 @@ public class LibraryData extends RealmObject {
         this.languages = languages;
     }
 
-    public int getLibraryID() { return libraryID; }
+    public Map<String, TranslationData> getTexts() {
+        return texts;
+    }
 
-    public void setLibraryID(int libraryID) { this.libraryID = libraryID; }
+    public void setTexts(Map<String, TranslationData> texts) {
+        this.texts = texts;
+    }
 
-    public String getLibraryName() { return libraryName; }
-
-    public void setLibraryName(String libraryName) { this.libraryName = libraryName; }
+    public TranslationData findTranslationByID(String translationID) {
+        return texts.get(translationID);
+    }
 }

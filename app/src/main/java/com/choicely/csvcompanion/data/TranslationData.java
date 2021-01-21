@@ -6,19 +6,10 @@ import java.util.Map;
 import io.realm.annotations.PrimaryKey;
 
 public class TranslationData {
-    @PrimaryKey
-    private String translationKey;
+
     private String translationName, translationDesc;
     private String androidKey, iosKey, webKey;
     private Map<String, String> translations = new HashMap<>();
-
-    public String getTranslationKey() {
-        return translationKey;
-    }
-
-    public void setTranslationKey(String translationKey) {
-        this.translationKey = translationKey;
-    }
 
     public String getTranslationName() {
         return translationName;

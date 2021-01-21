@@ -55,7 +55,7 @@ public class EditTranslationActivity extends AppCompatActivity {
         loadLanguages();
 
         if (getIntent().getStringExtra(TRANSLATION_KEY).isEmpty()) {
-            if (currentLibrary.)
+//            if (currentLibrary.)
             createNewTranslation();
         } else {
             loadTranslation();
@@ -65,7 +65,7 @@ public class EditTranslationActivity extends AppCompatActivity {
     }
 
     private void loadLanguages() {
-        List<String> langMap = currentLibrary.getLanguages();
+        Map<String, String> langMap = currentLibrary.getLanguages();
         List<String> langList = new ArrayList<>();
         for (String langValue : langMap.values()) {
             langList.add(langValue);
@@ -92,7 +92,7 @@ public class EditTranslationActivity extends AppCompatActivity {
     }
 
     private void loadTranslation() {
-        currentTranslation = currentLibrary.GetTranslationByID(getIntent().getStringExtra(TRANSLATION_KEY));
+//        currentTranslation = currentLibrary.GetTranslationByID(getIntent().getStringExtra(TRANSLATION_KEY));
         translationName.setText(currentTranslation.getTranslationName());
         transLationDesc.setText(currentTranslation.getTranslationDesc());
         androidKey.setText(currentTranslation.getAndroidKey());
