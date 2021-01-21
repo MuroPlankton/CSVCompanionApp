@@ -13,8 +13,10 @@ public class LibraryData extends RealmObject {
     @PrimaryKey
     private int libraryID;
     private String libraryName;
-    private Map<String, String> languages = new HashMap<>();
-    private Map<String, TranslationData> texts = new HashMap<>();
+    private List<String> langKeys = new ArrayList<>();
+    private List<String> langValues = new ArrayList<>();
+    private List<String> translationKeys = new ArrayList<>();
+    private List<TranslationData> translationData = new ArrayList<>();
 
     public int getLibraryID() { return libraryID; }
 
@@ -24,23 +26,33 @@ public class LibraryData extends RealmObject {
 
     public void setLibraryName(String libraryName) { this.libraryName = libraryName; }
 
-    public Map<String, String> getLanguages() {
-        return languages;
+    public List<String> getLangKeys() {
+        return langKeys;
     }
 
-    public void setLanguages(Map<String, String> languages) {
-        this.languages = languages;
+    public List<String> getLangValues() {
+        return langValues;
     }
 
-    public Map<String, TranslationData> getTexts() {
-        return texts;
+    public void setLanguages(List<String> keys, List<String> values) {
+        this.langKeys = keys;
+        this.langValues = values;
     }
 
-    public void setTexts(Map<String, TranslationData> texts) {
-        this.texts = texts;
+    public List<String> getTranslationKeys() {
+        return translationKeys;
+    }
+
+    public List<TranslationData> getTranslationData() {
+        return translationData;
+    }
+
+    public void setTexts(List<String> keys, List<TranslationData> values) {
+        this.translationKeys = keys;
+        this.translationData = values;
     }
 
     public TranslationData findTranslationByID(String translationID) {
-        return texts.get(translationID);
+        return translationData.get(translationKeys.indexOf(translationID));
     }
 }
