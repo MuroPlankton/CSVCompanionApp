@@ -2,7 +2,6 @@ package com.choicely.csvcompanion.home;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 
 import androidx.annotation.Nullable;
@@ -10,12 +9,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.choicely.csvcompanion.LibraryActivity;
+import com.choicely.csvcompanion.content.LibraryActivity;
 import com.choicely.csvcompanion.LibraryData;
 import com.choicely.csvcompanion.R;
 import com.choicely.csvcompanion.db.FirebaseDBHelper;
 import com.choicely.csvcompanion.db.RealmHelper;
-import com.choicely.csvcompanion.home.LibraryAdapter;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
