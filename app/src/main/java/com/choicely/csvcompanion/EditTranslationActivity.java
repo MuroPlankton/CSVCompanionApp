@@ -31,6 +31,7 @@ public class EditTranslationActivity extends AppCompatActivity {
     private EditText androidKey, iosKey, webKey;
     private Spinner langSpinner;
     private EditText translationValue;
+    private LibraryData currentLibrary;
     private TranslationData currentTranslation;
 
     @Override
@@ -49,7 +50,7 @@ public class EditTranslationActivity extends AppCompatActivity {
 
         String libraryKey = getIntent().getStringExtra(LIBRARY_KEYC);
         Realm realm = RealmHelper.getInstance().getRealm();
-        LibraryData currentLibrary = realm.where(LibraryData.class).equalTo("libraryID", libraryKey).findFirst();
+        currentLibrary = realm.where(LibraryData.class).equalTo("libraryID", libraryKey).findFirst();
 
         loadLanguages();
 
@@ -64,7 +65,7 @@ public class EditTranslationActivity extends AppCompatActivity {
     }
 
     private void loadLanguages() {
-        Map<String, String> langMap = currentLibrary.getLanguages();
+        List<String> langMap = currentLibrary.getLanguages();
         List<String> langList = new ArrayList<>();
         for (String langValue : langMap.values()) {
             langList.add(langValue);
@@ -92,10 +93,10 @@ public class EditTranslationActivity extends AppCompatActivity {
 
     private void loadTranslation() {
         currentTranslation = currentLibrary.GetTranslationByID(getIntent().getStringExtra(TRANSLATION_KEY));
-        translationName.setText(currentTranslation.getName());
-        transLationDesc.setText(currentTranslation.getDesc());
+        translationName.setText(currentTranslation.getTranslationName());
+        transLationDesc.setText(currentTranslation.getTranslationDesc());
         androidKey.setText(currentTranslation.getAndroidKey());
-        iosKey.setText(currentTranslation.getIOSKey());
+        iosKey.setText(currentTranslation.getIosKey());
         webKey.setText(currentTranslation.getWebKey());
     }
 }

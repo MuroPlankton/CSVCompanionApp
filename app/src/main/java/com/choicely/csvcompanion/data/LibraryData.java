@@ -1,7 +1,9 @@
 package com.choicely.csvcompanion.data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -11,7 +13,7 @@ public class LibraryData extends RealmObject {
     @PrimaryKey
     private int libraryID;
     private String libraryName;
-    private List<String> languages = new ArrayList<>();
+    private Map<String, String> languages = new HashMap<>();
     private List<TranslationData> texts = new ArrayList<>();
 
     public List<TranslationData> getTexts() {
@@ -22,11 +24,11 @@ public class LibraryData extends RealmObject {
         this.texts = texts;
     }
 
-    public List<String> getLanguages() {
+    public Map<String, String> getLanguages() {
         return languages;
     }
 
-    public void setLanguages(List<String> languages) {
+    public void setLanguages(Map<String, String> languages) {
         this.languages = languages;
     }
 
