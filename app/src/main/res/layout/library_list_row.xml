@@ -5,6 +5,12 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/light_gray"
+        />
+
     <TextView
         android:id="@+id/library_list_row_library_name"
         android:layout_width="match_parent"
@@ -13,14 +19,14 @@
         android:padding="8dp"
         android:textSize="24sp"
         android:textColor="@color/black"
-        android:background="@color/lowkeyYellow"
-        tools:text="testi"
+        android:background="@color/light_yellow"
+        tools:text="library name"
         />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:background="@color/gray"
+        android:layout_height="1dp"
+        android:background="@color/light_gray"
         />
 
 </LinearLayout>
