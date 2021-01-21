@@ -5,6 +5,7 @@
     >
 
     <application
+        android:name=".app.CSVCompanionApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -19,7 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LibraryHomeActivity"/>
+        <activity android:name=".home.LibraryHomeActivity"/>
         <activity android:name=".LibraryActivity"/>
         <activity android:name=".EditTranslationActivity"/>
     </application>

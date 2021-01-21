@@ -28,14 +28,12 @@ public class LibraryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_library_profile);
         libraryName = findViewById(R.id.activity_library_profile_name);
 
-
         createNewLibrary();
     }
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference ref = database.getReference();
     private DatabaseReference librariesRef = ref.child("libraries/Library1");
-
 
     public void createNewLibrary() {
 //        newChild();
@@ -53,17 +51,14 @@ public class LibraryActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
     private void addLanguage() {
-
         Map<String, Object> map = new HashMap<>();
         map.put("Language1", new Languages("fi", "suomi"));
         map.put("Language2", new Languages("en", "english"));
         map.put("Language3", new Languages("sv", "svenska"));
         librariesRef.updateChildren(map);
-
     }
 
     private void updateChild() {
