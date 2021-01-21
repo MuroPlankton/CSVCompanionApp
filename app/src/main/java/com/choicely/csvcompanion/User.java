@@ -7,7 +7,7 @@ public class User {
 
     }
 
-    public void setUser(String name) {
+    public User(String name) {
         this.name = name;
     }
 }
