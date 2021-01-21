@@ -44,7 +44,6 @@ public class LibraryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_library_profile);
 
         langCodeEditText = findViewById(R.id.activity_library_profile_language_field);
-
         contentRecyclerView = findViewById(R.id.activity_library_profile_recycler);
         contentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new LibraryContentAdapter(this);
@@ -52,16 +51,10 @@ public class LibraryActivity extends AppCompatActivity {
 
         libraryName = findViewById(R.id.activity_library_profile_name);
 
+        addLanguageToFireBase();
 
-        Realm realm = RealmHelper.getInstance().getRealm();
-        RealmResults<LanguageData> langs = realm.where(LanguageData.class).findAll();
-
-        for (LanguageData language : langs) {
-            Log.d(TAG, "onCreate: " + language.getLang());
-        }
-
-        updateContent();
-        createNewLibrary();
+//        updateContent();
+//        createNewLibrary();
     }
 
     public void createNewLibrary() {
@@ -70,10 +63,6 @@ public class LibraryActivity extends AppCompatActivity {
 
     private void updateContent() {
         adapter.clear();
-//        langList.add("en");
-//        langList.add("fi");
-//        langList.add("it");
-//        langList.add("sv");
 
         for (int i = 0; i < langList.size(); i++) {
             adapter.add(langList.get(i));
@@ -82,30 +71,20 @@ public class LibraryActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
-//    private void addLanguage() {
-//        DatabaseReference librariesRef = ref.child("libraries/Library1/languages");
-//
-//        Map<String, Object> langMap = new HashMap<>();
-//
-//        for (int i = 0; i < langList.size(); i++) {
-//            langMap.put(UUID.randomUUID().toString(), langList.get(i));
-//        }
-//
-//        librariesRef.setValue(langMap);
-//    }
+    private void addLanguageToFireBase() {
+        DatabaseReference librariesRef = ref.child("libraries/Library1/languages");
 
-//    private void updateChild() {
-//        DatabaseReference updateRef = librariesRef.child("Language");
-//        Map<String, Object> libUpdates = new HashMap<>();
-//        libUpdates.put("language", "en");
-//        updateRef.updateChildren(libUpdates);
-//    }
-//
-//    private void newChild() {
-//        Map<String, Library> map = new HashMap<>();
-//        map.put("Library1", new Library("Choicely germany"));
-//        librariesRef.push().setValue(map);
-//    }
+        Realm realm = RealmHelper.getInstance().getRealm();
+        RealmResults<LanguageData> langs = realm.where(LanguageData.class).findAll();
+
+        Map<String, Object> langMap = new HashMap<>();
+
+        for (LanguageData language : langs) {
+            Log.d(TAG, "onCreate: " + language.getLang());
+            langMap.put(UUID.randomUUID().toString(), language.getLang());
+        }
+        librariesRef.setValue(langMap);
+    }
 
     public void onAddLanguageClicked(View view) {
         String langCode = langCodeEditText.getText().toString();
@@ -115,7 +94,6 @@ public class LibraryActivity extends AppCompatActivity {
         languageData.setLang(langCode);
 
         Realm realm = RealmHelper.getInstance().getRealm();
-
         realm.executeTransaction(realm1 -> {
             realm.insertOrUpdate(languageData);
         });
