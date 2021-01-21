@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class LibraryActivity extends AppCompatActivity {
-    private static final String TAG = "LibraryProfileAct";
+    private static final String TAG = "LibraryActivity";
 
     private EditText libraryName;
     private List<String> langList;
@@ -32,5 +32,4 @@ public class LibraryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_library_profile);
         libraryName = findViewById(R.id.activity_library_profile_name);
     }
-
 }

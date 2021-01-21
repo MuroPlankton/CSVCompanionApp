@@ -9,9 +9,18 @@
         android:id="@+id/library_list_row_library_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="8dp"
         android:textSize="24sp"
         android:textColor="@color/black"
+        android:background="@color/lowkeyYellow"
         tools:text="testi"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/gray"
         />
 
 </LinearLayout>
