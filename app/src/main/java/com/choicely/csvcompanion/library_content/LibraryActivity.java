@@ -14,8 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.choicely.csvcompanion.EditTranslationActivity;
+import com.choicely.csvcompanion.IntentKeys;
 import com.choicely.csvcompanion.R;
 import com.choicely.csvcompanion.data.LanguageData;
+import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.data.SingleTranslationData;
 import com.choicely.csvcompanion.db.FirebaseDBHelper;
 import com.choicely.csvcompanion.db.RealmHelper;
@@ -31,6 +33,7 @@ import java.util.UUID;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 public class LibraryActivity extends AppCompatActivity {
     private static final String TAG = "LibraryActivity";
@@ -50,6 +53,8 @@ public class LibraryActivity extends AppCompatActivity {
 
     private final LanguageData languageData = new LanguageData();
 
+    private String libraryID;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,8 +70,62 @@ public class LibraryActivity extends AppCompatActivity {
         adapter = new LibraryContentAdapter(this);
         contentRecyclerView.setAdapter(adapter);
 
+        libraryID = getIntent().getStringExtra(IntentKeys.LIBRARY_ID);
+
+        if (libraryID == null) {
+            newLibrary();
+        } else {
+            loadLibrary();
+        }
         startFireBaseListening();
-//        updateContent();
+    }
+
+    private void newLibrary() {
+//        Realm realm = RealmHelper.getInstance().getRealm();
+//        LibraryData library = realm.where(LibraryData.class).sort("id", Sort.DESCENDING).findFirst();
+//        if(library == null){
+        libraryID = String.valueOf(UUID.randomUUID());
+        Log.d(TAG, "new Library created with the ID:" + libraryID);
+//        }
+
+
+    }
+
+    private void loadLibrary() {
+        Realm realm = RealmHelper.getInstance().getRealm();
+        LibraryData library = realm.where(LibraryData.class).equalTo("id", libraryID).findFirst();
+        Log.d(TAG, "loadPicture: library loaded with id:" + libraryID);
+
+        libraryNameEditText.setText(library.getLibraryName());
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        saveLibrary();
+    }
+
+    private void saveLibrary() {
+        Realm realm = RealmHelper.getInstance().getRealm();
+        LibraryData libraryData = new LibraryData();
+
+        Log.d(TAG, "saveLibrary: library saved with the ID:" + libraryID);
+
+        libraryData.setLibraryID(libraryID);
+        libraryData.setLibraryName(libraryNameEditText.getText().toString());
+
+        realm.executeTransaction(realm1 -> {
+            realm.insertOrUpdate(libraryData);
+        });
+        addLibraryToFireBase();
+
+    }
+
+    private void addLibraryToFireBase(){
+        DatabaseReference librariesRef = ref.child("libraries");
+        String name = libraryNameEditText.getText().toString();
+        librariesRef.push().setValue(name);
     }
 
     private void startFireBaseListening() {

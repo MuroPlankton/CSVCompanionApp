@@ -1,6 +1,7 @@
 package com.choicely.csvcompanion.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.choicely.csvcompanion.EditTranslationActivity;
+import com.choicely.csvcompanion.IntentKeys;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.R;
 
@@ -48,12 +51,20 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
 
     public static class LibraryViewHolder extends RecyclerView.ViewHolder {
 
+        String libraryID;
         public TextView libraryName;
 
         public LibraryViewHolder(@NonNull View itemView) {
             super(itemView);
+            itemView.setOnClickListener(onRowClick);
 
             libraryName = itemView.findViewById(R.id.library_list_row_library_name);
         }
+        private final View.OnClickListener onRowClick = view -> {
+            Context ctx = libraryName.getContext();
+            Intent intent = new Intent(ctx, EditTranslationActivity.class);
+            intent.putExtra(IntentKeys.LIBRARY_ID, libraryID);
+            ctx.startActivity(intent);
+        };
     }
 }
