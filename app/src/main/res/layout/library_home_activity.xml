@@ -22,6 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/library_home_activity_heading"
+        android:layout_above="@id/activity_library_home_new_library"
         />
 
     <Button
