@@ -92,7 +92,7 @@ public class EditTranslationActivity extends AppCompatActivity {
             }
         }
     }
-
+    
     private void loadText() {
         translationName.setText(currentText.getTranslationName());
         transLationDesc.setText(currentText.getTranslationDesc());

@@ -1,6 +1,8 @@
 package com.choicely.csvcompanion.data;
 
-public class LanguageData {
+import io.realm.RealmObject;
+
+public class LanguageData extends RealmObject {
 
     private String langKey;
     private String langName;

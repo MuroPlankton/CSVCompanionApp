@@ -2,7 +2,8 @@
     <string name="app_name">CSV Companion</string>
     <string name="new_library">New library</string>
     <string name="add_lang">Add language</string>
-    <string name="type_lang">Lang code e.g. "en"</string>
+    <string name="type_lang_code">Lang code e.g. "en"</string>
+    <string name="type_lang">Language</string>
     <string name="new_translation">New translation</string>
     <string name="add_another_translation">Add another text</string>
     <string name="android_key">android key</string>
@@ -13,4 +14,5 @@
     <string name="translation_name">Translation name</string>
     <string name="translation_description">Translation description</string>
     <string name="libraries">Libraries</string>
+
 </resources>

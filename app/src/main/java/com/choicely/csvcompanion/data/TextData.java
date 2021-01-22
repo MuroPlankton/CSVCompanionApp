@@ -1,9 +1,10 @@
 package com.choicely.csvcompanion.data;
 
 import io.realm.RealmList;
+import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class TextData {
+public class TextData extends RealmObject {
 
     @PrimaryKey
     private String textKey;
