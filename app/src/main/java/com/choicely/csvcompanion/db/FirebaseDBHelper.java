@@ -89,15 +89,15 @@ public class FirebaseDBHelper {
 
                     if(languagesMap != null){
                         for(String k : languagesMap.keySet()){
+                            Log.d(TAG, "key: " + k);
                             Object languageObject = languagesMap.get(k);
-                            languageDataRealmList.add((LanguageData) languageObject);
-                            
+                            Log.d(TAG, "languageobject: " + languageObject);
+                            LanguageData language = new LanguageData();
+
+
 //                            Map<String, Object> languageMap = (Map<String, Object>) languageObject;
 //
 //                            LanguageData language = new LanguageData();
-
-
-
                         }
                     }
 
