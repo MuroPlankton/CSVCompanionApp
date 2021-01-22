@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".home.LibraryHomeActivity"/>
-        <activity android:name=".LibraryActivity"/>
+        <activity android:name=".content.LibraryActivity"/>
         <activity android:name=".EditTranslationActivity"/>
     </application>
 

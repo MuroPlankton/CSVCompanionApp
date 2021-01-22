@@ -1,6 +1,8 @@
 package com.choicely.csvcompanion.data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.realm.annotations.PrimaryKey;
@@ -9,7 +11,7 @@ public class TranslationData {
 
     private String translationName, translationDesc;
     private String androidKey, iosKey, webKey;
-    private Map<String, String> translations = new HashMap<>();
+    private List<String> translations = new ArrayList<>();
 
     public String getTranslationName() {
         return translationName;
@@ -51,11 +53,11 @@ public class TranslationData {
         this.webKey = webKey;
     }
 
-    public Map<String, String> getTranslations() {
+    public List<String> getTranslations() {
         return translations;
     }
 
-    public void setTranslations(Map<String, String> translations) {
+    public void setTranslations(List<String> translations) {
         this.translations = translations;
     }
 }

@@ -92,7 +92,7 @@ public class EditTranslationActivity extends AppCompatActivity {
     }
 
     private void loadTranslation() {
-//        currentTranslation = currentLibrary.GetTranslationByID(getIntent().getStringExtra(TRANSLATION_KEY));
+        currentTranslation = currentLibrary.findTranslationByID(getIntent().getStringExtra(TRANSLATION_KEY));
         translationName.setText(currentTranslation.getTranslationName());
         transLationDesc.setText(currentTranslation.getTranslationDesc());
         androidKey.setText(currentTranslation.getAndroidKey());

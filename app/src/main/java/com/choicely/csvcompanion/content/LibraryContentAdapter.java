@@ -1,4 +1,4 @@
-package com.choicely.csvcompanion;
+package com.choicely.csvcompanion.content;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,12 +10,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.choicely.csvcompanion.EditTranslationActivity;
+import com.choicely.csvcompanion.IntentKeys;
+import com.choicely.csvcompanion.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class LibraryContentAdapter extends RecyclerView.Adapter<LibraryContentAdapter.LibraryContentViewHolder> {
 
-    private List<String> translationList = new ArrayList<>();
+    private final List<String> translationList = new ArrayList<>();
     private final Context context;
 
     public LibraryContentAdapter(Context context) {

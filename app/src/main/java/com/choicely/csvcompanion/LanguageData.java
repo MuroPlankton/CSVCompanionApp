@@ -1,6 +1,5 @@
 package com.choicely.csvcompanion;
 
-import java.util.UUID;
 
 import io.realm.RealmObject;
 
