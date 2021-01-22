@@ -79,23 +79,6 @@ public class LibraryActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
-    private void addLanguageToFireBase() {
-        DatabaseReference librariesRef = ref.child("libraries/Library1/languages");
-
-        Realm realm = RealmHelper.getInstance().getRealm();
-        RealmResults<LanguageData> languages = realm.where(LanguageData.class).findAll();
-
-        Map<String, Object> langMap = new HashMap<>();
-
-        for (LanguageData language : languages) {
-            Log.d(TAG, "addLanguageToFireBase " + language.getLang());
-            langMap.put(UUID.randomUUID().toString(), language.getLang());
-        }
-        librariesRef.setValue(langMap);
-    }
-
-    private final LanguageData languageData = new LanguageData();
-
     public void onAddLanguageClicked(View view) {
         @NotNull
         String langCode = langCodeEditText.getText().toString();
@@ -104,7 +87,9 @@ public class LibraryActivity extends AppCompatActivity {
 
         if (!checkIfLanguageAlreadyExists(langCode) && !langCode.isEmpty()) {
             languageData.setLang(langCode);
-            realm.executeTransaction(realm1 -> realm.insertOrUpdate(languageData));
+            realm.executeTransaction(realm1 -> realm.copyToRealmOrUpdate(languageData));
+            Toast.makeText(this, "Language: " + '"' + langCode + '"' + " added", Toast.LENGTH_SHORT).show();
+
         } else if (!checkIfLanguageAlreadyExists(langCode) && langCode.isEmpty()) {
             Toast.makeText(this, "Language field cannot be emtpy!", Toast.LENGTH_SHORT).show();
         } else {
@@ -125,8 +110,25 @@ public class LibraryActivity extends AppCompatActivity {
         return false;
     }
 
-    public void onNewTranslationClicked(View view) {
+    private void addLanguageToFireBase() {
+        DatabaseReference librariesRef = ref.child("libraries/Library1/languages");
+
         Realm realm = RealmHelper.getInstance().getRealm();
-        realm.executeTransaction(realm1 -> realm.deleteAll());
+        RealmResults<LanguageData> languages = realm.where(LanguageData.class).findAll();
+
+        Map<String, Object> langMap = new HashMap<>();
+
+        for (LanguageData language : languages) {
+            Log.d(TAG, "addLanguageToFireBase " + language.getLang());
+            langMap.put(UUID.randomUUID().toString(), language.getLang());
+        }
+        librariesRef.setValue(langMap);
+    }
+
+    private final LanguageData languageData = new LanguageData();
+
+    public void onNewTranslationClicked(View view) {
+//        Realm realm = RealmHelper.getInstance().getRealm();
+//        realm.executeTransaction(realm1 -> realm.deleteAll());
     }
 }
