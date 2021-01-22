@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.choicely.csvcompanion.EditTranslationActivity;
 import com.choicely.csvcompanion.R;
 import com.choicely.csvcompanion.data.LanguageData;
+import com.choicely.csvcompanion.data.SingleTranslationData;
+import com.choicely.csvcompanion.db.FirebaseDBHelper;
 import com.choicely.csvcompanion.db.RealmHelper;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -37,8 +39,7 @@ public class LibraryActivity extends AppCompatActivity {
     private EditText langCodeEditText;
     private EditText langEditText;
 
-
-    private final List<String> langList = new ArrayList<>();
+    private final List<String> translationList = new ArrayList<>();
     private TextView languageCountTextView;
     private RecyclerView contentRecyclerView;
     private LibraryContentAdapter adapter;
@@ -64,22 +65,25 @@ public class LibraryActivity extends AppCompatActivity {
         adapter = new LibraryContentAdapter(this);
         contentRecyclerView.setAdapter(adapter);
 
-//        addLanguageToFireBase();
-
+        startFireBaseListening();
 //        updateContent();
-//        createNewLibrary();
-
     }
 
-    public void createNewLibrary() {
-
+    private void startFireBaseListening() {
+        FirebaseDBHelper helper = FirebaseDBHelper.getInstance();
+        helper.setListener(this::updateContent);
+        helper.listenForLibraryDataChange();
     }
 
     private void updateContent() {
         adapter.clear();
 
-        for (int i = 0; i < langList.size(); i++) {
+        Realm realm = RealmHelper.getInstance().getRealm();
+        RealmResults<SingleTranslationData> translations = realm.where(SingleTranslationData.class).findAll();
 
+        for (SingleTranslationData singleTranslation : translations) {
+            Log.d(TAG, "updateContent: " + singleTranslation.getTranslation());
+            adapter.add(singleTranslation.getTranslation());
         }
 
         adapter.notifyDataSetChanged();
@@ -100,7 +104,7 @@ public class LibraryActivity extends AppCompatActivity {
             addLanguageToFireBase();
 
         } else if (!checkIfLanguageAlreadyExists(langCode) && langCode.isEmpty()) {
-            Toast.makeText(this, "Language code field cannot be emtpy!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Language code field cannot be empty!", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Language: " + '"' + langCode + '"' + " already exists", Toast.LENGTH_SHORT).show();
         }
@@ -136,9 +140,7 @@ public class LibraryActivity extends AppCompatActivity {
 
 
     public void onNewTranslationClicked(View view) {
-
         Intent intent = new Intent(LibraryActivity.this, EditTranslationActivity.class);
         startActivity(intent);
-
     }
 }
