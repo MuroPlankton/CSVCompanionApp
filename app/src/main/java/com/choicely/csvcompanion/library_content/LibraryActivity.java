@@ -1,5 +1,6 @@
 package com.choicely.csvcompanion.library_content;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.choicely.csvcompanion.EditTranslationActivity;
 import com.choicely.csvcompanion.R;
 import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.db.RealmHelper;
@@ -58,7 +60,7 @@ public class LibraryActivity extends AppCompatActivity {
         libraryNameEditText = findViewById(R.id.activity_library_profile_name);
 
         contentRecyclerView = findViewById(R.id.activity_library_profile_recycler);
-            contentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        contentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new LibraryContentAdapter(this);
         contentRecyclerView.setAdapter(adapter);
 
@@ -134,6 +136,9 @@ public class LibraryActivity extends AppCompatActivity {
 
 
     public void onNewTranslationClicked(View view) {
+
+        Intent intent = new Intent(LibraryActivity.this, EditTranslationActivity.class);
+        startActivity(intent);
 
     }
 }
