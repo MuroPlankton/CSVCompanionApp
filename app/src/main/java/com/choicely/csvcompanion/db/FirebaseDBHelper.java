@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 
 import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
+import com.choicely.csvcompanion.data.SingleTranslationData;
+import com.choicely.csvcompanion.data.TextData;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -70,8 +72,8 @@ public class FirebaseDBHelper {
             Realm realm = helper.getRealm();
 
             realm.executeTransaction(realm1 -> {
-                for (String key : librariesMap.keySet()) {
-                    Object libraryObject = librariesMap.get(key);
+                for (String key1 : librariesMap.keySet()) {
+                    Object libraryObject = librariesMap.get(key1);
                     final Map<String, Object> libraryMap = (Map<String, Object>) libraryObject;
 
                     LibraryData library = new LibraryData();
@@ -80,27 +82,65 @@ public class FirebaseDBHelper {
 //                        if(libraryMap.get("id") != null && libraryMap.get("libraryName") != null)
 //                        library.setLibraryID((Integer) libraryMap.get("id"));
                         library.setLibraryName((String) libraryMap.get("libraryName"));
-                        Log.d(TAG, "libraryName: " + libraryMap.get("libraryName"));
                     }
 
                     Object languagesObject = libraryMap.get("languages");
                     Map<String, Object> languagesMap = (Map<String, Object>) languagesObject;
-//                    RealmList<LanguageData> languageDataRealmList = new RealmList<>();
 
                     if (languagesMap != null) {
-                        for (String k : languagesMap.keySet()) {
-                            Object languageValue = languagesMap.get(k);
+                        for (String key2 : languagesMap.keySet()) {
+                            Object languageValue = languagesMap.get(key2);
 
                             LanguageData language = new LanguageData();
-                            language.setLangKey(k);
+                            language.setLangKey(key2);
                             language.setLangName((String) languageValue);
 
                             realm.copyToRealmOrUpdate(language);
 
-                            Log.d(TAG, "key: " + k);
+                            Log.d(TAG, "key2: " + key2);
                             Log.d(TAG, "languageValue: " + languageValue);
                         }
                     }
+
+                    Object textsObject = libraryMap.get("texts");
+                    Log.d(TAG, "textsObject: " + textsObject);
+                    Map<String, Object> textsMap = (Map<String, Object>) textsObject;
+
+                    //TODO: check properly if all this works
+                    if(textsMap != null){
+                        for (String key3 : textsMap.keySet()) {
+                            Object textObject = textsMap.get(key3);
+                            Log.d(TAG, "textObject: " + textObject);
+                            Map<String, Object> textMap = (Map<String, Object>) textObject;
+
+                            if(textMap != null) {
+                                Object translationsObject = textMap.get("translations");
+                                Map<String, Object> translationMap = (Map<String, Object>) translationsObject;
+
+                                for (String key4 : translationMap.keySet()) {
+                                    Object translationValue = translationMap.get(key4);
+
+                                    SingleTranslationData translation = new SingleTranslationData();
+                                    translation.setLangKey(key4);
+                                    translation.setTranslation((String) translationValue);
+
+                                    Log.d(TAG, "key4: " + key4);
+                                    Log.d(TAG, "translationValue: " + translationValue);
+                                }
+
+                                TextData textData = new TextData();
+
+                                //TODO: text key and possibly the translations list
+//                                textData.setTextKey();
+                                textData.setTranslationName((String) textMap.get("name"));
+                                textData.setTranslationDesc((String) textMap.get("description"));
+                                textData.setAndroidKey((String) textMap.get("android_key"));
+                                textData.setIosKey((String) textMap.get("ios_key"));
+                                textData.setWebKey((String) textMap.get("web_key"));
+                            }
+                        }
+                    }
+
                     realm.copyToRealmOrUpdate(library);
                 }
             });
