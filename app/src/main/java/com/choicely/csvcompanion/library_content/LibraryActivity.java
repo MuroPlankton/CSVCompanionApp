@@ -1,4 +1,4 @@
-package com.choicely.csvcompanion.content;
+package com.choicely.csvcompanion.library_content;
 
 import android.os.Bundle;
 import android.util.Log;
