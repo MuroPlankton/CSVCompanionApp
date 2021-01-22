@@ -31,21 +31,43 @@
         android:orientation="horizontal"
         >
 
-        <EditText
-            android:background="#EBFCFF"
-            android:id="@+id/activity_library_profile_language_field"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/type_lang"
-            android:maxLength="2"
-            android:maxLines="1"
-            />
+            android:orientation="vertical"
+            >
+
+            <EditText
+                android:id="@+id/activity_library_profile_language_code_field"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="#EBFCFF"
+                android:hint="@string/type_lang_code"
+                android:maxLength="2"
+                android:maxLines="1"
+                android:textSize="20sp"
+                />
+
+            <EditText
+                android:id="@+id/activity_library_profile_language_field"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:background="#EBFCFF"
+                android:hint="@string/type_lang"
+                android:maxLines="1"
+                android:textSize="20sp"
+                />
+        </LinearLayout>
+
 
         <Button
             android:id="@+id/activity_library_profile_language_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:onClick="onAddLanguageClicked"
             android:text="@string/add_lang"
@@ -56,8 +78,8 @@
         android:id="@+id/activity_library_profile_language_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
         android:gravity="center_horizontal"
+        android:textSize="20sp"
         tools:text="amount of languages"
         />
 
@@ -67,8 +89,8 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="96dp"
         android:layout_marginTop="16dp"
-        android:text="@string/new_translation"
         android:onClick="onNewTranslationClicked"
+        android:text="@string/new_translation"
         />
 
 </LinearLayout>

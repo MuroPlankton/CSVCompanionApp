@@ -5,13 +5,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.realm.RealmList;
+import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class TranslationData {
+public class TextData extends RealmObject {
 
+    @PrimaryKey
+    private String translationKey;
     private String translationName, translationDesc;
     private String androidKey, iosKey, webKey;
-    private List<String> translations = new ArrayList<>();
+    private RealmList<SingleTranslationData> translations = new RealmList<>();
+
+    public String getTranslationKey() {
+        return translationKey;
+    }
+
+    public void setTranslationKey(String translationKey) {
+        this.translationKey = translationKey;
+    }
 
     public String getTranslationName() {
         return translationName;
@@ -53,11 +65,11 @@ public class TranslationData {
         this.webKey = webKey;
     }
 
-    public List<String> getTranslations() {
+    public RealmList<SingleTranslationData> getTranslations() {
         return translations;
     }
 
-    public void setTranslations(List<String> translations) {
+    public void setTranslations(RealmList<SingleTranslationData> translations) {
         this.translations = translations;
     }
 }

@@ -1,4 +1,4 @@
-package com.choicely.csvcompanion.content;
+package com.choicely.csvcompanion.library_content;
 
 import android.content.Context;
 import android.content.Intent;

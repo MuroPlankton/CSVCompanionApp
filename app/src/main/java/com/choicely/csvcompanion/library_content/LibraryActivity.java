@@ -1,4 +1,4 @@
-package com.choicely.csvcompanion.content;
+package com.choicely.csvcompanion.library_content;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -12,8 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.choicely.csvcompanion.LanguageData;
 import com.choicely.csvcompanion.R;
+import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.db.RealmHelper;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -33,6 +33,7 @@ public class LibraryActivity extends AppCompatActivity {
 
     private EditText libraryNameEditText;
     private EditText langCodeEditText;
+    private EditText langEditText;
 
 
     private final List<String> langList = new ArrayList<>();
@@ -44,17 +45,20 @@ public class LibraryActivity extends AppCompatActivity {
     private final DatabaseReference ref = database.getReference();
     private final DatabaseReference librariesRef = ref.child("libraries/Library1");
 
+    private final LanguageData languageData = new LanguageData();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_library_profile);
 
         languageCountTextView = findViewById(R.id.activity_library_profile_language_count);
-        langCodeEditText = findViewById(R.id.activity_library_profile_language_field);
+        langCodeEditText = findViewById(R.id.activity_library_profile_language_code_field);
+        langEditText = findViewById(R.id.activity_library_profile_language_field);
         libraryNameEditText = findViewById(R.id.activity_library_profile_name);
 
         contentRecyclerView = findViewById(R.id.activity_library_profile_recycler);
-        contentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            contentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new LibraryContentAdapter(this);
         contentRecyclerView.setAdapter(adapter);
 
@@ -82,20 +86,22 @@ public class LibraryActivity extends AppCompatActivity {
     public void onAddLanguageClicked(View view) {
         @NotNull
         String langCode = langCodeEditText.getText().toString();
+        String language = langEditText.getText().toString();
 
         Realm realm = RealmHelper.getInstance().getRealm();
 
         if (!checkIfLanguageAlreadyExists(langCode) && !langCode.isEmpty()) {
-            languageData.setLang(langCode);
-            realm.executeTransaction(realm1 -> realm.copyToRealmOrUpdate(languageData));
+            languageData.setLangKey(langCode);
+            languageData.setLangName(language);
+            realm.executeTransaction(realm1 -> realm.insertOrUpdate(languageData));
             Toast.makeText(this, "Language: " + '"' + langCode + '"' + " added", Toast.LENGTH_SHORT).show();
+            addLanguageToFireBase();
 
         } else if (!checkIfLanguageAlreadyExists(langCode) && langCode.isEmpty()) {
-            Toast.makeText(this, "Language field cannot be emtpy!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Language code field cannot be emtpy!", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Language: " + '"' + langCode + '"' + " already exists", Toast.LENGTH_SHORT).show();
         }
-        addLanguageToFireBase();
     }
 
     private Boolean checkIfLanguageAlreadyExists(String langCode) {
@@ -103,7 +109,7 @@ public class LibraryActivity extends AppCompatActivity {
         RealmResults<LanguageData> languages = realm.where(LanguageData.class).findAll();
 
         for (LanguageData language : languages) {
-            if (langCode.equals(language.getLang())) {
+            if (langCode.equals(language.getLangKey())) {
                 return true;
             }
         }
@@ -116,19 +122,18 @@ public class LibraryActivity extends AppCompatActivity {
         Realm realm = RealmHelper.getInstance().getRealm();
         RealmResults<LanguageData> languages = realm.where(LanguageData.class).findAll();
 
-        Map<String, Object> langMap = new HashMap<>();
+        Map<String, String> langMap = new HashMap<>();
 
         for (LanguageData language : languages) {
-            Log.d(TAG, "addLanguageToFireBase " + language.getLang());
-            langMap.put(UUID.randomUUID().toString(), language.getLang());
+            Log.d(TAG, "Amount of languages: " + languages.size());
+            langMap.put(language.getLangKey(), language.getLangName());
         }
+        Log.d(TAG, "addLanguageToFireBase: " + langMap);
         librariesRef.setValue(langMap);
     }
 
-    private final LanguageData languageData = new LanguageData();
 
     public void onNewTranslationClicked(View view) {
-//        Realm realm = RealmHelper.getInstance().getRealm();
-//        realm.executeTransaction(realm1 -> realm.deleteAll());
+
     }
 }

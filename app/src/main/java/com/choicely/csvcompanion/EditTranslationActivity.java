@@ -12,13 +12,13 @@ import android.widget.Spinner;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
-import com.choicely.csvcompanion.data.TranslationData;
+import com.choicely.csvcompanion.data.TextData;
 import com.choicely.csvcompanion.db.RealmHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import io.realm.Realm;
 
@@ -32,7 +32,7 @@ public class EditTranslationActivity extends AppCompatActivity {
     private Spinner langSpinner;
     private EditText translationValue;
     private LibraryData currentLibrary;
-    private TranslationData currentTranslation;
+    private TextData currentTranslation;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
@@ -65,13 +65,12 @@ public class EditTranslationActivity extends AppCompatActivity {
     }
 
     private void loadLanguages() {
-        Map<String, String> langMap = currentLibrary.getLanguages();
-        List<String> langList = new ArrayList<>();
-        for (String langValue : langMap.values()) {
-            langList.add(langValue);
+        List<LanguageData> languages = currentLibrary.getLanguages();
+        List<String> langNames = new ArrayList<>();
+        for (LanguageData language : languages) {
+            langNames.add(language.getLangName());
         }
-
-        ArrayAdapter<String> langAdapter = new ArrayAdapter<String>(this, R.layout.language_text_layout, R.id.language_text_view, langList);
+        ArrayAdapter<String> langAdapter = new ArrayAdapter<String>(this, R.layout.language_text_layout, R.id.language_text_view, langNames);
         langSpinner.setAdapter(langAdapter);
     }
 
@@ -90,9 +89,16 @@ public class EditTranslationActivity extends AppCompatActivity {
     private void createNewTranslation() {
 
     }
-
+    private void findCurrentText() {
+        List<TextData> texts = currentLibrary.getTexts();
+        for (TextData text : texts) {
+            if (text.getTextKey().equals(getIntent().getStringExtra(TEXT_KEY))) {
+                currentText = text;
+                break;
+            }
+        }
+    }
     private void loadTranslation() {
-        currentTranslation = currentLibrary.findTranslationByID(getIntent().getStringExtra(TRANSLATION_KEY));
         translationName.setText(currentTranslation.getTranslationName());
         transLationDesc.setText(currentTranslation.getTranslationDesc());
         androidKey.setText(currentTranslation.getAndroidKey());
