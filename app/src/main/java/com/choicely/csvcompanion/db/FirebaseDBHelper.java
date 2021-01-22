@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -14,6 +15,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Map;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 
 public class FirebaseDBHelper {
 
@@ -79,6 +81,24 @@ public class FirebaseDBHelper {
 //                        library.setLibraryID((Integer) libraryMap.get("id"));
                         library.setLibraryName((String) libraryMap.get("libraryName"));
                         Log.d(TAG, "libraryName: " + libraryMap.get("libraryName"));
+                    }
+
+                    Object languagesObject = libraryMap.get("languages");
+                    Map<String, Object> languagesMap = (Map<String, Object>) languagesObject;
+                    RealmList<LanguageData> languageDataRealmList = new RealmList<>();
+
+                    if(languagesMap != null){
+                        for(String k : languagesMap.keySet()){
+                            Object languageObject = languagesMap.get(k);
+                            languageDataRealmList.add((LanguageData) languageObject);
+                            
+//                            Map<String, Object> languageMap = (Map<String, Object>) languageObject;
+//
+//                            LanguageData language = new LanguageData();
+
+
+
+                        }
                     }
 
                     realm.copyToRealmOrUpdate(library);
