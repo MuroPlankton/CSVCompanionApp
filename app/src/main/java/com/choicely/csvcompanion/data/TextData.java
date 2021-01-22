@@ -1,27 +1,23 @@
 package com.choicely.csvcompanion.data;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import io.realm.RealmList;
+import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class TextData {
+public class TextData extends RealmObject {
 
     @PrimaryKey
-    private String translationKey;
+    private String textKey;
     private String translationName, translationDesc;
     private String androidKey, iosKey, webKey;
     private RealmList<SingleTranslationData> translations = new RealmList<>();
 
-    public String getTranslationKey() {
-        return translationKey;
+    public String getTextKey() {
+        return textKey;
     }
 
-    public void setTranslationKey(String translationKey) {
-        this.translationKey = translationKey;
+    public void setTextKey(String textKey) {
+        this.textKey = textKey;
     }
 
     public String getTranslationName() {

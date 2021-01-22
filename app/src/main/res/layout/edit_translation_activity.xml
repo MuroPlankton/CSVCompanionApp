@@ -39,8 +39,9 @@
 
     <EditText
         android:id="@+id/edit_translation_act_android_key"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
         android:layout_centerHorizontal="true"
         android:layout_above="@id/edit_translation_act_ios_key"
         android:hint="@string/android_key"
@@ -48,8 +49,9 @@
 
     <EditText
         android:id="@+id/edit_translation_act_ios_key"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
         android:layout_centerHorizontal="true"
         android:layout_above="@id/edit_translation_act_web_key"
         android:hint="@string/ios_key"
@@ -57,8 +59,9 @@
 
     <EditText
         android:id="@+id/edit_translation_act_web_key"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
         android:layout_centerHorizontal="true"
         android:layout_above="@id/edit_translation_act_language_dropdown"
         android:hint="@string/web_key"
@@ -75,8 +78,9 @@
 
     <EditText
         android:id="@+id/edit_translation_act_write_translation"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
         android:layout_centerHorizontal="true"
         android:layout_above="@id/edit_translation_act_submit_translation"
         android:layout_marginBottom="30dp"
