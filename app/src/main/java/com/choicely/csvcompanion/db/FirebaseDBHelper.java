@@ -24,26 +24,26 @@ public class FirebaseDBHelper {
 
     private onDatabaseUpdateListener listener;
 
-    private FirebaseDBHelper(){
+    private FirebaseDBHelper() {
     }
 
-    public static void init(){
-        if(instance != null){
+    public static void init() {
+        if (instance != null) {
             throw new IllegalStateException(TAG + " is already initialized!");
         }
 
         instance = new FirebaseDBHelper();
     }
 
-    public static FirebaseDBHelper getInstance(){
-        if(instance == null){
+    public static FirebaseDBHelper getInstance() {
+        if (instance == null) {
             throw new IllegalStateException(TAG + " is not initialized!");
         }
 
         return instance;
     }
 
-    public void listenForLibraryDataChange(){
+    public void listenForLibraryDataChange() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("libraries");
 
@@ -62,21 +62,21 @@ public class FirebaseDBHelper {
     }
 
     @SuppressWarnings("unchecked")
-    public void readFirebaseLibraries(Object libraries){
-        if(libraries instanceof Map){
+    public void readFirebaseLibraries(Object libraries) {
+        if (libraries instanceof Map) {
             final Map<String, Object> librariesMap = (Map<String, Object>) libraries;
 
             RealmHelper helper = RealmHelper.getInstance();
             Realm realm = helper.getRealm();
 
             realm.executeTransaction(realm1 -> {
-                for(String key : librariesMap.keySet()){
+                for (String key : librariesMap.keySet()) {
                     Object libraryObject = librariesMap.get(key);
                     final Map<String, Object> libraryMap = (Map<String, Object>) libraryObject;
 
                     LibraryData library = new LibraryData();
 
-                    if(libraryMap != null) {
+                    if (libraryMap != null) {
 //                        if(libraryMap.get("id") != null && libraryMap.get("libraryName") != null)
 //                        library.setLibraryID((Integer) libraryMap.get("id"));
                         library.setLibraryName((String) libraryMap.get("libraryName"));
@@ -85,26 +85,26 @@ public class FirebaseDBHelper {
 
                     Object languagesObject = libraryMap.get("languages");
                     Map<String, Object> languagesMap = (Map<String, Object>) languagesObject;
-                    RealmList<LanguageData> languageDataRealmList = new RealmList<>();
+//                    RealmList<LanguageData> languageDataRealmList = new RealmList<>();
 
-                    if(languagesMap != null){
-                        for(String k : languagesMap.keySet()){
-                            Log.d(TAG, "key: " + k);
-                            Object languageObject = languagesMap.get(k);
-                            Log.d(TAG, "languageobject: " + languageObject);
+                    if (languagesMap != null) {
+                        for (String k : languagesMap.keySet()) {
+                            Object languageValue = languagesMap.get(k);
+
                             LanguageData language = new LanguageData();
+                            language.setLangKey(k);
+                            language.setLangName((String) languageValue);
 
+                            realm.copyToRealmOrUpdate(language);
 
-//                            Map<String, Object> languageMap = (Map<String, Object>) languageObject;
-//
-//                            LanguageData language = new LanguageData();
+                            Log.d(TAG, "key: " + k);
+                            Log.d(TAG, "languageValue: " + languageValue);
                         }
                     }
-
                     realm.copyToRealmOrUpdate(library);
                 }
             });
-            if(listener != null) {
+            if (listener != null) {
                 listener.onDatabaseUpdate();
             }
         }
@@ -114,7 +114,7 @@ public class FirebaseDBHelper {
         this.listener = listener;
     }
 
-    public interface onDatabaseUpdateListener{
+    public interface onDatabaseUpdateListener {
         void onDatabaseUpdate();
     }
 }
