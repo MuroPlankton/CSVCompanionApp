@@ -13,12 +13,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.choicely.csvcompanion.data.LibraryData;
-import com.choicely.csvcompanion.data.TranslationData;
+import com.choicely.csvcompanion.data.TextData;
 import com.choicely.csvcompanion.db.RealmHelper;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import io.realm.Realm;
 
@@ -32,7 +30,7 @@ public class EditTranslationActivity extends AppCompatActivity {
     private Spinner langSpinner;
     private EditText translationValue;
     private LibraryData currentLibrary;
-    private TranslationData currentTranslation;
+    private TextData currentTranslation;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
@@ -65,12 +63,7 @@ public class EditTranslationActivity extends AppCompatActivity {
     }
 
     private void loadLanguages() {
-        Map<String, String> langMap = currentLibrary.getLanguages();
-        List<String> langList = new ArrayList<>();
-        for (String langValue : langMap.values()) {
-            langList.add(langValue);
-        }
-
+        List<String> langList = currentLibrary.getLangValues();
         ArrayAdapter<String> langAdapter = new ArrayAdapter<String>(this, R.layout.language_text_layout, R.id.language_text_view, langList);
         langSpinner.setAdapter(langAdapter);
     }
