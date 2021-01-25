@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 
 public class LibraryActivity extends AppCompatActivity {
@@ -80,22 +81,22 @@ public class LibraryActivity extends AppCompatActivity {
             Log.d(TAG, "onCreate: ############################################################################### ladattu kirjasto");
             loadLibrary();
         }
+        updateContent();
     }
 
     private void newLibrary() {
-        DatabaseReference createdLibrary = ref.child("libraries/" + UUID.randomUUID() + "/languages");
         libraryID = String.valueOf(UUID.randomUUID());
         Log.d(TAG, "new Library created with the ID:" + libraryID);
     }
 
     private void loadLibrary() {
         Realm realm = RealmHelper.getInstance().getRealm();
+
         LibraryData library = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
-        Log.d(TAG, "loadPicture: library loaded with id:" + libraryID);
+
+        Log.d(TAG, "loadLibrary: library loaded with id:" + libraryID);
         Log.d(TAG, "loadLibrary: library name: " + library.getLibraryName());
         libraryNameEditText.setText(library.getLibraryName());
-        updateContent();
-
     }
 
     @Override
@@ -118,16 +119,20 @@ public class LibraryActivity extends AppCompatActivity {
 
         Realm realm = RealmHelper.getInstance().getRealm();
         LibraryData library = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
-        languageCountTextView.setText(library.getLanguages().size());
-        try {
-            List<TextData> textList = library.getTexts();
-            for (TextData text : textList) {
-                adapter.addValues(UUID.randomUUID().toString(), text.getTranslationName(), text.getTranslationDesc());
-            }
-            adapter.notifyDataSetChanged();
-        } catch (NullPointerException e) {
-            Log.d(TAG, e.getMessage());
+
+        String count = String.valueOf(library.getLanguages().size());
+        languageCountTextView.setText("Amount of languages: " + count);
+
+        RealmList<TextData> textList = library.getTexts();
+        Log.d(TAG, "updateContent: wEHHFFFFFFFFHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH      " + textList.size());
+
+        adapter.setLibrary(library);
+        for (TextData text : textList) {
+            Log.d(TAG, "updateContent: dlsahfvhfdvsnhhbdhsvn");
+            Log.d(TAG, "updateContent: " + text.getTranslationName() + " " + text.getTranslationDesc());
+            adapter.add(text.getTextKey(), text.getTranslationName(), text.getTranslationDesc());
         }
+        adapter.notifyDataSetChanged();
     }
 
     public void onAddLanguageClicked(View view) {
