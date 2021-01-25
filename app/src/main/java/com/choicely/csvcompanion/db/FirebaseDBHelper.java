@@ -18,6 +18,7 @@ import java.util.Map;
 
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmResults;
 
 public class FirebaseDBHelper {
 
@@ -80,12 +81,13 @@ public class FirebaseDBHelper {
 
                     if (libraryMap != null) {
 //                        if(libraryMap.get("id") != null && libraryMap.get("libraryName") != null)
-//                        library.setLibraryID((Integer) libraryMap.get("id"));
+                        library.setLibraryID(key1);
                         library.setLibraryName((String) libraryMap.get("libraryName"));
                     }
 
                     Object languagesObject = libraryMap.get("languages");
                     Map<String, Object> languagesMap = (Map<String, Object>) languagesObject;
+                    RealmList<LanguageData> languageDataRealmList = new RealmList<>();
 
                     if (languagesMap != null) {
                         for (String key2 : languagesMap.keySet()) {
@@ -94,8 +96,10 @@ public class FirebaseDBHelper {
                             LanguageData language = new LanguageData();
                             language.setLangKey(key2);
                             language.setLangName((String) languageValue);
+                            languageDataRealmList.add(language);
 
-                            realm.copyToRealmOrUpdate(language);
+                            //I will set the list of these to libraryData
+                            library.setLanguages(languageDataRealmList);
 
                             Log.d(TAG, "key2: " + key2);
                             Log.d(TAG, "languageValue: " + languageValue);
@@ -140,7 +144,6 @@ public class FirebaseDBHelper {
                             }
                         }
                     }
-
                     realm.copyToRealmOrUpdate(library);
                 }
             });
