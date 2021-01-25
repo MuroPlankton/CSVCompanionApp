@@ -2,6 +2,7 @@ package com.choicely.csvcompanion.library_content;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import java.util.List;
 
 public class LibraryContentAdapter extends RecyclerView.Adapter<LibraryContentAdapter.LibraryContentViewHolder> {
 
+    private static final String TAG = "ContentAdapter";
     private final Context context;
     private LibraryData libraryData;
 
@@ -42,12 +44,13 @@ public class LibraryContentAdapter extends RecyclerView.Adapter<LibraryContentAd
     public void onBindViewHolder(@NonNull LibraryContentViewHolder holder, int position) {
         holder.libraryID = libraryData.getLibraryID();
         holder.textID = textIDList.get(position);
-
         holder.desc.setText(textDescList.get(position));
         holder.textName.setText(textNameList.get(position));
+
+        Log.d(TAG, "onBindViewHolder: " + position);
     }
 
-    public void addValues(String id, String name, String desc){
+    public void add(String id, String name, String desc){
         textIDList.add(id);
         textNameList.add(name);
         textDescList.add(desc);

@@ -40,8 +40,6 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
         holder.libraryID = library.getLibraryID();
         holder.libraryName.setText(library.getLibraryName());
         Log.d(TAG, "libraryName: " + library.getLibraryName());
-
-        holder.libraryLangs.setText(String.format("List of languages: \n%s", library.getLanguages().toString()));
     }
 
     public void add(LibraryData library){ list.add(library); }
@@ -55,14 +53,12 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
 
         String libraryID;
         public TextView libraryName;
-        public TextView libraryLangs;
 
         public LibraryViewHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setOnClickListener(onRowClick);
 
             libraryName = itemView.findViewById(R.id.library_list_row_library_name);
-            libraryLangs = itemView.findViewById(R.id.library_list_row_library_lang_test);
         }
         private final View.OnClickListener onRowClick = view -> {
             Context ctx = libraryName.getContext();

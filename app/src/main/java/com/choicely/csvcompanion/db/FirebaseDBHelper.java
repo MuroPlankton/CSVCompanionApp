@@ -111,13 +111,13 @@ public class FirebaseDBHelper {
                     Map<String, Object> textsMap = (Map<String, Object>) textsObject;
                     RealmList<TextData> textDataRealmList = new RealmList<>();
 
-                    if(textsMap != null){
+                    if (textsMap != null) {
                         for (String key3 : textsMap.keySet()) {
                             Object textObject = textsMap.get(key3);
                             Log.d(TAG, "textObject: " + textObject);
                             Map<String, Object> textMap = (Map<String, Object>) textObject;
 
-                            if(textMap != null) {
+                            if (textMap != null) {
                                 TextData text = new TextData();
 
                                 text.setTextKey(key3);
@@ -131,7 +131,7 @@ public class FirebaseDBHelper {
                                 Map<String, Object> translationsMap = (Map<String, Object>) translationsObject;
                                 RealmList<SingleTranslationData> translationDataRealmList = new RealmList<>();
 
-                                if(translationsMap != null) {
+                                if (translationsMap != null) {
                                     for (String key4 : translationsMap.keySet()) {
                                         Object translationValue = translationsMap.get(key4);
 

@@ -18,9 +18,7 @@ import com.choicely.csvcompanion.IntentKeys;
 import com.choicely.csvcompanion.R;
 import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
-import com.choicely.csvcompanion.data.SingleTranslationData;
 import com.choicely.csvcompanion.data.TextData;
-import com.choicely.csvcompanion.db.FirebaseDBHelper;
 import com.choicely.csvcompanion.db.RealmHelper;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -35,7 +33,6 @@ import java.util.UUID;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
-import io.realm.Sort;
 
 public class LibraryActivity extends AppCompatActivity {
     private static final String TAG = "LibraryActivity";
@@ -63,7 +60,7 @@ public class LibraryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_library_profile);
+        setContentView(R.layout.activity_library_content);
 
         languageCountTextView = findViewById(R.id.activity_library_profile_language_count);
         langCodeEditText = findViewById(R.id.activity_library_profile_language_code_field);
@@ -84,28 +81,29 @@ public class LibraryActivity extends AppCompatActivity {
             Log.d(TAG, "onCreate: ############################################################################### ladattu kirjasto");
             loadLibrary();
         }
-        startFireBaseListening();
+        updateContent();
     }
 
     private void newLibrary() {
-        DatabaseReference createdLibrary = ref.child("libraries/" + UUID.randomUUID() + "/languages");
         libraryID = String.valueOf(UUID.randomUUID());
         Log.d(TAG, "new Library created with the ID:" + libraryID);
     }
 
     private void loadLibrary() {
         Realm realm = RealmHelper.getInstance().getRealm();
+
         LibraryData library = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
-        Log.d(TAG, "loadPicture: library loaded with id:" + libraryID);
+
+        Log.d(TAG, "loadLibrary: library loaded with id:" + libraryID);
         Log.d(TAG, "loadLibrary: library name: " + library.getLibraryName());
         libraryNameEditText.setText(library.getLibraryName());
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//        saveLibrary();
-//    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        saveLibrary();
+    }
 
     private void saveLibrary() {
         DatabaseReference libRef = ref.child("libraries/" + libraryID);
@@ -116,29 +114,25 @@ public class LibraryActivity extends AppCompatActivity {
         Log.d(TAG, "saveLibrary: library saved with the ID:" + libraryID);
     }
 
-    private void startFireBaseListening() {
-        FirebaseDBHelper helper = FirebaseDBHelper.getInstance();
-        helper.setListener(this::updateContent);
-        helper.listenForLibraryDataChange();
-    }
-
     private void updateContent() {
         adapter.clear();
 
         Realm realm = RealmHelper.getInstance().getRealm();
         LibraryData library = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
 
+        String count = String.valueOf(library.getLanguages().size());
+        languageCountTextView.setText("Amount of languages: " + count);
+
         try {
             List<TextData> textList = library.getTexts();
             adapter.setLibrary(library);
             for (TextData text : textList) {
-                adapter.addValues(UUID.randomUUID().toString(), text.getTranslationName(), text.getTranslationDesc());
+                adapter.add(text.getTextKey(), text.getTranslationName(), text.getTranslationDesc());
             }
             adapter.notifyDataSetChanged();
         } catch (NullPointerException e) {
             Log.d(TAG, e.getMessage());
         }
-
     }
 
     public void onAddLanguageClicked(View view) {
@@ -146,7 +140,6 @@ public class LibraryActivity extends AppCompatActivity {
         @NotNull
         String langCode = langCodeEditText.getText().toString();
         String language = langEditText.getText().toString();
-        libraryName = libraryNameEditText.getText().toString();
 
         if (!checkIfLanguageAlreadyExists(langCode) && !langCode.isEmpty()) {
 
@@ -181,12 +174,10 @@ public class LibraryActivity extends AppCompatActivity {
 
 
     public void onNewTranslationClicked(View view) {
+        saveLibrary();
         Intent intent = new Intent(LibraryActivity.this, EditTranslationActivity.class);
         intent.putExtra(IntentKeys.LIBRARY_ID, libraryID);
 //        intent.putExtra(IntentKeys.TRANSLATION_ID, "428375b6-10f1-463d-b7ef-9001ab9593ec");
         startActivity(intent);
-        saveLibrary();
-//        Realm realm = RealmHelper.getInstance().getRealm();
-//        realm.executeTransaction(realm1 -> realm.deleteAll());
     }
 }
