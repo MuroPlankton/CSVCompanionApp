@@ -147,7 +147,6 @@ public class FirebaseDBHelper {
                                     }
                                 }
                                 textDataRealmList.add(text);
-                                Log.d(TAG, "readFirebaseLibraries: text data size: " + textDataRealmList.size());
                                 library.setTexts(textDataRealmList);
                             }
                         }
