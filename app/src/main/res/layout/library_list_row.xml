@@ -23,6 +23,18 @@
         tools:text="library name"
         />
 
+    <TextView
+        android:id="@+id/library_list_row_library_lang_test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="8dp"
+        android:textSize="24sp"
+        android:textColor="@color/black"
+        android:background="@color/light_yellow"
+        tools:text="library langs"
+        />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
