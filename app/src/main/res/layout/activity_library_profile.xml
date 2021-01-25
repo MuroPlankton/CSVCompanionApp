@@ -12,8 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:maxLines="20"
         android:textSize="32sp"
         tools:text="Library name"
+        android:hint="Name of the library"
         />
 
     <androidx.recyclerview.widget.RecyclerView
