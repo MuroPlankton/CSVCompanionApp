@@ -82,7 +82,7 @@ public class FirebaseDBHelper {
                     if (libraryMap != null) {
 //                        if(libraryMap.get("id") != null && libraryMap.get("libraryName") != null)
                         library.setLibraryID(key1);
-                        library.setLibraryName((String) libraryMap.get("libraryName"));
+                        library.setLibraryName((String) libraryMap.get("library_name"));
                     }
 
                     Object languagesObject = libraryMap.get("languages");

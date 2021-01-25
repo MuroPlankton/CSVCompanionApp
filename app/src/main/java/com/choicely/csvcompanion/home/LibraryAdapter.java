@@ -11,10 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.choicely.csvcompanion.EditTranslationActivity;
 import com.choicely.csvcompanion.IntentKeys;
-import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.R;
+import com.choicely.csvcompanion.data.LibraryData;
+import com.choicely.csvcompanion.library_content.LibraryActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +63,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
         }
         private final View.OnClickListener onRowClick = view -> {
             Context ctx = libraryName.getContext();
-            Intent intent = new Intent(ctx, EditTranslationActivity.class);
+            Intent intent = new Intent(ctx, LibraryActivity.class);
             intent.putExtra(IntentKeys.LIBRARY_ID, libraryID);
             ctx.startActivity(intent);
         };

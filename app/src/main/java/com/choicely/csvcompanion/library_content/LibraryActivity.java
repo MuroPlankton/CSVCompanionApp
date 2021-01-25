@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.choicely.csvcompanion.EditTranslationActivity;
 import com.choicely.csvcompanion.IntentKeys;
 import com.choicely.csvcompanion.R;
 import com.choicely.csvcompanion.data.LanguageData;
@@ -97,15 +96,14 @@ public class LibraryActivity extends AppCompatActivity {
         LibraryData library = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
         Log.d(TAG, "loadPicture: library loaded with id:" + libraryID);
         Log.d(TAG, "loadLibrary: library name: " + library.getLibraryName());
-
         libraryNameEditText.setText(library.getLibraryName());
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        saveLibrary();
-    }
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//        saveLibrary();
+//    }
 
     private void saveLibrary() {
         DatabaseReference libRef = ref.child("libraries/" + libraryID);
@@ -182,8 +180,8 @@ public class LibraryActivity extends AppCompatActivity {
     public void onNewTranslationClicked(View view) {
 //        Intent intent = new Intent(LibraryActivity.this, EditTranslationActivity.class);
 //        startActivity(intent);
-//        saveLibrary();
-        Realm realm = RealmHelper.getInstance().getRealm();
-        realm.executeTransaction(realm1 -> realm.deleteAll());
+        saveLibrary();
+//        Realm realm = RealmHelper.getInstance().getRealm();
+//        realm.executeTransaction(realm1 -> realm.deleteAll());
     }
 }
