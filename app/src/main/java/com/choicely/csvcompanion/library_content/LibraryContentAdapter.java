@@ -13,14 +13,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.choicely.csvcompanion.EditTranslationActivity;
 import com.choicely.csvcompanion.IntentKeys;
 import com.choicely.csvcompanion.R;
+import com.choicely.csvcompanion.data.LibraryData;
+import com.choicely.csvcompanion.data.TextData;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LibraryContentAdapter extends RecyclerView.Adapter<LibraryContentAdapter.LibraryContentViewHolder> {
 
-    private final List<String> translationList = new ArrayList<>();
     private final Context context;
+    private final List<LibraryData> libraryList = new ArrayList<>();
+
+    List<String> textNameList = new ArrayList<>();
+    List<String> textDescList = new ArrayList<>();
+    List<String> textIDList = new ArrayList<>();
 
     public LibraryContentAdapter(Context context) {
         this.context = context;
@@ -34,42 +40,52 @@ public class LibraryContentAdapter extends RecyclerView.Adapter<LibraryContentAd
 
     @Override
     public void onBindViewHolder(@NonNull LibraryContentViewHolder holder, int position) {
+        LibraryData library = libraryList.get(position);
 
-        String string = translationList.get(position);
+        holder.libraryID = library.getLibraryID();
+        holder.textID = textIDList.get(position);
 
-        holder.translation.setText(string);
+        holder.desc.setText(textDescList.get(position));
+        holder.textName.setText(textNameList.get(position));
+    }
+
+    public void addValues(String id, String name, String desc){
+        textIDList.add(id);
+        textNameList.add(name);
+        textDescList.add(desc);
     }
 
     @Override
     public int getItemCount() {
-        return translationList.size();
-    }
-
-    public void add(String translation) {
-        translationList.add(translation);
+        return textIDList.size();
     }
 
     public void clear() {
-        translationList.clear();
+        textDescList.clear();
+        textIDList.clear();
+        textNameList.clear();
     }
 
     public static class LibraryContentViewHolder extends RecyclerView.ViewHolder {
 
-        long translationID;
-        public TextView translation;
+        String textID;
+        String libraryID;
+        public TextView desc;
+        public TextView textName;
 
         public LibraryContentViewHolder(@NonNull View itemView) {
             super(itemView);
-//            itemView.setOnClickListener(onRowClick);
-
-            translation = itemView.findViewById(R.id.content_row);
+            itemView.setOnClickListener(onRowClick);
+            textName = itemView.findViewById(R.id.content_row_translation_name);
+            desc = itemView.findViewById(R.id.content_row_translation_description);
         }
 
         private final View.OnClickListener onRowClick = view -> {
 
-            Context ctx = translation.getContext();
+            Context ctx = desc.getContext();
             Intent intent = new Intent(ctx, EditTranslationActivity.class);
-            intent.putExtra(IntentKeys.TRANSLATION_ID, translationID);
+            intent.putExtra(IntentKeys.LIBRARY_ID, libraryID);
+            intent.putExtra(IntentKeys.TRANSLATION_ID, textID);
             ctx.startActivity(intent);
         };
     }
