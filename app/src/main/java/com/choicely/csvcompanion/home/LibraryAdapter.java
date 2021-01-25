@@ -40,8 +40,6 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
         holder.libraryID = library.getLibraryID();
         holder.libraryName.setText(library.getLibraryName());
         Log.d(TAG, "libraryName: " + library.getLibraryName());
-
-        holder.libraryLangs.setText(String.format("List of languages: \n%s", library.getLanguages().toString()));
     }
 
     public void add(LibraryData library){ list.add(library); }
