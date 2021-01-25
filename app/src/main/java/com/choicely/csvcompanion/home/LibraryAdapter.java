@@ -30,7 +30,6 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
     @NonNull
     @Override
     public LibraryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d(TAG, "Adapter create");
         return new LibraryViewHolder(LayoutInflater.from(context).inflate(R.layout.library_list_row, parent, false));
     }
 

@@ -115,10 +115,10 @@ public class FirebaseDBHelper {
 
                             if(textMap != null) {
                                 Object translationsObject = textMap.get("translations");
-                                Map<String, Object> translationMap = (Map<String, Object>) translationsObject;
+                                Map<String, Object> translationsMap = (Map<String, Object>) translationsObject;
 
-                                for (String key4 : translationMap.keySet()) {
-                                    Object translationValue = translationMap.get(key4);
+                                for (String key4 : translationsMap.keySet()) {
+                                    Object translationValue = translationsMap.get(key4);
 
                                     SingleTranslationData translation = new SingleTranslationData();
                                     translation.setLangKey(key4);
