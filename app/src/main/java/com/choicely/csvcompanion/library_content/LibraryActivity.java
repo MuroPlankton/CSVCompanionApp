@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
@@ -43,17 +44,20 @@ public class LibraryActivity extends AppCompatActivity {
     private EditText langEditText;
 
     private final List<String> translationList = new ArrayList<>();
+//    private List<LanguageData> languageList = new ArrayList<>();
+
     private TextView languageCountTextView;
     private RecyclerView contentRecyclerView;
     private LibraryContentAdapter adapter;
 
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final DatabaseReference ref = database.getReference();
-    private final DatabaseReference librariesRef = ref.child("libraries/Library1");
 
     private final LanguageData languageData = new LanguageData();
 
     private String libraryID;
+    private String libraryName;
+    private List<LanguageData> languageList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,31 +77,28 @@ public class LibraryActivity extends AppCompatActivity {
         libraryID = getIntent().getStringExtra(IntentKeys.LIBRARY_ID);
 
         if (libraryID == null) {
+            Log.d(TAG, "onCreate: @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   uusi kirjasto");
             newLibrary();
         } else {
+            Log.d(TAG, "onCreate: ############################################################################### ladattu kirjasto");
             loadLibrary();
         }
         startFireBaseListening();
     }
 
     private void newLibrary() {
-//        Realm realm = RealmHelper.getInstance().getRealm();
-//        LibraryData library = realm.where(LibraryData.class).sort("id", Sort.DESCENDING).findFirst();
-//        if(library == null){
+        DatabaseReference createdLibrary = ref.child("libraries/" + UUID.randomUUID() + "/languages");
         libraryID = String.valueOf(UUID.randomUUID());
         Log.d(TAG, "new Library created with the ID:" + libraryID);
-//        }
-
-
     }
 
     private void loadLibrary() {
         Realm realm = RealmHelper.getInstance().getRealm();
-        LibraryData library = realm.where(LibraryData.class).equalTo("id", libraryID).findFirst();
+        LibraryData library = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
         Log.d(TAG, "loadPicture: library loaded with id:" + libraryID);
+        Log.d(TAG, "loadLibrary: library name: " + library.getLibraryName());
 
         libraryNameEditText.setText(library.getLibraryName());
-
     }
 
     @Override
@@ -107,25 +108,16 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     private void saveLibrary() {
-        Realm realm = RealmHelper.getInstance().getRealm();
-        LibraryData libraryData = new LibraryData();
+        DatabaseReference libRef = ref.child("libraries/" + libraryID);
+        Map<String, Object> library = new HashMap<>();
+        library.put("library_name", libraryNameEditText.getText().toString());
+        libRef.updateChildren(library);
 
         Log.d(TAG, "saveLibrary: library saved with the ID:" + libraryID);
-
-        libraryData.setLibraryID(libraryID);
-        libraryData.setLibraryName(libraryNameEditText.getText().toString());
-
-        realm.executeTransaction(realm1 -> {
-            realm.insertOrUpdate(libraryData);
-        });
-        addLibraryToFireBase();
-
     }
 
-    private void addLibraryToFireBase(){
-        DatabaseReference librariesRef = ref.child("libraries");
-        String name = libraryNameEditText.getText().toString();
-        librariesRef.push().setValue(name);
+    private void addLibraryToFireBase() {
+
     }
 
     private void startFireBaseListening() {
@@ -149,18 +141,16 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     public void onAddLanguageClicked(View view) {
+
         @NotNull
         String langCode = langCodeEditText.getText().toString();
         String language = langEditText.getText().toString();
-
-        Realm realm = RealmHelper.getInstance().getRealm();
+        libraryName = libraryNameEditText.getText().toString();
 
         if (!checkIfLanguageAlreadyExists(langCode) && !langCode.isEmpty()) {
-            languageData.setLangKey(langCode);
-            languageData.setLangName(language);
-            realm.executeTransaction(realm1 -> realm.insertOrUpdate(languageData));
+
+            addLanguageToFireBase(langCode, language);
             Toast.makeText(this, "Language: " + '"' + langCode + '"' + " added", Toast.LENGTH_SHORT).show();
-            addLanguageToFireBase();
 
         } else if (!checkIfLanguageAlreadyExists(langCode) && langCode.isEmpty()) {
             Toast.makeText(this, "Language code field cannot be empty!", Toast.LENGTH_SHORT).show();
@@ -181,25 +171,19 @@ public class LibraryActivity extends AppCompatActivity {
         return false;
     }
 
-    private void addLanguageToFireBase() {
-        DatabaseReference librariesRef = ref.child("libraries/Library1/languages");
-
-        Realm realm = RealmHelper.getInstance().getRealm();
-        RealmResults<LanguageData> languages = realm.where(LanguageData.class).findAll();
-
-        Map<String, String> langMap = new HashMap<>();
-
-        for (LanguageData language : languages) {
-            Log.d(TAG, "Amount of languages: " + languages.size());
-            langMap.put(language.getLangKey(), language.getLangName());
-        }
-        Log.d(TAG, "addLanguageToFireBase: " + langMap);
-        librariesRef.setValue(langMap);
+    private void addLanguageToFireBase(String langCode, String langName) {
+        DatabaseReference librariesRef = ref.child("libraries/"+ libraryID+"/languages");
+        Map<String, Object> langMap = new HashMap<>();
+        langMap.put(langCode, langName);
+        librariesRef.updateChildren(langMap);
     }
 
 
     public void onNewTranslationClicked(View view) {
-        Intent intent = new Intent(LibraryActivity.this, EditTranslationActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(LibraryActivity.this, EditTranslationActivity.class);
+//        startActivity(intent);
+//        saveLibrary();
+        Realm realm = RealmHelper.getInstance().getRealm();
+        realm.executeTransaction(realm1 -> realm.deleteAll());
     }
 }
