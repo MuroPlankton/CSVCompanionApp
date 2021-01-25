@@ -109,6 +109,7 @@ public class FirebaseDBHelper {
                     Object textsObject = libraryMap.get("texts");
                     Log.d(TAG, "textsObject: " + textsObject);
                     Map<String, Object> textsMap = (Map<String, Object>) textsObject;
+                    RealmList<TextData> textDataRealmList = new RealmList<>();
 
                     //TODO: check properly if all this works
                     if(textsMap != null){
@@ -132,15 +133,18 @@ public class FirebaseDBHelper {
                                     Log.d(TAG, "translationValue: " + translationValue);
                                 }
 
-                                TextData textData = new TextData();
+                                TextData text = new TextData();
 
                                 //TODO: text key and possibly the translations list
 //                                textData.setTextKey();
-                                textData.setTranslationName((String) textMap.get("name"));
-                                textData.setTranslationDesc((String) textMap.get("description"));
-                                textData.setAndroidKey((String) textMap.get("android_key"));
-                                textData.setIosKey((String) textMap.get("ios_key"));
-                                textData.setWebKey((String) textMap.get("web_key"));
+                                text.setTranslationName((String) textMap.get("name"));
+                                text.setTranslationDesc((String) textMap.get("description"));
+                                text.setAndroidKey((String) textMap.get("android_key"));
+                                text.setIosKey((String) textMap.get("ios_key"));
+                                text.setWebKey((String) textMap.get("web_key"));
+
+                                textDataRealmList.add(text);
+                                library.setTexts(textDataRealmList);
                             }
                         }
                     }
