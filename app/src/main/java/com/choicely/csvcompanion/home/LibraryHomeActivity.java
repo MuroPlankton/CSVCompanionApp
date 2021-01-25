@@ -44,7 +44,12 @@ public class LibraryHomeActivity extends AppCompatActivity {
         libraryRecycler.setAdapter(adapter);
 
         startFireBaseListening();
-//        updateContent();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startFireBaseListening();
     }
 
     private void startFireBaseListening() {
