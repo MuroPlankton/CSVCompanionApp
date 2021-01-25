@@ -111,7 +111,6 @@ public class FirebaseDBHelper {
                     Map<String, Object> textsMap = (Map<String, Object>) textsObject;
                     RealmList<TextData> textDataRealmList = new RealmList<>();
 
-                    //TODO: check properly if all this works
                     if(textsMap != null){
                         for (String key3 : textsMap.keySet()) {
                             Object textObject = textsMap.get(key3);
@@ -119,32 +118,37 @@ public class FirebaseDBHelper {
                             Map<String, Object> textMap = (Map<String, Object>) textObject;
 
                             if(textMap != null) {
-                                Object translationsObject = textMap.get("translations");
-                                Map<String, Object> translationsMap = (Map<String, Object>) translationsObject;
-
-                                for (String key4 : translationsMap.keySet()) {
-                                    Object translationValue = translationsMap.get(key4);
-
-                                    SingleTranslationData translation = new SingleTranslationData();
-                                    translation.setLangKey(key4);
-                                    translation.setTranslation((String) translationValue);
-
-                                    Log.d(TAG, "key4: " + key4);
-                                    Log.d(TAG, "translationValue: " + translationValue);
-                                }
-
                                 TextData text = new TextData();
 
-                                //TODO: text key and possibly the translations list
-//                                textData.setTextKey();
+                                text.setTextKey(key3);
                                 text.setTranslationName((String) textMap.get("name"));
                                 text.setTranslationDesc((String) textMap.get("description"));
                                 text.setAndroidKey((String) textMap.get("android_key"));
                                 text.setIosKey((String) textMap.get("ios_key"));
                                 text.setWebKey((String) textMap.get("web_key"));
 
-                                textDataRealmList.add(text);
-                                library.setTexts(textDataRealmList);
+                                Object translationsObject = textMap.get("translations");
+                                Map<String, Object> translationsMap = (Map<String, Object>) translationsObject;
+                                RealmList<SingleTranslationData> translationDataRealmList = new RealmList<>();
+
+                                if(translationsMap != null) {
+                                    for (String key4 : translationsMap.keySet()) {
+                                        Object translationValue = translationsMap.get(key4);
+
+                                        SingleTranslationData translation = new SingleTranslationData();
+                                        translation.setLangKey(key4);
+                                        translation.setTranslation((String) translationValue);
+
+                                        translationDataRealmList.add(translation);
+                                        text.setTranslations(translationDataRealmList);
+
+                                        Log.d(TAG, "key4: " + key4);
+                                        Log.d(TAG, "translationValue: " + translationValue);
+                                    }
+
+                                    textDataRealmList.add(text);
+                                    library.setTexts(textDataRealmList);
+                                }
                             }
                         }
                     }
