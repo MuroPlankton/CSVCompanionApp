@@ -130,6 +130,7 @@ public class LibraryActivity extends AppCompatActivity {
 
         try {
             List<TextData> textList = library.getTexts();
+            adapter.setLibrary(library);
             for (TextData text : textList) {
                 adapter.addValues(UUID.randomUUID().toString(), text.getTranslationName(), text.getTranslationDesc());
             }
@@ -182,6 +183,7 @@ public class LibraryActivity extends AppCompatActivity {
     public void onNewTranslationClicked(View view) {
         Intent intent = new Intent(LibraryActivity.this, EditTranslationActivity.class);
         intent.putExtra(IntentKeys.LIBRARY_ID, libraryID);
+//        intent.putExtra(IntentKeys.TRANSLATION_ID, "428375b6-10f1-463d-b7ef-9001ab9593ec");
         startActivity(intent);
         saveLibrary();
 //        Realm realm = RealmHelper.getInstance().getRealm();

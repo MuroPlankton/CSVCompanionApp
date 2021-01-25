@@ -22,7 +22,7 @@ import java.util.List;
 public class LibraryContentAdapter extends RecyclerView.Adapter<LibraryContentAdapter.LibraryContentViewHolder> {
 
     private final Context context;
-    private final List<LibraryData> libraryList = new ArrayList<>();
+    private LibraryData libraryData;
 
     List<String> textNameList = new ArrayList<>();
     List<String> textDescList = new ArrayList<>();
@@ -40,9 +40,7 @@ public class LibraryContentAdapter extends RecyclerView.Adapter<LibraryContentAd
 
     @Override
     public void onBindViewHolder(@NonNull LibraryContentViewHolder holder, int position) {
-        LibraryData library = libraryList.get(position);
-
-        holder.libraryID = library.getLibraryID();
+        holder.libraryID = libraryData.getLibraryID();
         holder.textID = textIDList.get(position);
 
         holder.desc.setText(textDescList.get(position));
@@ -53,6 +51,10 @@ public class LibraryContentAdapter extends RecyclerView.Adapter<LibraryContentAd
         textIDList.add(id);
         textNameList.add(name);
         textDescList.add(desc);
+    }
+
+    public void setLibrary(LibraryData library) {
+        this.libraryData = library;
     }
 
     @Override

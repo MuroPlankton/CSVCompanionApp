@@ -145,10 +145,9 @@ public class FirebaseDBHelper {
                                         Log.d(TAG, "key4: " + key4);
                                         Log.d(TAG, "translationValue: " + translationValue);
                                     }
-
-                                    textDataRealmList.add(text);
-                                    library.setTexts(textDataRealmList);
                                 }
+                                textDataRealmList.add(text);
+                                library.setTexts(textDataRealmList);
                             }
                         }
                     }

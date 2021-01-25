@@ -193,9 +193,8 @@ public class EditTranslationActivity extends AppCompatActivity {
 
     private void saveCurrentTranslationTextToFirebase() {
         FirebaseDatabase.getInstance().getReference()
-                .child("libraries").child(CurrentLibraryKey)
-                .child("texts").child(currentTextKey)
-                .child(langKeys.get(langSpinner.getSelectedItemPosition()))
+                .child("libraries/" + CurrentLibraryKey + "/texts/" + currentTextKey
+                        + langKeys.get(langSpinner.getSelectedItemPosition()))
                 .setValue(translationValue.getText().toString());
     }
 
