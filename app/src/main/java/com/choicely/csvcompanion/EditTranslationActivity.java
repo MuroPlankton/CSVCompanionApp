@@ -18,29 +18,26 @@ import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.data.SingleTranslationData;
 import com.choicely.csvcompanion.data.TextData;
-import com.choicely.csvcompanion.db.FirebaseDBHelper;
 import com.choicely.csvcompanion.db.RealmHelper;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.w3c.dom.Text;
-
-import java.security.cert.CertificateParsingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
 import io.realm.Realm;
 
+import static com.choicely.csvcompanion.IntentKeys.LIBRARY_ID;
+import static com.choicely.csvcompanion.IntentKeys.TRANSLATION_ID;
+
 public class EditTranslationActivity extends AppCompatActivity {
 
-    private static final String TEXT_KEY = "translation_key";
-    private static final String LIBRARY_KEYC = "library_key";
-    private String CurrentLibraryKey = getIntent().getStringExtra(LIBRARY_KEYC);
-    private String currentTextKey = getIntent().getStringExtra(TEXT_KEY);
+    private String CurrentLibraryKey;
+    private String currentTextKey;
     private Button anotherTranslationButton;
     private EditText translationName, transLationDesc;
     private EditText androidKey, iosKey, webKey;
@@ -56,12 +53,14 @@ public class EditTranslationActivity extends AppCompatActivity {
 
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_translation_activity);
 
+        CurrentLibraryKey = getIntent().getStringExtra(LIBRARY_ID);
+        currentTextKey = getIntent().getStringExtra(TRANSLATION_ID);
+
         anotherTranslationButton = findViewById(R.id.edit_translation_act_another_translation_btn);
-        anotherTranslationButton.setEnabled(false);
         translationName = findViewById(R.id.edit_translation_act_translation_name);
         transLationDesc = findViewById(R.id.edit_translation_act_translation_desc);
         androidKey = findViewById(R.id.edit_translation_act_android_key);
@@ -71,21 +70,24 @@ public class EditTranslationActivity extends AppCompatActivity {
         translationValue = findViewById(R.id.edit_translation_act_write_translation);
         submitTranslationButton = findViewById(R.id.edit_translation_act_submit_translation);
 
-        String libraryKey = getIntent().getStringExtra(LIBRARY_KEYC);
+        String libraryKey = getIntent().getStringExtra(LIBRARY_ID);
         Realm realm = RealmHelper.getInstance().getRealm();
         currentLibrary = realm.where(LibraryData.class).equalTo("libraryID", libraryKey).findFirst();
 
-        loadLanguages();
-        findCurrentText();
-        if (!currentTextKey.isEmpty()) {
+        if (currentTextKey != null) {
+            findCurrentText();
             loadText();
+        } else {
+            currentTextKey = UUID.randomUUID().toString();
         }
+        loadLanguages();
 
         langSpinner.setOnItemSelectedListener(langSelectedListener);
 
         translationValue.addTextChangedListener(translationTextChangedListener);
 
-        submitTranslationButton.setOnClickListener(submitClickListener);
+        anotherTranslationButton.setOnClickListener(buttonListener);
+        submitTranslationButton.setOnClickListener(buttonListener);
     }
 
     private void loadLanguages() {
@@ -103,21 +105,25 @@ public class EditTranslationActivity extends AppCompatActivity {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             Realm realm = RealmHelper.getInstance().getRealm();
 
-            currentLibrary = realm.where(LibraryData.class).equalTo("libraryID", getIntent().getStringExtra(LIBRARY_KEYC)).findFirst();
+            currentLibrary = realm.where(LibraryData.class).equalTo("libraryID", getIntent().getStringExtra(LIBRARY_ID)).findFirst();
             List<TextData> updatedTexts = currentLibrary.getTexts();
-            List<SingleTranslationData> updatedTranslations = null;
+            if (updatedTexts.size() > 0) {
+                List<SingleTranslationData> updatedTranslations = null;
 
-            for (TextData text : updatedTexts) {
-                if (text.getTextKey().equals(currentTextKey)) {
-                    currentText = text;
-                    updatedTranslations = text.getTranslations();
-                    break;
+                for (TextData text : updatedTexts) {
+                    if (text.getTextKey().equals(currentTextKey)) {
+                        currentText = text;
+                        updatedTranslations = text.getTranslations();
+                        break;
+                    }
                 }
-            }
 
-            for (SingleTranslationData translationData : updatedTranslations) {
-                if (translationData.getLangKey().equals(langKeys.indexOf(position))) {
-                    translationValue.setText(translationData.getTranslation());
+                if (updatedTranslations != null) {
+                    for (SingleTranslationData translationData : updatedTranslations) {
+                        if (translationData.getLangKey().equals(langKeys.indexOf(position))) {
+                            translationValue.setText(translationData.getTranslation());
+                        }
+                    }
                 }
             }
         }
@@ -190,19 +196,44 @@ public class EditTranslationActivity extends AppCompatActivity {
                 .child("libraries").child(CurrentLibraryKey)
                 .child("texts").child(currentTextKey)
                 .child(langKeys.get(langSpinner.getSelectedItemPosition()))
-                .setValue(translationValue.getText());
+                .setValue(translationValue.getText().toString());
     }
 
-    private View.OnClickListener submitClickListener = new View.OnClickListener() {
+    private View.OnClickListener buttonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Map<String, String> textToSave = new HashMap<>();
-            textToSave.put("name", translationName.getText().toString());
-            textToSave.put("description", transLationDesc.getText().toString());
-            textToSave.put("android_key", androidKey.getText().toString());
-            textToSave.put("ios_key", iosKey.getText().toString());
-            textToSave.put("web_key", webKey.getText().toString());
-            FirebaseDatabase.getInstance().getReference().child("libraries").child("texts").child(currentTextKey).setValue(textToSave);
+            if (v.getId() == R.id.edit_translation_act_another_translation_btn) {
+                clearAndCreateNew();
+            } else {
+                onBackPressed();
+            }
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        saveCurrentText();
+        super.onBackPressed();
+    }
+
+    private void saveCurrentText() {
+        Map<String, String> textToSave = new HashMap<>();
+        textToSave.put("name", translationName.getText().toString());
+        textToSave.put("description", transLationDesc.getText().toString());
+        textToSave.put("android_key", androidKey.getText().toString());
+        textToSave.put("ios_key", iosKey.getText().toString());
+        textToSave.put("web_key", webKey.getText().toString());
+        FirebaseDatabase.getInstance().getReference().child("libraries").child(CurrentLibraryKey).child("texts").child(currentTextKey).setValue(textToSave);
+    }
+
+    private void clearAndCreateNew() {
+        translationName.setText("");
+        transLationDesc.setText("");
+        androidKey.setText("");
+        iosKey.setText("");
+        webKey.setText("");
+        translationValue.setText("");
+
+        currentTextKey = UUID.randomUUID().toString();
+    }
 }
