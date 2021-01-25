@@ -18,9 +18,7 @@ import com.choicely.csvcompanion.IntentKeys;
 import com.choicely.csvcompanion.R;
 import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
-import com.choicely.csvcompanion.data.SingleTranslationData;
 import com.choicely.csvcompanion.data.TextData;
-import com.choicely.csvcompanion.db.FirebaseDBHelper;
 import com.choicely.csvcompanion.db.RealmHelper;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -33,9 +31,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmResults;
-import io.realm.Sort;
 
 public class LibraryActivity extends AppCompatActivity {
     private static final String TAG = "LibraryActivity";
@@ -63,7 +59,7 @@ public class LibraryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_library_profile);
+        setContentView(R.layout.activity_library_content);
 
         languageCountTextView = findViewById(R.id.activity_library_profile_language_count);
         langCodeEditText = findViewById(R.id.activity_library_profile_language_code_field);
@@ -84,7 +80,6 @@ public class LibraryActivity extends AppCompatActivity {
             Log.d(TAG, "onCreate: ############################################################################### ladattu kirjasto");
             loadLibrary();
         }
-        startFireBaseListening();
     }
 
     private void newLibrary() {
@@ -99,13 +94,15 @@ public class LibraryActivity extends AppCompatActivity {
         Log.d(TAG, "loadPicture: library loaded with id:" + libraryID);
         Log.d(TAG, "loadLibrary: library name: " + library.getLibraryName());
         libraryNameEditText.setText(library.getLibraryName());
+        updateContent();
+
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//        saveLibrary();
-//    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        saveLibrary();
+    }
 
     private void saveLibrary() {
         DatabaseReference libRef = ref.child("libraries/" + libraryID);
@@ -116,18 +113,12 @@ public class LibraryActivity extends AppCompatActivity {
         Log.d(TAG, "saveLibrary: library saved with the ID:" + libraryID);
     }
 
-    private void startFireBaseListening() {
-        FirebaseDBHelper helper = FirebaseDBHelper.getInstance();
-        helper.setListener(this::updateContent);
-        helper.listenForLibraryDataChange();
-    }
-
     private void updateContent() {
         adapter.clear();
 
         Realm realm = RealmHelper.getInstance().getRealm();
         LibraryData library = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
-
+        languageCountTextView.setText(library.getLanguages().size());
         try {
             List<TextData> textList = library.getTexts();
             for (TextData text : textList) {
@@ -137,7 +128,6 @@ public class LibraryActivity extends AppCompatActivity {
         } catch (NullPointerException e) {
             Log.d(TAG, e.getMessage());
         }
-
     }
 
     public void onAddLanguageClicked(View view) {
@@ -145,7 +135,6 @@ public class LibraryActivity extends AppCompatActivity {
         @NotNull
         String langCode = langCodeEditText.getText().toString();
         String language = langEditText.getText().toString();
-        libraryName = libraryNameEditText.getText().toString();
 
         if (!checkIfLanguageAlreadyExists(langCode) && !langCode.isEmpty()) {
 
@@ -180,11 +169,9 @@ public class LibraryActivity extends AppCompatActivity {
 
 
     public void onNewTranslationClicked(View view) {
+        saveLibrary();
         Intent intent = new Intent(LibraryActivity.this, EditTranslationActivity.class);
         intent.putExtra(IntentKeys.LIBRARY_ID, libraryID);
         startActivity(intent);
-        saveLibrary();
-//        Realm realm = RealmHelper.getInstance().getRealm();
-//        realm.executeTransaction(realm1 -> realm.deleteAll());
     }
 }
