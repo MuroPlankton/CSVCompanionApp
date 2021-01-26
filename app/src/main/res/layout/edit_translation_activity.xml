@@ -103,8 +103,5 @@
         android:layout_alignParentBottom="true"
         android:text="@string/submit_translation"
         />
-
-
-
-
+    
 </RelativeLayout>

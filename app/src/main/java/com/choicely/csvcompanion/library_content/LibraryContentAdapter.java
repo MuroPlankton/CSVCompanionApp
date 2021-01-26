@@ -43,19 +43,11 @@ public class LibraryContentAdapter extends RecyclerView.Adapter<LibraryContentAd
 
     @Override
     public void onBindViewHolder(@NonNull LibraryContentViewHolder holder, int position) {
+        holder.desc.setText(textDescList.get(position));
+        holder.textName.setText(textNameList.get(position));
+        holder.libraryID = libraryData.getLibraryID();
+        holder.textID = textIDList.get(position);
 
-//        if (textDescList.get(position).isEmpty() && textNameList.get(position).isEmpty()) {
-//            Log.d(TAG, "onBindViewHolder: empty");
-////            textNameList.remove(position);
-////            textDescList.remove(position);
-//            holder.desc.setHint("no description added");
-//            holder.textName.setHint("No name added");
-//        } else {
-            holder.desc.setText(textDescList.get(position));
-            holder.textName.setText(textNameList.get(position));
-            holder.libraryID = libraryData.getLibraryID();
-            holder.textID = textIDList.get(position);
-//        }
         Log.d(TAG, "onBindViewHolder: " + position);
     }
 
