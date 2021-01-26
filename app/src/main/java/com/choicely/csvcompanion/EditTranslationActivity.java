@@ -189,7 +189,7 @@ public class EditTranslationActivity extends AppCompatActivity {
         if (!isTranslationSaveScheduled) {
             isTranslationSaveScheduled = true;
             translationTextSaveTimer = new Timer();
-            translationTextSaveTimer.schedule(translationSaveTask, 2000);
+            translationTextSaveTimer.schedule(translationSaveTask, 1000);
         } else {
             isTranslationSaveScheduled = false;
             translationTextSaveTimer.cancel();
