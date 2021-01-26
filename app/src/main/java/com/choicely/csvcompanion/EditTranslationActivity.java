@@ -1,5 +1,6 @@
 package com.choicely.csvcompanion;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.text.Editable;
@@ -15,6 +16,7 @@ import android.widget.Spinner;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.choicely.csvcompanion.app.CSVCompanionApp;
 import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.data.SingleTranslationData;
@@ -37,6 +39,7 @@ import static com.choicely.csvcompanion.IntentKeys.TRANSLATION_ID;
 
 public class EditTranslationActivity extends AppCompatActivity {
 
+    private PopUpAlert popUpAlert = new PopUpAlert();
     private static final String TAG = "EditTranslationActivity";
     private String CurrentLibraryKey;
     private String currentTextKey;
@@ -48,10 +51,11 @@ public class EditTranslationActivity extends AppCompatActivity {
     private Button submitTranslationButton;
     private LibraryData currentLibrary;
     private TextData currentText;
-    private List<String> langNames = new ArrayList<>();
     private List<String> langKeys = new ArrayList<>();
+    private List<String> langNames = new ArrayList<>();
     private boolean isTranslationSaveScheduled = false;
     private Timer translationTextSaveTimer;
+
 
 
     @Override
@@ -101,7 +105,6 @@ public class EditTranslationActivity extends AppCompatActivity {
         ArrayAdapter<String> langAdapter = new ArrayAdapter<String>(this, R.layout.language_text_layout, R.id.language_text_view, langNames);
         langSpinner.setAdapter(langAdapter);
     }
-
     private AdapterView.OnItemSelectedListener langSelectedListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -137,6 +140,7 @@ public class EditTranslationActivity extends AppCompatActivity {
         }
     };
 
+
     private void findCurrentText() {
         List<TextData> texts = currentLibrary.getTexts();
         for (TextData text : texts) {
@@ -154,7 +158,6 @@ public class EditTranslationActivity extends AppCompatActivity {
         iosKey.setText(currentText.getIosKey());
         webKey.setText(currentText.getWebKey());
     }
-
     private TextWatcher translationTextChangedListener = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -173,6 +176,7 @@ public class EditTranslationActivity extends AppCompatActivity {
 
         }
     };
+
 
     private void translationTextSaveDelayer() {
         TimerTask translationSaveTask = new TimerTask() {
@@ -200,23 +204,22 @@ public class EditTranslationActivity extends AppCompatActivity {
                         + "/translations/" + langKeys.get(langSpinner.getSelectedItemPosition()))
                 .setValue(translationValue.getText().toString());
     }
-
-    private View.OnClickListener buttonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (v.getId() == R.id.edit_translation_act_another_translation_btn) {
-                saveCurrentText();
-                clearAndCreateNew();
-            } else {
-                onBackPressed();
-            }
+    private View.OnClickListener buttonListener = v -> {
+        if (v.getId() == R.id.edit_translation_act_another_translation_btn) {
+            saveCurrentText();
+            clearAndCreateNew();
+        } else {
+            onBackPressed();
         }
     };
 
+
     @Override
     public void onBackPressed() {
-        saveCurrentText();
-        super.onBackPressed();
+        if(!checkIfRowsAreEmpty()){
+            super.onBackPressed();
+            saveCurrentText();
+        }
     }
 
     private void saveCurrentText() {
@@ -227,6 +230,14 @@ public class EditTranslationActivity extends AppCompatActivity {
         textToSave.put("ios_key", iosKey.getText().toString());
         textToSave.put("web_key", webKey.getText().toString());
         FirebaseDatabase.getInstance().getReference().child("libraries").child(CurrentLibraryKey).child("texts").child(currentTextKey).updateChildren(textToSave);
+    }
+
+    private Boolean checkIfRowsAreEmpty() {
+        if (translationName.getText().toString().isEmpty() || transLationDesc.getText().toString().isEmpty()){
+            popUpAlert.alertPopUp(EditTranslationActivity.this, R.string.pop_up_message, "error");
+            return true;
+        }
+        return false;
     }
 
     private void clearAndCreateNew() {
