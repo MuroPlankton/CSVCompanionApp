@@ -42,7 +42,6 @@ public class LibraryActivity extends AppCompatActivity {
     private EditText langCodeEditText;
     private EditText langEditText;
 
-    private TextView languageCountTextView;
     private RecyclerView contentRecyclerView;
     private LibraryContentAdapter adapter;
 
@@ -58,7 +57,6 @@ public class LibraryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.library_activity);
 
-        languageCountTextView = findViewById(R.id.library_activity_language_count);
         langCodeEditText = findViewById(R.id.library_activity_language_code_field);
         langEditText = findViewById(R.id.library_activity_language_field);
         libraryNameEditText = findViewById(R.id.library_activity_library_name);
@@ -121,9 +119,6 @@ public class LibraryActivity extends AppCompatActivity {
         Realm realm = RealmHelper.getInstance().getRealm();
         LibraryData library = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
 
-        String count = String.valueOf(library.getLanguages().size());
-        languageCountTextView.setText(String.format("Amount of languages: %s", count));
-
         try {
             List<TextData> textList = library.getTexts();
             adapter.setLibrary(library);
@@ -144,6 +139,7 @@ public class LibraryActivity extends AppCompatActivity {
         if (!checkIfLanguageAlreadyExists(langCode) && !langCode.isEmpty()) {
             addLanguageToFireBase(langCode, language);
             Toast.makeText(this, "Language: " + '"' + langCode + '"' + " added", Toast.LENGTH_SHORT).show();
+            updateContent();
         } else if (!checkIfLanguageAlreadyExists(langCode) && langCode.isEmpty()) {
 
             Toast.makeText(this, "Language code field cannot be empty!", Toast.LENGTH_SHORT).show();
@@ -181,7 +177,6 @@ public class LibraryActivity extends AppCompatActivity {
         saveLibrary();
         Intent intent = new Intent(LibraryActivity.this, EditTranslationActivity.class);
         intent.putExtra(IntentKeys.LIBRARY_ID, libraryID);
-//        intent.putExtra(IntentKeys.TRANSLATION_ID, "428375b6-10f1-463d-b7ef-9001ab9593ec");
         startActivity(intent);
     }
 }
