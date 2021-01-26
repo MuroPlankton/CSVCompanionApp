@@ -43,7 +43,6 @@ public class EditTranslationActivity extends AppCompatActivity {
     private static final String TAG = "EditTranslationActivity";
     private String CurrentLibraryKey;
     private String currentTextKey;
-    private Button anotherTranslationButton;
     private EditText translationName, transLationDesc;
     private EditText androidKey, iosKey, webKey;
     private Spinner langSpinner;
@@ -66,7 +65,6 @@ public class EditTranslationActivity extends AppCompatActivity {
         CurrentLibraryKey = getIntent().getStringExtra(LIBRARY_ID);
         currentTextKey = getIntent().getStringExtra(TRANSLATION_ID);
 
-        anotherTranslationButton = findViewById(R.id.edit_translation_act_another_translation_btn);
         translationName = findViewById(R.id.edit_translation_act_translation_name);
         transLationDesc = findViewById(R.id.edit_translation_act_translation_desc);
         androidKey = findViewById(R.id.edit_translation_act_android_key);
@@ -92,7 +90,6 @@ public class EditTranslationActivity extends AppCompatActivity {
 
         translationValue.addTextChangedListener(translationTextChangedListener);
 
-        anotherTranslationButton.setOnClickListener(buttonListener);
         submitTranslationButton.setOnClickListener(buttonListener);
     }
 
@@ -189,7 +186,7 @@ public class EditTranslationActivity extends AppCompatActivity {
         if (!isTranslationSaveScheduled) {
             isTranslationSaveScheduled = true;
             translationTextSaveTimer = new Timer();
-            translationTextSaveTimer.schedule(translationSaveTask, 2000);
+            translationTextSaveTimer.schedule(translationSaveTask, 1000);
         } else {
             isTranslationSaveScheduled = false;
             translationTextSaveTimer.cancel();
@@ -204,12 +201,11 @@ public class EditTranslationActivity extends AppCompatActivity {
                         + "/translations/" + langKeys.get(langSpinner.getSelectedItemPosition()))
                 .setValue(translationValue.getText().toString());
     }
+
     private View.OnClickListener buttonListener = v -> {
-        if (v.getId() == R.id.edit_translation_act_another_translation_btn) {
+        if (!checkIfRowsAreEmpty()) {
             saveCurrentText();
             clearAndCreateNew();
-        } else {
-            onBackPressed();
         }
     };
 

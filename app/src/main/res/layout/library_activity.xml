@@ -5,19 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center_horizontal"
     >
 
     <EditText
         android:id="@+id/library_activity_library_name"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:padding="8dp"
-        android:background="@drawable/edit_text_bottom_line"
-        android:maxLines="20"
+        android:maxLines="1"
         android:textSize="32sp"
         tools:text="Library name"
-        android:hint="@string/name_of_the_library"
+        android:hint="Name of the library"
+        android:layout_marginBottom="16dp"
         />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -31,67 +31,54 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="8dp"
         android:orientation="horizontal"
+        android:layout_marginTop="16dp"
         >
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
 
             <EditText
                 android:id="@+id/library_activity_language_code_field"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="#EBFCFF"
+                android:layout_weight="1"
                 android:hint="@string/type_lang_code"
                 android:maxLength="2"
                 android:maxLines="1"
-                android:textSize="20sp"
+                android:layout_marginHorizontal="4dp"
                 />
 
             <EditText
                 android:id="@+id/library_activity_language_field"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="8dp"
-                android:background="#EBFCFF"
+                android:layout_weight="2"
                 android:hint="@string/type_lang"
                 android:maxLines="1"
-                android:textSize="20sp"
+                android:layout_marginHorizontal="4dp"
                 />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/library_activity_language_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:onClick="onAddLanguageClicked"
-            android:text="@string/add_lang"
-            />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/library_activity_language_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:onClick="onAddLanguageClicked"
+        android:text="@string/add_lang"
+        />
 
     <TextView
         android:id="@+id/library_activity_language_count"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:textSize="20sp"
         tools:text="amount of languages"
+        android:layout_marginBottom="16dp"
         />
 
     <Button
         android:id="@+id/library_activity_new_translation_button"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="96dp"
-        android:layout_marginTop="16dp"
         android:onClick="onNewTranslationClicked"
         android:text="@string/new_translation"
         />
