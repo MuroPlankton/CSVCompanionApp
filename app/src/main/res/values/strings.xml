@@ -15,5 +15,5 @@
     <string name="translation_description">Translation description</string>
     <string name="libraries">Libraries</string>
     <string name="name_of_the_library">Name of the library</string>
-
+    <string name="pop_up_message">You have not added a name or a description, do you want to continue without saving?</string>
 </resources>
