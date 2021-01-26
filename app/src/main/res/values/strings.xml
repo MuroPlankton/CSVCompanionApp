@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CSV Companion</string>
+    <string name="app_name">CSV translator</string>
     <string name="new_library">New library</string>
     <string name="add_lang">Add language</string>
     <string name="type_lang_code">Lang code e.g. "en"</string>
