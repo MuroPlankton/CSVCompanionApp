@@ -3,42 +3,53 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/content_row_translation_name"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/content_row_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/light_color"
-        android:padding="8dp"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        tools:text="Translation name"
-        />
+        android:layout_margin="12dp"
+        app:cardElevation="2dp"
+        >
 
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:background="@color/light_gray"
-        />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
 
-    <TextView
-        android:id="@+id/content_row_translation_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/light_color"
-        android:maxLines="4"
-        android:padding="16dp"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        tools:text="description"
-        />
+            <TextView
+                android:id="@+id/content_row_translation_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_color"
+                android:padding="8dp"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                tools:text="Translation name"
+                />
 
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:layout_marginTop="3dp"
-        android:background="@color/black"
-        />
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="@color/light_gray"
+                />
+
+            <TextView
+                android:id="@+id/content_row_translation_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_color"
+                android:maxLines="4"
+                android:padding="16dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                tools:text="description"
+                />
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
 
 </LinearLayout>
