@@ -53,14 +53,12 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
 
         String libraryID;
         public TextView libraryName;
-        public TextView libraryLangs;
 
         public LibraryViewHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setOnClickListener(onRowClick);
 
             libraryName = itemView.findViewById(R.id.library_list_row_library_name);
-            libraryLangs = itemView.findViewById(R.id.library_list_row_library_lang_test);
         }
         private final View.OnClickListener onRowClick = view -> {
             Context ctx = libraryName.getContext();

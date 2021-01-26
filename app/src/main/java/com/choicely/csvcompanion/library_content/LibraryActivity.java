@@ -105,14 +105,16 @@ public class LibraryActivity extends AppCompatActivity {
         String count = String.valueOf(library.getLanguages().size());
         languageCountTextView.setText(String.format("Amount of languages: %s", count));
 
-        RealmList<TextData> textList = library.getTexts();
-
-        adapter.setLibrary(library);
-        for (TextData text : textList) {
-            Log.d(TAG, "updateContent: " + text.getTranslationName() + " " + text.getTranslationDesc());
-            adapter.add(text.getTextKey(), text.getTranslationName(), text.getTranslationDesc());
+        try {
+            List<TextData> textList = library.getTexts();
+            adapter.setLibrary(library);
+            for (TextData text : textList) {
+                adapter.add(text.getTextKey(), text.getTranslationName(), text.getTranslationDesc());
+            }
+            adapter.notifyDataSetChanged();
+        } catch (NullPointerException e) {
+            Log.d(TAG, e.getMessage());
         }
-        adapter.notifyDataSetChanged();
     }
 
     public void onAddLanguageClicked(View view) {
@@ -146,7 +148,7 @@ public class LibraryActivity extends AppCompatActivity {
                     return true;
                 }
             }
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.getMessage();
         }
         return false;
@@ -163,6 +165,7 @@ public class LibraryActivity extends AppCompatActivity {
         saveLibrary();
         Intent intent = new Intent(LibraryActivity.this, EditTranslationActivity.class);
         intent.putExtra(IntentKeys.LIBRARY_ID, libraryID);
+//        intent.putExtra(IntentKeys.TRANSLATION_ID, "428375b6-10f1-463d-b7ef-9001ab9593ec");
         startActivity(intent);
     }
 
