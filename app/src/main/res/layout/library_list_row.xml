@@ -19,7 +19,7 @@
         android:padding="8dp"
         android:textSize="24sp"
         android:textColor="@color/black"
-        android:background="@color/light_yellow"
+        android:background="@color/light_color"
         tools:text="library name"
         />
 
