@@ -11,6 +11,5 @@
         android:layout_height="wrap_content"
         android:id="@+id/language_text_view"
         android:textColor="@color/black"
-        android:background="@color/light_yellow"
         />
 </LinearLayout>

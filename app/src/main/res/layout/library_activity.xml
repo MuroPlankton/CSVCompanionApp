@@ -8,10 +8,12 @@
     >
 
     <EditText
-        android:id="@+id/activity_library_profile_name"
+        android:id="@+id/library_activity_library_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:padding="8dp"
+        android:background="@drawable/edit_text_borders"
         android:maxLines="20"
         android:textSize="32sp"
         tools:text="Library name"
@@ -19,7 +21,7 @@
         />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/activity_library_profile_recycler"
+        android:id="@+id/library_activity_recycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -40,7 +42,7 @@
             >
 
             <EditText
-                android:id="@+id/activity_library_profile_language_code_field"
+                android:id="@+id/library_activity_language_code_field"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
@@ -52,7 +54,7 @@
                 />
 
             <EditText
-                android:id="@+id/activity_library_profile_language_field"
+                android:id="@+id/library_activity_language_field"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -64,9 +66,8 @@
                 />
         </LinearLayout>
 
-
         <Button
-            android:id="@+id/activity_library_profile_language_button"
+            android:id="@+id/library_activity_language_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -77,7 +78,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/activity_library_profile_language_count"
+        android:id="@+id/library_activity_language_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
@@ -86,7 +87,7 @@
         />
 
     <Button
-        android:id="@+id/activity_library_profile_new_translation_button"
+        android:id="@+id/library_activity_new_translation_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="96dp"
