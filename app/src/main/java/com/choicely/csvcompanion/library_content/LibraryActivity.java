@@ -91,6 +91,16 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        try {
+            super.onResume();
+            updateContent();
+        } catch (NullPointerException e) {
+            e.getMessage();
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
         saveLibrary();
