@@ -42,21 +42,16 @@ public class LibraryActivity extends AppCompatActivity {
     private EditText langCodeEditText;
     private EditText langEditText;
 
-    private final List<String> translationList = new ArrayList<>();
-//    private List<LanguageData> languageList = new ArrayList<>();
-
     private TextView languageCountTextView;
     private RecyclerView contentRecyclerView;
     private LibraryContentAdapter adapter;
 
+    private LibraryData currentLibrary;
+
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final DatabaseReference ref = database.getReference();
 
-    private final LanguageData languageData = new LanguageData();
-
     private String libraryID;
-    private String libraryName;
-    private List<LanguageData> languageList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,10 +71,8 @@ public class LibraryActivity extends AppCompatActivity {
         libraryID = getIntent().getStringExtra(IntentKeys.LIBRARY_ID);
 
         if (libraryID == null) {
-            Log.d(TAG, "onCreate: @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   uusi kirjasto");
             newLibrary();
         } else {
-            Log.d(TAG, "onCreate: ############################################################################### ladattu kirjasto");
             loadLibrary();
         }
     }
@@ -87,14 +80,12 @@ public class LibraryActivity extends AppCompatActivity {
     private void newLibrary() {
         libraryID = String.valueOf(UUID.randomUUID());
         Log.d(TAG, "new Library created with the ID:" + libraryID);
+        saveLibrary();
     }
 
     private void loadLibrary() {
         Realm realm = RealmHelper.getInstance().getRealm();
         LibraryData library = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
-
-        Log.d(TAG, "loadLibrary: library loaded with id:" + libraryID);
-        Log.d(TAG, "loadLibrary: library name: " + library.getLibraryName());
         libraryNameEditText.setText(library.getLibraryName());
         updateContent();
     }
@@ -144,7 +135,9 @@ public class LibraryActivity extends AppCompatActivity {
             addLanguageToFireBase(langCode, language);
             Toast.makeText(this, "Language: " + '"' + langCode + '"' + " added", Toast.LENGTH_SHORT).show();
         } else if (!checkIfLanguageAlreadyExists(langCode) && langCode.isEmpty()) {
+
             Toast.makeText(this, "Language code field cannot be empty!", Toast.LENGTH_SHORT).show();
+
         } else {
             Toast.makeText(this, "Language: " + '"' + langCode + '"' + " already exists", Toast.LENGTH_SHORT).show();
         }
@@ -152,12 +145,17 @@ public class LibraryActivity extends AppCompatActivity {
 
     private Boolean checkIfLanguageAlreadyExists(String langCode) {
         Realm realm = RealmHelper.getInstance().getRealm();
-        RealmResults<LanguageData> languages = realm.where(LanguageData.class).findAll();
+        currentLibrary = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
 
-        for (LanguageData language : languages) {
-            if (langCode.equals(language.getLangKey())) {
-                return true;
+        try {
+            List<LanguageData> languages = currentLibrary.getLanguages();
+            for (LanguageData language : languages) {
+                if (langCode.equals(language.getLangKey())) {
+                    return true;
+                }
             }
+        } catch (NullPointerException e) {
+            e.getMessage();
         }
         return false;
     }

@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <TextView
+        android:padding="8dp"
         android:id="@+id/content_row_translation_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,6 +14,10 @@
         android:textColor="@color/black"
         android:textSize="30sp"
         tools:text="Translation name"
+<<<<<<< HEAD
+=======
+        android:background="#FFF7F7"
+>>>>>>> c55e26935c41535637deb7016466ccdf31164895
         />
 
     <View
@@ -22,20 +27,30 @@
         />
 
     <TextView
+        android:padding="16dp"
         android:id="@+id/content_row_translation_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#F7FFFF"
         android:maxLines="4"
         android:textColor="@color/black"
-        android:textSize="30sp"
+        android:textSize="16sp"
         tools:text="description"
+<<<<<<< HEAD
+=======
+        android:maxLines="4"
+        android:background="#D5FFFF"
+>>>>>>> c55e26935c41535637deb7016466ccdf31164895
         />
 
     <View
         android:layout_width="wrap_content"
+<<<<<<< HEAD
         android:layout_height="1dp"
         android:layout_marginTop="3dp"
+=======
+        android:layout_height="5dp"
+>>>>>>> c55e26935c41535637deb7016466ccdf31164895
         android:background="@color/black"
         />
 
