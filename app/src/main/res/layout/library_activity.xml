@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:padding="8dp"
-        android:background="@drawable/edit_text_borders"
+        android:background="@drawable/edit_text_bottom_line"
         android:maxLines="20"
         android:textSize="32sp"
         tools:text="Library name"
