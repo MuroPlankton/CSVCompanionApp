@@ -8,13 +8,14 @@
     >
 
     <TextView
+        android:padding="8dp"
         android:id="@+id/content_row_translation_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
         android:textSize="30sp"
         tools:text="Translation name"
-        android:background="#F7FFFF"
+        android:background="#FFF7F7"
         />
     <View
         android:layout_width="wrap_content"
@@ -22,20 +23,21 @@
         android:background="@color/black"
         />
     <TextView
+        android:padding="16dp"
         android:id="@+id/content_row_translation_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
-        android:textSize="30sp"
+        android:textSize="16sp"
         tools:text="description"
         android:maxLines="4"
-        android:background="#F7FFFF"
+        android:background="#D5FFFF"
         />
 
     <View
         android:layout_marginTop="3dp"
         android:layout_width="wrap_content"
-        android:layout_height="1dp"
+        android:layout_height="5dp"
         android:background="@color/black"
 />
 

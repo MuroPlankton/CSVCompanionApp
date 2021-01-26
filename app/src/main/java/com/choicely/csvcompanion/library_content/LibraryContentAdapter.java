@@ -45,6 +45,7 @@ public class LibraryContentAdapter extends RecyclerView.Adapter<LibraryContentAd
         holder.libraryID = libraryData.getLibraryID();
 
         holder.textID = textIDList.get(position);
+
         holder.desc.setText(textDescList.get(position));
         holder.textName.setText(textNameList.get(position));
 
@@ -56,10 +57,10 @@ public class LibraryContentAdapter extends RecyclerView.Adapter<LibraryContentAd
         textNameList.add(name);
         textDescList.add(desc);
     }
+
     public void setLibrary(LibraryData library){
         this.libraryData = library;
     }
-
 
     @Override
     public int getItemCount() {
@@ -79,9 +80,6 @@ public class LibraryContentAdapter extends RecyclerView.Adapter<LibraryContentAd
         public TextView desc;
         public TextView textName;
 
-        public String getLibraryID() {
-            return libraryID;
-        }
 
         public LibraryContentViewHolder(@NonNull View itemView) {
             super(itemView);
