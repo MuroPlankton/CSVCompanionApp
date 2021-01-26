@@ -11,13 +11,13 @@
         android:id="@+id/library_activity_library_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:padding="8dp"
         android:background="@drawable/edit_text_bottom_line"
+        android:gravity="center_horizontal"
+        android:hint="@string/name_of_the_library"
         android:maxLines="20"
+        android:padding="8dp"
         android:textSize="32sp"
         tools:text="Library name"
-        android:hint="@string/name_of_the_library"
         />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -42,26 +42,29 @@
             >
 
             <EditText
+
                 android:id="@+id/library_activity_language_code_field"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="#EBFCFF"
+                android:background="@drawable/edit_text_box_borders"
                 android:hint="@string/type_lang_code"
                 android:maxLength="2"
                 android:maxLines="1"
+                android:padding="8dp"
                 android:textSize="20sp"
                 />
 
             <EditText
                 android:id="@+id/library_activity_language_field"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="8dp"
-                android:background="#EBFCFF"
+                android:background="@drawable/edit_text_box_borders"
                 android:hint="@string/type_lang"
                 android:maxLines="1"
+                android:padding="8dp"
                 android:textSize="20sp"
                 />
         </LinearLayout>
@@ -76,15 +79,6 @@
             android:text="@string/add_lang"
             />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/library_activity_language_count"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:textSize="20sp"
-        tools:text="amount of languages"
-        />
 
     <Button
         android:id="@+id/library_activity_new_translation_button"
