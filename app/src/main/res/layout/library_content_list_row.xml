@@ -1,42 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/content_row_translation_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/light_color"
+        android:padding="8dp"
         android:textColor="@color/black"
-        android:textSize="30sp"
+        android:textSize="24sp"
         tools:text="Translation name"
-        android:background="#F7FFFF"
         />
+
     <View
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:background="@color/black"
+        android:background="@color/light_gray"
         />
+
     <TextView
         android:id="@+id/content_row_translation_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:textSize="30sp"
-        tools:text="description"
+        android:background="@color/light_color"
         android:maxLines="4"
-        android:background="#F7FFFF"
+        android:padding="16dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        tools:text="description"
         />
 
     <View
-        android:layout_marginTop="3dp"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
+        android:layout_marginTop="3dp"
         android:background="@color/black"
-/>
+        />
 
 </LinearLayout>

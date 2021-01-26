@@ -15,5 +15,6 @@
         android:textSize="24sp"
 
         android:id="@+id/language_text_view"
+        android:textColor="@color/black"
         />
 </LinearLayout>

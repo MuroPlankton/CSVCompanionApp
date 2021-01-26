@@ -25,7 +25,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
     private final Context context;
     private final List<LibraryData> list = new ArrayList<>();
 
-    public LibraryAdapter(Context context){ this.context = context;}
+    public LibraryAdapter(Context context) { this.context = context; }
 
     @NonNull
     @Override
@@ -38,20 +38,24 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
         LibraryData library = list.get(position);
 
         holder.libraryID = library.getLibraryID();
-        holder.libraryName.setText(library.getLibraryName());
-        Log.d(TAG, "libraryName: " + library.getLibraryName());
+
+        if (library.getLibraryName().isEmpty()) {
+            holder.libraryName.setHint("library has no name...");
+        } else {
+            holder.libraryName.setText(library.getLibraryName());
+        }
     }
 
-    public void add(LibraryData library){ list.add(library); }
+    public void add(LibraryData library) { list.add(library); }
 
     @Override
     public int getItemCount() { return list.size(); }
 
-    public void clear(){ list.clear(); }
+    public void clear() { list.clear(); }
 
     public static class LibraryViewHolder extends RecyclerView.ViewHolder {
 
-        String libraryID;
+        public String libraryID;
         public TextView libraryName;
 
         public LibraryViewHolder(@NonNull View itemView) {
@@ -60,6 +64,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
 
             libraryName = itemView.findViewById(R.id.library_list_row_library_name);
         }
+
         private final View.OnClickListener onRowClick = view -> {
             Context ctx = libraryName.getContext();
             Intent intent = new Intent(ctx, LibraryActivity.class);

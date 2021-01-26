@@ -44,6 +44,7 @@ public class LibraryContentAdapter extends RecyclerView.Adapter<LibraryContentAd
     public void onBindViewHolder(@NonNull LibraryContentViewHolder holder, int position) {
         holder.libraryID = libraryData.getLibraryID();
         holder.textID = textIDList.get(position);
+
         holder.desc.setText(textDescList.get(position));
         holder.textName.setText(textNameList.get(position));
 
