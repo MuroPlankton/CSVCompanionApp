@@ -95,7 +95,6 @@ public class LibraryActivity extends AppCompatActivity {
         updateContent();
     }
 
-
     private void updateContent() {
         adapter.clear();
 
