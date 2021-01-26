@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -36,6 +37,7 @@ import static com.choicely.csvcompanion.IntentKeys.TRANSLATION_ID;
 
 public class EditTranslationActivity extends AppCompatActivity {
 
+    private static final String TAG = "EditTranslationActivity";
     private String CurrentLibraryKey;
     private String currentTextKey;
     private Button anotherTranslationButton;
@@ -120,7 +122,8 @@ public class EditTranslationActivity extends AppCompatActivity {
 
                 if (updatedTranslations != null) {
                     for (SingleTranslationData translationData : updatedTranslations) {
-                        if (translationData.getLangKey().equals(langKeys.indexOf(position))) {
+                        Log.d(TAG, "LangKey: " + translationData.getLangKey() + " translation: " + translationData.getTranslation());
+                        if (translationData.getLangKey().equals(langKeys.get(position))) {
                             translationValue.setText(translationData.getTranslation());
                         }
                     }
@@ -194,7 +197,7 @@ public class EditTranslationActivity extends AppCompatActivity {
     private void saveCurrentTranslationTextToFirebase() {
         FirebaseDatabase.getInstance().getReference()
                 .child("libraries/" + CurrentLibraryKey + "/texts/" + currentTextKey
-                        + langKeys.get(langSpinner.getSelectedItemPosition()))
+                        + "/translations/" + langKeys.get(langSpinner.getSelectedItemPosition()))
                 .setValue(translationValue.getText().toString());
     }
 
@@ -202,6 +205,7 @@ public class EditTranslationActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             if (v.getId() == R.id.edit_translation_act_another_translation_btn) {
+                saveCurrentText();
                 clearAndCreateNew();
             } else {
                 onBackPressed();
@@ -216,13 +220,13 @@ public class EditTranslationActivity extends AppCompatActivity {
     }
 
     private void saveCurrentText() {
-        Map<String, String> textToSave = new HashMap<>();
+        Map<String, Object> textToSave = new HashMap<>();
         textToSave.put("name", translationName.getText().toString());
         textToSave.put("description", transLationDesc.getText().toString());
         textToSave.put("android_key", androidKey.getText().toString());
         textToSave.put("ios_key", iosKey.getText().toString());
         textToSave.put("web_key", webKey.getText().toString());
-        FirebaseDatabase.getInstance().getReference().child("libraries").child(CurrentLibraryKey).child("texts").child(currentTextKey).setValue(textToSave);
+        FirebaseDatabase.getInstance().getReference().child("libraries").child(CurrentLibraryKey).child("texts").child(currentTextKey).updateChildren(textToSave);
     }
 
     private void clearAndCreateNew() {
