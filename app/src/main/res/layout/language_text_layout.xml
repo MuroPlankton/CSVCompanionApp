@@ -13,8 +13,6 @@
         tools:text="Suomi"
         android:layout_margin="8dp"
         android:textSize="24sp"
-
         android:id="@+id/language_text_view"
-        android:textColor="@color/black"
         />
 </LinearLayout>
