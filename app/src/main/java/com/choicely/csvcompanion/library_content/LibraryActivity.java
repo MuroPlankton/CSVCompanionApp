@@ -1,20 +1,22 @@
 package com.choicely.csvcompanion.library_content;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.choicely.csvcompanion.CSVWriter;
 import com.choicely.csvcompanion.EditTranslationActivity;
 import com.choicely.csvcompanion.IntentKeys;
 import com.choicely.csvcompanion.R;
@@ -26,14 +28,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 public class LibraryActivity extends AppCompatActivity {
     private static final String TAG = "LibraryActivity";
@@ -72,6 +72,25 @@ public class LibraryActivity extends AppCompatActivity {
             newLibrary();
         } else {
             loadLibrary();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.action_bar_buttons, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_share) {
+            return true;
+        } else if (item.getItemId() == R.id.action_export) {
+            CSVWriter.writeCSVFile(libraryID);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
