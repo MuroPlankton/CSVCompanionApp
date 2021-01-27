@@ -96,9 +96,7 @@ public class FirebaseDBHelper {
 //                            Object userValue = usersMap.get(user);
 //                            userDataList.add(userValue);
 //                            library.setUser(userDataList);
-//
 //                        }
-//
 //                    }
                     Object languagesObject = libraryMap.get("languages");
                     Map<String, Object> languagesMap = (Map<String, Object>) languagesObject;

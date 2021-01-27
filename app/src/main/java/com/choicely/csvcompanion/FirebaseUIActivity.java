@@ -33,7 +33,6 @@ public class FirebaseUIActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.Theme_CSVCompanion);
         super.onCreate(savedInstanceState);
         createSignInIntent();
     }

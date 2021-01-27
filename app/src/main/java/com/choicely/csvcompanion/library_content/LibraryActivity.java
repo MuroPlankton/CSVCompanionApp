@@ -94,7 +94,9 @@ public class LibraryActivity extends AppCompatActivity {
     private void loadLibrary() {
         Realm realm = RealmHelper.getInstance().getRealm();
         LibraryData library = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
-        libraryNameEditText.setText(library.getLibraryName());
+        if(library != null){
+            libraryNameEditText.setText(library.getLibraryName());
+        }
         updateContent();
     }
 
