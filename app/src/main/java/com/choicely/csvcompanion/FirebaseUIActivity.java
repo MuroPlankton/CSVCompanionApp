@@ -3,6 +3,7 @@ package com.choicely.csvcompanion;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,7 +34,6 @@ public class FirebaseUIActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.library_home_activity);
         createSignInIntent();
     }
 
@@ -155,5 +155,4 @@ public class FirebaseUIActivity extends AppCompatActivity {
                 RC_SIGN_IN);
         // [END auth_fui_pp_tos]
     }
-
 }
