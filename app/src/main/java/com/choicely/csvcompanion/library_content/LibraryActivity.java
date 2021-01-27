@@ -55,6 +55,8 @@ public class LibraryActivity extends AppCompatActivity {
     private String libraryID;
     private FirebaseUser user;
 
+    private Realm realm = RealmHelper.getInstance().getRealm();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,8 +83,11 @@ public class LibraryActivity extends AppCompatActivity {
     private void newLibrary() {
         libraryID = String.valueOf(UUID.randomUUID());
         user = FirebaseAuth.getInstance().getCurrentUser();
+
         Log.d(TAG, "new Library created with the ID:" + libraryID);
         Log.d(TAG, "newLibrary: user:" + user);
+
+        addUser();
         saveLibrary();
     }
 
@@ -111,11 +116,8 @@ public class LibraryActivity extends AppCompatActivity {
 
     private void saveLibrary() {
         DatabaseReference libRef = ref.child("libraries/" + libraryID);
-        Map<String, String> users = new HashMap<>();
-        users.put("user", user.getDisplayName());
 
         Map<String, Object> library = new HashMap<>();
-        library.put("users", users);
         library.put("library_name", libraryNameEditText.getText().toString());
         libRef.updateChildren(library);
 
@@ -125,7 +127,6 @@ public class LibraryActivity extends AppCompatActivity {
     private void updateContent() {
         adapter.clear();
 
-        Realm realm = RealmHelper.getInstance().getRealm();
         LibraryData library = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
 
         try {
@@ -159,7 +160,6 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     private Boolean checkIfLanguageAlreadyExists(String langCode) {
-        Realm realm = RealmHelper.getInstance().getRealm();
         currentLibrary = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
 
         try {
@@ -173,6 +173,14 @@ public class LibraryActivity extends AppCompatActivity {
             e.getMessage();
         }
         return false;
+    }
+
+    public void addUser() {
+        DatabaseReference libRef = ref.child("libraries/" + libraryID + "/users");
+        Map<String, Object> userMap = new HashMap<>();
+        userMap.put("user", user.getDisplayName());
+        libRef.updateChildren(userMap);
+
     }
 
     private void addLanguageToFireBase(String langCode, String langName) {
