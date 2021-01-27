@@ -85,7 +85,6 @@ public class FirebaseDBHelper {
                     if (libraryMap != null) {
                         library.setLibraryID(key1);
                         library.setLibraryName((String) libraryMap.get("library_name"));
-                    }
 //                    Object usersObject = libraryMap.get("users");
 //                    Map<String, Object> usersMap = (Map<String, Object>) usersObject;
 //                    List<LibraryData> userDataList = new ArrayList<>();
@@ -98,74 +97,75 @@ public class FirebaseDBHelper {
 //                            library.setUser(userDataList);
 //                        }
 //                    }
-                    Object languagesObject = libraryMap.get("languages");
-                    Map<String, Object> languagesMap = (Map<String, Object>) languagesObject;
-                    RealmList<LanguageData> languageDataRealmList = new RealmList<>();
+                        Object languagesObject = libraryMap.get("languages");
+                        Map<String, Object> languagesMap = (Map<String, Object>) languagesObject;
+                        RealmList<LanguageData> languageDataRealmList = new RealmList<>();
 
-                    if (languagesMap != null) {
-                        for (String key2 : languagesMap.keySet()) {
-                            Object languageValue = languagesMap.get(key2);
+                        if (languagesMap != null) {
+                            for (String key2 : languagesMap.keySet()) {
+                                Object languageValue = languagesMap.get(key2);
 
-                            LanguageData language = new LanguageData();
-                            language.setLangKey(key2);
-                            language.setLangName((String) languageValue);
-                            languageDataRealmList.add(language);
+                                LanguageData language = new LanguageData();
+                                language.setLangKey(key2);
+                                language.setLangName((String) languageValue);
+                                languageDataRealmList.add(language);
 
-                            //I will set the list of these to libraryData
-                            library.setLanguages(languageDataRealmList);
+                                //I will set the list of these to libraryData
+                                library.setLanguages(languageDataRealmList);
 
-                            Log.d(TAG, "key2: " + key2);
-                            Log.d(TAG, "languageValue: " + languageValue);
+                                Log.d(TAG, "key2: " + key2);
+                                Log.d(TAG, "languageValue: " + languageValue);
+                            }
                         }
-                    }
 
-                    Object textsObject = libraryMap.get("texts");
-                    Log.d(TAG, "textsObject: " + textsObject);
-                    Map<String, Object> textsMap = (Map<String, Object>) textsObject;
-                    RealmList<TextData> textDataRealmList = new RealmList<>();
+                        Object textsObject = libraryMap.get("texts");
+                        Log.d(TAG, "textsObject: " + textsObject);
+                        Map<String, Object> textsMap = (Map<String, Object>) textsObject;
+                        RealmList<TextData> textDataRealmList = new RealmList<>();
 
-                    if (textsMap != null) {
-                        for (String key3 : textsMap.keySet()) {
-                            Object textObject = textsMap.get(key3);
-                            Log.d(TAG, "textObject: " + textObject);
+                        if (textsMap != null) {
+                            for (String key3 : textsMap.keySet()) {
+                                Object textObject = textsMap.get(key3);
+                                Log.d(TAG, "textObject: " + textObject);
 
-                            // this checks that the firebase structure isn't wrong
-                            // and that the textsMap.get(key3) doesn't return a string while it should return a map
-                            if (!(textObject instanceof String)) {
-                                Map<String, Object> textMap = (Map<String, Object>) textObject;
-                                if (textMap != null) {
-                                    TextData text = new TextData();
+                                // this checks that the firebase structure isn't wrong
+                                // and that the textsMap.get(key3) doesn't return a string while it should return a map
+                                if (!(textObject instanceof String)) {
+                                    Map<String, Object> textMap = (Map<String, Object>) textObject;
+                                    if (textMap != null) {
+                                        TextData text = new TextData();
 
-                                    text.setTextKey(key3);
-                                    text.setTranslationName((String) textMap.get("name"));
-                                    text.setTranslationDesc((String) textMap.get("description"));
-                                    text.setAndroidKey((String) textMap.get("android_key"));
-                                    text.setIosKey((String) textMap.get("ios_key"));
-                                    text.setWebKey((String) textMap.get("web_key"));
+                                        text.setTextKey(key3);
+                                        text.setTranslationName((String) textMap.get("name"));
+                                        text.setTranslationDesc((String) textMap.get("description"));
+                                        text.setAndroidKey((String) textMap.get("android_key"));
+                                        text.setIosKey((String) textMap.get("ios_key"));
+                                        text.setWebKey((String) textMap.get("web_key"));
 
-                                    Object translationsObject = textMap.get("translations");
-                                    Map<String, Object> translationsMap = (Map<String, Object>) translationsObject;
-                                    RealmList<SingleTranslationData> translationDataRealmList = new RealmList<>();
+                                        Object translationsObject = textMap.get("translations");
+                                        Map<String, Object> translationsMap = (Map<String, Object>) translationsObject;
+                                        RealmList<SingleTranslationData> translationDataRealmList = new RealmList<>();
 
-                                    if (translationsMap != null) {
-                                        for (String key4 : translationsMap.keySet()) {
-                                            Object translationValue = translationsMap.get(key4);
+                                        if (translationsMap != null) {
+                                            for (String key4 : translationsMap.keySet()) {
+                                                Object translationValue = translationsMap.get(key4);
 
-                                            SingleTranslationData translation = new SingleTranslationData();
-                                            translation.setLangKey(key4);
-                                            translation.setTranslation((String) translationValue);
+                                                SingleTranslationData translation = new SingleTranslationData();
+                                                translation.setLangKey(key4);
+                                                translation.setTranslation((String) translationValue);
 
-                                            translationDataRealmList.add(translation);
-                                            text.setTranslations(translationDataRealmList);
+                                                translationDataRealmList.add(translation);
+                                                text.setTranslations(translationDataRealmList);
 
-                                            Log.d(TAG, "key4: " + key4);
-                                            Log.d(TAG, "translationValue: " + translationValue);
+                                                Log.d(TAG, "key4: " + key4);
+                                                Log.d(TAG, "translationValue: " + translationValue);
+                                            }
                                         }
+                                        textDataRealmList.add(text);
+                                        library.setTexts(textDataRealmList);
+                                    } else {
+                                        Log.d(TAG, "textMap is null");
                                     }
-                                    textDataRealmList.add(text);
-                                    library.setTexts(textDataRealmList);
-                                } else {
-                                    Log.d(TAG, "textMap is null");
                                 }
                             }
                         }

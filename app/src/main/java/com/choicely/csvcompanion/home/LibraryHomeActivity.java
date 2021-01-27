@@ -43,6 +43,7 @@ public class LibraryHomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.library_home_activity);
 
+        newLibraryButton = findViewById(R.id.activity_library_home_new_library);
         searchButton = findViewById(R.id.library_home_activity_search_button);
         searchField = findViewById(R.id.library_home_activity_search_field);
         backSpace = findViewById(R.id.library_home_activity_backspace);
@@ -63,8 +64,6 @@ public class LibraryHomeActivity extends AppCompatActivity {
             }
         });
 
-        newLibraryButton = findViewById(R.id.activity_library_home_new_library);
-
         libraryRecycler = findViewById(R.id.library_home_activity_recycler);
         libraryRecycler.setLayoutManager(new LinearLayoutManager(this));
         adapter = new LibraryAdapter(this);
@@ -78,7 +77,7 @@ public class LibraryHomeActivity extends AppCompatActivity {
             isSearchActive = true;
             searchActivity();
         } else if (v == backSpace) {
-            Log.d(TAG, "backspace clicked");
+            searchField.getText().clear();
             isSearchActive = false;
             searchActivity();
         } else if (v == newLibraryButton) {
