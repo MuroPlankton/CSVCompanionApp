@@ -16,5 +16,7 @@
     <string name="libraries">Libraries</string>
     <string name="name_of_the_library">Name of the library</string>
     <string name="pop_up_message">You have not added a name or a description, do you want to continue without saving?</string>
+    <string name="share_library">Share library</string>
+    <string name="export_library">Export library to csv</string>
     <string name="search_by_name">search by name...</string>
 </resources>
