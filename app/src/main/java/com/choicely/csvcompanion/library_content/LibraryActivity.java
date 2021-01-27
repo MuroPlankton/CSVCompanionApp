@@ -22,6 +22,8 @@ import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.data.TextData;
 import com.choicely.csvcompanion.db.RealmHelper;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.annotations.NotNull;
@@ -51,6 +53,7 @@ public class LibraryActivity extends AppCompatActivity {
     private final DatabaseReference ref = database.getReference();
 
     private String libraryID;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,7 +80,9 @@ public class LibraryActivity extends AppCompatActivity {
 
     private void newLibrary() {
         libraryID = String.valueOf(UUID.randomUUID());
+        user = FirebaseAuth.getInstance().getCurrentUser();
         Log.d(TAG, "new Library created with the ID:" + libraryID);
+        Log.d(TAG, "newLibrary: user:" + user);
         saveLibrary();
     }
 
@@ -106,7 +111,11 @@ public class LibraryActivity extends AppCompatActivity {
 
     private void saveLibrary() {
         DatabaseReference libRef = ref.child("libraries/" + libraryID);
+        Map<String, String> users = new HashMap<>();
+        users.put("user", user.getDisplayName());
+
         Map<String, Object> library = new HashMap<>();
+        library.put("users", users);
         library.put("library_name", libraryNameEditText.getText().toString());
         libRef.updateChildren(library);
 

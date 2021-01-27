@@ -9,6 +9,7 @@ public class LibraryData extends RealmObject {
     @PrimaryKey
     private String libraryID;
     private String libraryName;
+    private String user;
     private RealmList<LanguageData> languages = new RealmList<>();
     private RealmList<TextData> texts = new RealmList<>();
 
@@ -26,6 +27,14 @@ public class LibraryData extends RealmObject {
 
     public void setLibraryName(String libraryName) {
         this.libraryName = libraryName;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
     public RealmList<LanguageData> getLanguages() {
