@@ -230,7 +230,7 @@ public class EditTranslationActivity extends AppCompatActivity {
 
     private Boolean checkIfRowsAreEmpty() {
         if (translationName.getText().toString().isEmpty() || transLationDesc.getText().toString().isEmpty()){
-            popUpAlert.alertPopUp(EditTranslationActivity.this, R.string.pop_up_message, "error");
+            popUpAlert.alertPopUp(EditTranslationActivity.this, R.string.pop_up_message, "Warning");
             return true;
         }
         return false;
