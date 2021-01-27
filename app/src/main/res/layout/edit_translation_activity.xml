@@ -1,45 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:fillViewport="true"
     >
 
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/edit_translation_act_submit_translation"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         >
 
         <EditText
             android:id="@+id/edit_translation_act_translation_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
             android:layout_above="@id/edit_translation_act_translation_desc"
+            android:layout_marginHorizontal="32dp"
             android:hint="@string/translation_name"
             android:maxLines="1"
             />
 
-        <com.google.android.material.textfield.TextInputEditText
+        <EditText
             android:id="@+id/edit_translation_act_translation_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_above="@id/edit_translation_act_android_key"
+            android:layout_centerVertical="true"
+            android:layout_margin="12dp"
+            android:hint="@string/translation_description"
             android:lines="5"
             android:maxLines="5"
-            android:layout_margin="12dp"
-            android:layout_centerVertical="true"
-            android:hint="@string/translation_description"
-            android:layout_above="@id/edit_translation_act_android_key"
             />
 
         <EditText
             android:id="@+id/edit_translation_act_android_key"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_above="@id/edit_translation_act_ios_key"
             android:layout_marginHorizontal="32dp"
             android:layout_marginTop="16dp"
-            android:layout_above="@id/edit_translation_act_ios_key"
             android:hint="@string/android_key"
             />
 
@@ -47,8 +49,8 @@
             android:id="@+id/edit_translation_act_ios_key"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
             android:layout_above="@id/edit_translation_act_web_key"
+            android:layout_marginHorizontal="32dp"
             android:hint="@string/ios_key"
             />
 
@@ -56,18 +58,18 @@
             android:id="@+id/edit_translation_act_web_key"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
             android:layout_above="@id/edit_translation_act_dropdown_combo"
+            android:layout_marginHorizontal="32dp"
             android:hint="@string/web_key"
             />
 
         <LinearLayout
+            android:id="@+id/edit_translation_act_dropdown_combo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_above="@id/edit_translation_act_write_translation"
             android:layout_centerHorizontal="true"
             android:gravity="center_horizontal"
-            android:layout_above="@id/edit_translation_act_write_translation"
-            android:id="@+id/edit_translation_act_dropdown_combo"
             android:orientation="vertical"
             >
 
@@ -81,11 +83,11 @@
                 />
 
             <View
+                android:id="@+id/edit_translation_act_spinner_underline"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_centerHorizontal="true"
                 android:background="#808080"
-                android:id="@+id/edit_translation_act_spinner_underline"
                 />
         </LinearLayout>
 
@@ -93,20 +95,20 @@
             android:id="@+id/edit_translation_act_write_translation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
             android:layout_above="@id/edit_translation_act_submit_translation"
+            android:layout_marginHorizontal="32dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="30dp"
             android:hint="@string/translation"
             />
-    </ScrollView>
 
-    <Button
-        android:id="@+id/edit_translation_act_submit_translation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:text="@string/submit_translation"
-        />
-</RelativeLayout>
+        <Button
+            android:id="@+id/edit_translation_act_submit_translation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="@string/submit_translation"
+            />
+    </RelativeLayout>
+</ScrollView>
