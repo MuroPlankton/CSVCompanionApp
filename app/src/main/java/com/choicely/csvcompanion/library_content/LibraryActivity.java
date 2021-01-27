@@ -24,6 +24,8 @@ import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.data.TextData;
 import com.choicely.csvcompanion.db.RealmHelper;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.annotations.NotNull;
@@ -51,6 +53,9 @@ public class LibraryActivity extends AppCompatActivity {
     private final DatabaseReference ref = database.getReference();
 
     private String libraryID;
+    private FirebaseUser user;
+
+    private Realm realm = RealmHelper.getInstance().getRealm();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,14 +101,21 @@ public class LibraryActivity extends AppCompatActivity {
 
     private void newLibrary() {
         libraryID = String.valueOf(UUID.randomUUID());
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
         Log.d(TAG, "new Library created with the ID:" + libraryID);
+        Log.d(TAG, "newLibrary: user:" + user);
+
+        addUser();
         saveLibrary();
     }
 
     private void loadLibrary() {
         Realm realm = RealmHelper.getInstance().getRealm();
         LibraryData library = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
-        libraryNameEditText.setText(library.getLibraryName());
+        if(library != null){
+            libraryNameEditText.setText(library.getLibraryName());
+        }
         updateContent();
     }
 
@@ -125,6 +137,7 @@ public class LibraryActivity extends AppCompatActivity {
 
     private void saveLibrary() {
         DatabaseReference libRef = ref.child("libraries/" + libraryID);
+
         Map<String, Object> library = new HashMap<>();
         library.put("library_name", libraryNameEditText.getText().toString());
         libRef.updateChildren(library);
@@ -135,7 +148,6 @@ public class LibraryActivity extends AppCompatActivity {
     private void updateContent() {
         adapter.clear();
 
-        Realm realm = RealmHelper.getInstance().getRealm();
         LibraryData library = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
 
         try {
@@ -169,7 +181,6 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     private Boolean checkIfLanguageAlreadyExists(String langCode) {
-        Realm realm = RealmHelper.getInstance().getRealm();
         currentLibrary = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
 
         try {
@@ -183,6 +194,14 @@ public class LibraryActivity extends AppCompatActivity {
             e.getMessage();
         }
         return false;
+    }
+
+    public void addUser() {
+        DatabaseReference libRef = ref.child("libraries/" + libraryID + "/users");
+        Map<String, Object> userMap = new HashMap<>();
+        userMap.put("user", user.getDisplayName());
+        libRef.updateChildren(userMap);
+
     }
 
     private void addLanguageToFireBase(String langCode, String langName) {

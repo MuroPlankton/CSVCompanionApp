@@ -8,12 +8,15 @@ import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.data.SingleTranslationData;
 import com.choicely.csvcompanion.data.TextData;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import io.realm.Realm;
@@ -83,7 +86,18 @@ public class FirebaseDBHelper {
                         library.setLibraryID(key1);
                         library.setLibraryName((String) libraryMap.get("library_name"));
                     }
-
+//                    Object usersObject = libraryMap.get("users");
+//                    Map<String, Object> usersMap = (Map<String, Object>) usersObject;
+//                    List<LibraryData> userDataList = new ArrayList<>();
+//
+//                    if(usersMap != null){
+//                        for(String user : usersMap.keySet()){
+//
+//                            Object userValue = usersMap.get(user);
+//                            userDataList.add(userValue);
+//                            library.setUser(userDataList);
+//                        }
+//                    }
                     Object languagesObject = libraryMap.get("languages");
                     Map<String, Object> languagesMap = (Map<String, Object>) languagesObject;
                     RealmList<LanguageData> languageDataRealmList = new RealmList<>();
