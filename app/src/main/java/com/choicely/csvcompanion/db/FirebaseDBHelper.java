@@ -46,21 +46,23 @@ public class FirebaseDBHelper {
     }
 
     public void listenForLibraryDataChange() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("libraries");
+        new Thread(() -> {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference("libraries");
 
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                final Object changedData = snapshot.getValue();
-                readFirebaseLibraries(changedData);
-            }
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    final Object changedData = snapshot.getValue();
+                    readFirebaseLibraries(changedData);
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d(TAG, "Failed to read value", error.toException());
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.d(TAG, "Failed to read value", error.toException());
+                }
+            });
+        }).start();
     }
 
     @SuppressWarnings("unchecked")
@@ -81,18 +83,7 @@ public class FirebaseDBHelper {
                     if (libraryMap != null) {
                         library.setLibraryID(key1);
                         library.setLibraryName((String) libraryMap.get("library_name"));
-//                    Object usersObject = libraryMap.get("users");
-//                    Map<String, Object> usersMap = (Map<String, Object>) usersObject;
-//                    List<LibraryData> userDataList = new ArrayList<>();
-//
-//                    if(usersMap != null){
-//                        for(String user : usersMap.keySet()){
-//
-//                            Object userValue = usersMap.get(user);
-//                            userDataList.add(userValue);
-//                            library.setUser(userDataList);
-//                        }
-//                    }
+
                         Object languagesObject = libraryMap.get("languages");
                         Map<String, Object> languagesMap = (Map<String, Object>) languagesObject;
                         RealmList<LanguageData> languageDataRealmList = new RealmList<>();

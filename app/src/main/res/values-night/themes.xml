@@ -5,6 +5,7 @@
         <item name="colorPrimary">#3C3C3C</item>
         <item name="colorPrimaryVariant">#323232</item>
         <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="android:colorBackground">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
@@ -12,5 +13,9 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+    </style>
+
+    <style name="CardBackgroundNight" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <item name="cardBackgroundColor">#3C3C3C</item>
     </style>
 </resources>

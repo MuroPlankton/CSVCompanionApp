@@ -85,8 +85,6 @@ public class EditTranslationActivity extends AppCompatActivity {
 
         langSpinner.setOnItemSelectedListener(langSelectedListener);
 
-        translationValue.addTextChangedListener(translationTextChangedListener);
-
         submitTranslationButton.setOnClickListener(buttonListener);
     }
 
@@ -99,9 +97,17 @@ public class EditTranslationActivity extends AppCompatActivity {
         ArrayAdapter<String> langAdapter = new ArrayAdapter<String>(this, R.layout.language_text_layout, R.id.language_text_view, langNames);
         langSpinner.setAdapter(langAdapter);
     }
+
     private AdapterView.OnItemSelectedListener langSelectedListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            if (translationValue.getText().length() > 0) {
+                FirebaseDatabase.getInstance().getReference()
+                        .child("libraries/" + CurrentLibraryKey + "/texts/" + currentTextKey
+                                + "/translations/" + langKeys.get(langSpinner.getSelectedItemPosition()))
+                        .setValue(translationValue.getText().toString());
+            }
+
             Realm realm = RealmHelper.getInstance().getRealm();
 
             currentLibrary = realm.where(LibraryData.class).equalTo("libraryID", getIntent().getStringExtra(LIBRARY_ID)).findFirst();
@@ -134,7 +140,6 @@ public class EditTranslationActivity extends AppCompatActivity {
         }
     };
 
-
     private void findCurrentText() {
         List<TextData> texts = currentLibrary.getTexts();
         for (TextData text : texts) {
@@ -151,52 +156,6 @@ public class EditTranslationActivity extends AppCompatActivity {
         androidKey.setText(currentText.getAndroidKey());
         iosKey.setText(currentText.getIosKey());
         webKey.setText(currentText.getWebKey());
-    }
-    private TextWatcher translationTextChangedListener = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (s.length() > 0) {
-                translationTextSaveDelayer();
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-        }
-    };
-
-
-    private void translationTextSaveDelayer() {
-        TimerTask translationSaveTask = new TimerTask() {
-            @Override
-            public void run() {
-                saveCurrentTranslationTextToFirebase();
-            }
-        };
-
-        if (!isTranslationSaveScheduled) {
-            isTranslationSaveScheduled = true;
-            translationTextSaveTimer = new Timer();
-            translationTextSaveTimer.schedule(translationSaveTask, 1000);
-        } else {
-            isTranslationSaveScheduled = false;
-            translationTextSaveTimer.cancel();
-            translationTextSaveTimer.purge();
-            translationTextSaveDelayer();
-        }
-    }
-
-    private void saveCurrentTranslationTextToFirebase() {
-        FirebaseDatabase.getInstance().getReference()
-                .child("libraries/" + CurrentLibraryKey + "/texts/" + currentTextKey
-                        + "/translations/" + langKeys.get(langSpinner.getSelectedItemPosition()))
-                .setValue(translationValue.getText().toString());
     }
 
     private View.OnClickListener buttonListener = v -> {
