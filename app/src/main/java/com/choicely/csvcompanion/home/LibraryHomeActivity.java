@@ -2,13 +2,12 @@ package com.choicely.csvcompanion.home;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -17,10 +16,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.choicely.csvcompanion.R;
-import com.choicely.csvcompanion.library_content.LibraryActivity;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.db.FirebaseDBHelper;
 import com.choicely.csvcompanion.db.RealmHelper;
+import com.choicely.csvcompanion.libraryContent.LibraryActivity;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -30,11 +29,8 @@ public class LibraryHomeActivity extends AppCompatActivity {
     private static final String TAG = "LibraryHomeActivity";
 
     private Button newLibraryButton;
-    private ImageButton searchButton;
-    private ImageButton backSpace;
-    private EditText searchField;
+    private SearchView searchView;
     private TextView heading;
-    private boolean isSearchActive = false;
     private RecyclerView libraryRecycler;
     private LibraryAdapter adapter;
 
@@ -43,27 +39,8 @@ public class LibraryHomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.library_home_activity);
 
-        searchButton = findViewById(R.id.library_home_activity_search_button);
-        searchField = findViewById(R.id.library_home_activity_search_field);
-        backSpace = findViewById(R.id.library_home_activity_backspace);
-        heading = findViewById(R.id.library_home_activity_heading);
-
-        searchField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                updateSearchedContent();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-
         newLibraryButton = findViewById(R.id.activity_library_home_new_library);
+        heading = findViewById(R.id.library_home_activity_heading);
 
         libraryRecycler = findViewById(R.id.library_home_activity_recycler);
         libraryRecycler.setLayoutManager(new LinearLayoutManager(this));
@@ -73,15 +50,37 @@ public class LibraryHomeActivity extends AppCompatActivity {
         startFireBaseListening();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.library_home_activity_actions, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search_libraries);
+        searchView = (SearchView) searchItem.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                updateSearchedContent();
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startFireBaseListening();
+    }
+
     public void onClick(View v) {
-        if (v == searchButton) {
-            isSearchActive = true;
-            searchActivity();
-        } else if (v == backSpace) {
-            Log.d(TAG, "backspace clicked");
-            isSearchActive = false;
-            searchActivity();
-        } else if (v == newLibraryButton) {
+        if (v == newLibraryButton) {
             Intent intent = new Intent(this, LibraryActivity.class);
             startActivity(intent);
         }
@@ -93,19 +92,13 @@ public class LibraryHomeActivity extends AppCompatActivity {
         RealmHelper helper = RealmHelper.getInstance();
         Realm realm = helper.getRealm();
 
-        RealmResults<LibraryData> libraryNames = realm.where(LibraryData.class).contains("libraryName", searchField.getText().toString()).findAll();
+        RealmResults<LibraryData> libraryNames = realm.where(LibraryData.class).contains("libraryName", searchView.getQuery().toString()).findAll();
 
         for (LibraryData libraryName : libraryNames) {
             adapter.add(libraryName);
         }
 
         adapter.notifyDataSetChanged();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        startFireBaseListening();
     }
 
     private void startFireBaseListening() {
@@ -127,17 +120,5 @@ public class LibraryHomeActivity extends AppCompatActivity {
         }
 
         adapter.notifyDataSetChanged();
-    }
-
-    private void searchActivity() {
-        if (isSearchActive) {
-            searchField.setVisibility(View.VISIBLE);
-            backSpace.setVisibility(View.VISIBLE);
-            heading.setVisibility(View.INVISIBLE);
-        } else {
-            searchField.setVisibility(View.GONE);
-            backSpace.setVisibility(View.GONE);
-            heading.setVisibility(View.VISIBLE);
-        }
     }
 }

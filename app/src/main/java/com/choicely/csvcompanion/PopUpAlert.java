@@ -2,11 +2,7 @@ package com.choicely.csvcompanion;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.view.View;
-
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class PopUpAlert {
 

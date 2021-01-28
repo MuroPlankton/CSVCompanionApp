@@ -19,4 +19,6 @@
     <string name="share_library">Share library</string>
     <string name="export_library">Export library to csv</string>
     <string name="search_by_name">search by name...</string>
+    <string name="search">Search</string>
+    <string name="backspace">backspace</string>
 </resources>

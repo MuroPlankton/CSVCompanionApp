@@ -12,46 +12,14 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="24dp"
         android:text="@string/libraries"
-        android:textColor="@color/black"
         android:textSize="32sp" />
-
-    <ImageButton
-        android:id="@+id/library_home_activity_search_button"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentEnd="true"
-        android:background="@drawable/ic_search_24px"
-        android:onClick="onClick"
-        />
-
-    <EditText
-        android:id="@+id/library_home_activity_search_field"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/library_home_activity_search_button"
-        android:layout_alignBottom="@id/library_home_activity_search_button"
-        android:layout_toStartOf="@id/library_home_activity_search_button"
-        android:hint="@string/search_by_name"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
-    <ImageButton
-        android:id="@+id/library_home_activity_backspace"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@drawable/ic_keyboard_backspace_24px"
-        android:layout_toStartOf="@id/library_home_activity_search_field"
-        android:visibility="gone"
-        android:onClick="onClick"
-        tools:visibility="visible"
-        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/library_home_activity_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/activity_library_home_new_library"
-        android:layout_below="@id/library_home_activity_search_button"
+        android:layout_below="@id/library_home_activity_heading"
         android:layout_marginTop="8dp"
         />
 

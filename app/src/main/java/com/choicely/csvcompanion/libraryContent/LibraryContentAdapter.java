@@ -1,8 +1,7 @@
-package com.choicely.csvcompanion.library_content;
+package com.choicely.csvcompanion.libraryContent;
 
 import android.content.Context;
 import android.content.Intent;
-import android.sax.ElementListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import com.choicely.csvcompanion.EditTranslationActivity;
 import com.choicely.csvcompanion.IntentKeys;
 import com.choicely.csvcompanion.R;
 import com.choicely.csvcompanion.data.LibraryData;
-import com.choicely.csvcompanion.data.TextData;
 
 import java.util.ArrayList;
 import java.util.List;

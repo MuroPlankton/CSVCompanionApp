@@ -14,7 +14,7 @@
         android:theme="@style/Theme.CSVCompanion"
         >
         <activity android:name=".home.LibraryHomeActivity"/>
-        <activity android:name=".library_content.LibraryActivity"/>
+        <activity android:name=".libraryContent.LibraryActivity"/>
         <activity android:name=".EditTranslationActivity"
             android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".SplashScreenActivity"
