@@ -2,7 +2,6 @@ package com.choicely.csvcompanion.home;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.choicely.csvcompanion.IntentKeys;
 import com.choicely.csvcompanion.R;
 import com.choicely.csvcompanion.data.LibraryData;
-import com.choicely.csvcompanion.library_content.LibraryActivity;
+import com.choicely.csvcompanion.libraryContent.LibraryActivity;
 
 import java.util.ArrayList;
 import java.util.List;

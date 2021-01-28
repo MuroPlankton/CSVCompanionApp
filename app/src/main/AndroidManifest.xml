@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".home.LibraryHomeActivity"/>
-        <activity android:name=".library_content.LibraryActivity"/>
+        <activity android:name=".libraryContent.LibraryActivity"/>
         <activity android:name=".EditTranslationActivity"
             android:windowSoftInputMode="adjustResize"/>
     </application>

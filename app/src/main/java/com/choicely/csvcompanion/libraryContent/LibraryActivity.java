@@ -1,4 +1,4 @@
-package com.choicely.csvcompanion.library_content;
+package com.choicely.csvcompanion.libraryContent;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -83,7 +83,7 @@ public class LibraryActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.action_bar_buttons, menu);
+        inflater.inflate(R.menu.library_activity_actions, menu);
         return true;
     }
 
