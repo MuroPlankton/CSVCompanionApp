@@ -83,11 +83,10 @@ public class FirebaseDBHelper {
                     if (libraryMap != null) {
                         library.setLibraryID(key1);
                         library.setLibraryName((String) libraryMap.get("library_name"));
-                    }
 
-                    Object languagesObject = libraryMap.get("languages");
-                    Map<String, Object> languagesMap = (Map<String, Object>) languagesObject;
-                    RealmList<LanguageData> languageDataRealmList = new RealmList<>();
+                        Object languagesObject = libraryMap.get("languages");
+                        Map<String, Object> languagesMap = (Map<String, Object>) languagesObject;
+                        RealmList<LanguageData> languageDataRealmList = new RealmList<>();
 
                         if (languagesMap != null) {
                             for (String key2 : languagesMap.keySet()) {

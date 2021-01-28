@@ -32,7 +32,6 @@ public class SplashScreenActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        Log.d(TAG, user.getEmail());
         if (user != null) {
             startActivity(new Intent(this, LibraryHomeActivity.class));
             finish();
@@ -75,5 +74,4 @@ public class SplashScreenActivity extends Activity {
 
         }
     };
-
 }
