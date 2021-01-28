@@ -21,8 +21,6 @@
             android:gravity="center"
             android:padding="12dp"
             android:textSize="24sp"
-            android:textColor="@color/black"
-            android:background="@color/light_color"
             tools:text="library name"
             />
     </androidx.cardview.widget.CardView>
