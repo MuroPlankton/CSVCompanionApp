@@ -199,7 +199,7 @@ public class LibraryActivity extends AppCompatActivity {
     public void addUser() {
         DatabaseReference libRef = ref.child("libraries/" + libraryID + "/users");
         Map<String, Object> userMap = new HashMap<>();
-        userMap.put("user", user.getDisplayName());
+        userMap.put(user.getUid(), user.getDisplayName());
         libRef.updateChildren(userMap);
 
     }
