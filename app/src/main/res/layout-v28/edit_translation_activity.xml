@@ -85,6 +85,7 @@
                 android:id="@+id/edit_translation_act_spinner_underline"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:layout_centerHorizontal="true"
                 android:background="#808080"
                 />
         </LinearLayout>

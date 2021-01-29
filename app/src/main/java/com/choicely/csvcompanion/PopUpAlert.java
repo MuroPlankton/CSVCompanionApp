@@ -8,16 +8,9 @@ public class PopUpAlert {
 
     public void alertPopUp(Activity activity, int message, String title) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setMessage(message).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                activity.finish();
-            }
-        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
+        builder.setMessage(message)
+                .setPositiveButton("Yes", (dialog, which) -> activity.finish())
+                .setNegativeButton("No", (dialog, which) -> {
         });
 
         AlertDialog alert = builder.create();
