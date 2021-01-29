@@ -36,7 +36,6 @@
         >
 
         <EditText
-
             android:id="@+id/library_activity_language_code_field"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
