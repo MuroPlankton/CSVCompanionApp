@@ -41,12 +41,10 @@ public class LibraryContentAdapter extends RecyclerView.Adapter<LibraryContentAd
 
     @Override
     public void onBindViewHolder(@NonNull LibraryContentViewHolder holder, int position) {
-        holder.desc.setText(textDescList.get(position));
         holder.textName.setText(textNameList.get(position));
+        holder.desc.setText(textDescList.get(position));
         holder.libraryID = libraryData.getLibraryID();
         holder.textID = textIDList.get(position);
-
-        Log.d(TAG, "onBindViewHolder: " + position);
     }
 
     public void add(String id, String name, String desc) {
@@ -85,7 +83,6 @@ public class LibraryContentAdapter extends RecyclerView.Adapter<LibraryContentAd
         }
 
         private final View.OnClickListener onRowClick = view -> {
-
             Context ctx = desc.getContext();
             Intent intent = new Intent(ctx, EditTranslationActivity.class);
             intent.putExtra(IntentKeys.LIBRARY_ID, libraryID);

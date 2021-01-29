@@ -80,7 +80,6 @@ public class LibraryActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -141,11 +140,23 @@ public class LibraryActivity extends AppCompatActivity {
     private void saveLibrary() {
         DatabaseReference libRef = ref.child("libraries/" + libraryID);
 
+        String libraryName = libraryNameEditText.getText().toString();
+
         Map<String, Object> library = new HashMap<>();
-        library.put("library_name", libraryNameEditText.getText().toString());
+        library.put("library_name", libraryName);
         libRef.updateChildren(library);
 
         Log.d(TAG, "saveLibrary: library saved with the ID:" + libraryID);
+
+        addLibraryToUserLibraries(libraryName);
+    }
+
+    private void addLibraryToUserLibraries(String libraryName){
+        DatabaseReference libRef = ref.child("user_libraries/" + user.getUid());
+
+        Map<String, Object> userLibraryMap = new HashMap<>();
+        userLibraryMap.put(libraryID, libraryName);
+        libRef.updateChildren(userLibraryMap);
     }
 
     private void updateContent() {
