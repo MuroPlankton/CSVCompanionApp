@@ -29,6 +29,7 @@
             android:layout_height="36dp"
             android:src="@drawable/ic_share_24px"
             android:backgroundTint="@color/fui_transparent"
+            android:tint="?iconColor"
             android:layout_gravity="end|center"
             />
 
