@@ -49,10 +49,8 @@ public class EditTranslationActivity extends AppCompatActivity {
     private TextData currentText;
     private final List<String> langKeys = new ArrayList<>();
     private final List<String> langNames = new ArrayList<>();
-    private final boolean isTranslationSaveScheduled = false;
-    private Timer translationTextSaveTimer;
 
-
+    private Map<String, String> translations = new HashMap<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,36 +100,9 @@ public class EditTranslationActivity extends AppCompatActivity {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             if (translationValue.getText().length() > 0) {
-                FirebaseDatabase.getInstance().getReference()
-                        .child("libraries/" + CurrentLibraryKey + "/texts/" + currentTextKey
-                                + "/translations/" + langKeys.get(langSpinner.getSelectedItemPosition()))
-                        .setValue(translationValue.getText().toString());
+                translations.put(langKeys.get(langSpinner.getSelectedItemPosition()), translationValue.getText().toString());
             }
-
-            Realm realm = RealmHelper.getInstance().getRealm();
-
-            currentLibrary = realm.where(LibraryData.class).equalTo("libraryID", getIntent().getStringExtra(LIBRARY_ID)).findFirst();
-            List<TextData> updatedTexts = currentLibrary.getTexts();
-            if (updatedTexts.size() > 0) {
-                List<SingleTranslationData> updatedTranslations = null;
-
-                for (TextData text : updatedTexts) {
-                    if (text.getTextKey().equals(currentTextKey)) {
-                        currentText = text;
-                        updatedTranslations = text.getTranslations();
-                        break;
-                    }
-                }
-
-                if (updatedTranslations != null) {
-                    for (SingleTranslationData translationData : updatedTranslations) {
-                        Log.d(TAG, "LangKey: " + translationData.getLangKey() + " translation: " + translationData.getTranslation());
-                        if (translationData.getLangKey().equals(langKeys.get(position))) {
-                            translationValue.setText(translationData.getTranslation());
-                        }
-                    }
-                }
-            }
+            translationValue.setText(translations.get(langKeys.get(langSpinner.getSelectedItemPosition())));
         }
 
         @Override
@@ -156,6 +127,10 @@ public class EditTranslationActivity extends AppCompatActivity {
         androidKey.setText(currentText.getAndroidKey());
         iosKey.setText(currentText.getIosKey());
         webKey.setText(currentText.getWebKey());
+
+        for (SingleTranslationData translationData : currentText.getTranslations()) {
+            translations.put(translationData.getLangKey(), translationData.getTranslation());
+        }
     }
 
     private final View.OnClickListener buttonListener = v -> {
@@ -168,7 +143,7 @@ public class EditTranslationActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(!checkIfRowsAreEmpty()){
+        if (!checkIfRowsAreEmpty()) {
             super.onBackPressed();
             saveCurrentText();
         }
@@ -181,11 +156,12 @@ public class EditTranslationActivity extends AppCompatActivity {
         textToSave.put("android_key", androidKey.getText().toString());
         textToSave.put("ios_key", iosKey.getText().toString());
         textToSave.put("web_key", webKey.getText().toString());
+        textToSave.put("translations", translations);
         FirebaseDatabase.getInstance().getReference().child("libraries").child(CurrentLibraryKey).child("texts").child(currentTextKey).updateChildren(textToSave);
     }
 
     private Boolean checkIfRowsAreEmpty() {
-        if (translationName.getText().toString().isEmpty() || transLationDesc.getText().toString().isEmpty()){
+        if (translationName.getText().toString().isEmpty() || transLationDesc.getText().toString().isEmpty()) {
             popUpAlert.alertPopUp(EditTranslationActivity.this, R.string.pop_up_message, "Warning");
             return true;
         }
