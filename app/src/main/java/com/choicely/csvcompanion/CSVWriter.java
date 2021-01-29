@@ -20,10 +20,10 @@ import io.realm.Realm;
 
 public class CSVWriter {
 
-    public static void writeCSVFile(String libraryKey) {
+    public static void writeCSVFile(LibraryData libraryData) {
         new Thread(() -> {
-            Realm realm = RealmHelper.getInstance().getRealm();
-            LibraryData libraryData = realm.where(LibraryData.class).equalTo("libraryID", libraryKey).findFirst();
+//            Realm realm = Realm.getDefaultInstance();
+//            LibraryData libraryData = realm.where(LibraryData.class).equalTo("libraryID", libraryKey).findFirst();
 
             File root = Environment.getDataDirectory();
             File csvFile = new File(root, libraryData.getLibraryName() + ".csv");
@@ -72,6 +72,8 @@ public class CSVWriter {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+//            realm.close();
         }).start();
     }
 }

@@ -92,7 +92,8 @@ public class LibraryActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.action_share) {
             return true;
         } else if (item.getItemId() == R.id.action_export) {
-            CSVWriter.writeCSVFile(libraryID);
+            saveLibrary();
+            CSVWriter.writeCSVFile(currentLibrary);
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -112,9 +113,9 @@ public class LibraryActivity extends AppCompatActivity {
 
     private void loadLibrary() {
         Realm realm = RealmHelper.getInstance().getRealm();
-        LibraryData library = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
-        if(library != null){
-            libraryNameEditText.setText(library.getLibraryName());
+        updateCurrentLibrary();
+        if(currentLibrary != null){
+            libraryNameEditText.setText(currentLibrary.getLibraryName());
         }
         updateContent();
     }
@@ -148,11 +149,11 @@ public class LibraryActivity extends AppCompatActivity {
     private void updateContent() {
         adapter.clear();
 
-        LibraryData library = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
+        updateCurrentLibrary();
 
         try {
-            List<TextData> textList = library.getTexts();
-            adapter.setLibrary(library);
+            List<TextData> textList = currentLibrary.getTexts();
+            adapter.setLibrary(currentLibrary);
             for (TextData text : textList) {
                 adapter.add(text.getTextKey(), text.getTranslationName(), text.getTranslationDesc());
             }
@@ -181,7 +182,7 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     private Boolean checkIfLanguageAlreadyExists(String langCode) {
-        currentLibrary = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
+        updateCurrentLibrary();
 
         try {
             List<LanguageData> languages = currentLibrary.getLanguages();
@@ -213,8 +214,17 @@ public class LibraryActivity extends AppCompatActivity {
 
     public void onNewTranslationClicked(View view) {
         saveLibrary();
-        Intent intent = new Intent(LibraryActivity.this, EditTranslationActivity.class);
-        intent.putExtra(IntentKeys.LIBRARY_ID, libraryID);
-        startActivity(intent);
+        updateCurrentLibrary();
+        if (currentLibrary.getLanguages().size() < 1) {
+            Toast.makeText(this, "No languages", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = new Intent(LibraryActivity.this, EditTranslationActivity.class);
+            intent.putExtra(IntentKeys.LIBRARY_ID, libraryID);
+            startActivity(intent);
+        }
+    }
+
+    private void updateCurrentLibrary() {
+        currentLibrary = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
     }
 }
