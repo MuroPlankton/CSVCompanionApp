@@ -3,16 +3,21 @@ package com.choicely.csvcompanion.libraryContent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.ListPopupWindow;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,6 +35,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +49,10 @@ public class LibraryActivity extends AppCompatActivity {
     private EditText libraryNameEditText;
     private EditText langCodeEditText;
     private EditText langEditText;
+    private ListPopupWindow listPopupWindow;
+
+    private String[] sampleLanguages = {"en | English", "fi | Suomi", "sv | Svenska", "ee | Eestlane", "it | Italiano"};
+    private List<Pair<String, String>> sampleLanguageList = new ArrayList<>();
 
     private RecyclerView contentRecyclerView;
     private LibraryContentAdapter adapter;
@@ -54,8 +64,8 @@ public class LibraryActivity extends AppCompatActivity {
 
     private String libraryID;
     private FirebaseUser user;
-
     private Realm realm = RealmHelper.getInstance().getRealm();
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +74,12 @@ public class LibraryActivity extends AppCompatActivity {
 
         langCodeEditText = findViewById(R.id.library_activity_language_code_field);
         langEditText = findViewById(R.id.library_activity_language_field);
+        listPopupWindow = new ListPopupWindow(this);
+        listPopupWindow.setAdapter(new ArrayAdapter<>(this, R.layout.language_text_layout, R.id.language_text_view, sampleLanguages));
+        listPopupWindow.setAnchorView(langCodeEditText);
+        listPopupWindow.setWidth(ListPopupWindow.MATCH_PARENT);
+        listPopupWindow.setHeight(ListPopupWindow.WRAP_CONTENT);
+
         libraryNameEditText = findViewById(R.id.library_activity_library_name);
 
         contentRecyclerView = findViewById(R.id.library_activity_recycler);
@@ -78,7 +94,35 @@ public class LibraryActivity extends AppCompatActivity {
         } else {
             loadLibrary();
         }
+
+        sampleLanguageList.add(new Pair<>("en", "English"));
+        sampleLanguageList.add(new Pair<>("fi", "Suomi"));
+        sampleLanguageList.add(new Pair<>("sv", "Svenska"));
+        sampleLanguageList.add(new Pair<>("ee", "Eestlane"));
+        sampleLanguageList.add(new Pair<>("it", "Italiano"));
+
+        langEditText.setOnFocusChangeListener(onFocusChangeListener);
+        langCodeEditText.setOnFocusChangeListener(onFocusChangeListener);
+        listPopupWindow.setOnItemClickListener(langPopupItemClickListener);
     }
+
+    private AdapterView.OnItemClickListener langPopupItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            langCodeEditText.setText(sampleLanguageList.get(position).first);
+            langEditText.setText((sampleLanguageList.get(position).second));
+            listPopupWindow.dismiss();
+        }
+    };
+
+    View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus && !listPopupWindow.isShowing()) {
+                listPopupWindow.show();
+            }
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
