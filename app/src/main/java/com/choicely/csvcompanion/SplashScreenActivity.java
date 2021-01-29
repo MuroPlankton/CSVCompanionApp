@@ -63,7 +63,7 @@ public class SplashScreenActivity extends Activity {
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
             String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
+            Log.d(TAG, "User_id: " + userID);
             if (!snapshot.hasChild(ROOT_USER_ELEMENT) || !snapshot.child(ROOT_USER_ELEMENT).hasChild(userID)) {
                 FirebaseDatabase.getInstance().getReference().child(ROOT_USER_ELEMENT).child(userID).child("name").setValue(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
             }

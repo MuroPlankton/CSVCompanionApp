@@ -80,6 +80,7 @@ public class LibraryActivity extends AppCompatActivity {
         }
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -125,6 +126,8 @@ public class LibraryActivity extends AppCompatActivity {
         try {
             super.onResume();
             updateContent();
+
+            currentLibrary = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
         } catch (NullPointerException e) {
             e.getMessage();
         }
@@ -171,14 +174,17 @@ public class LibraryActivity extends AppCompatActivity {
         if (!checkIfLanguageAlreadyExists(langCode) && !langCode.isEmpty()) {
             addLanguageToFireBase(langCode, language);
             Toast.makeText(this, "Language: " + '"' + langCode + '"' + " added", Toast.LENGTH_SHORT).show();
+            clearLanguageEditTexts();
             updateContent();
         } else if (!checkIfLanguageAlreadyExists(langCode) && langCode.isEmpty()) {
-
             Toast.makeText(this, "Language code field cannot be empty!", Toast.LENGTH_SHORT).show();
-
         } else {
             Toast.makeText(this, "Language: " + '"' + langCode + '"' + " already exists", Toast.LENGTH_SHORT).show();
         }
+    }
+    private void clearLanguageEditTexts() {
+        langCodeEditText.setText("");
+        langEditText.setText("");
     }
 
     private Boolean checkIfLanguageAlreadyExists(String langCode) {
@@ -200,9 +206,9 @@ public class LibraryActivity extends AppCompatActivity {
     public void addUser() {
         DatabaseReference libRef = ref.child("libraries/" + libraryID + "/users");
         Map<String, Object> userMap = new HashMap<>();
-        userMap.put("user", user.getDisplayName());
+        userMap.put(user.getUid(), user.getDisplayName());
+        Log.d(TAG, "user_id: " + user.getUid());
         libRef.updateChildren(userMap);
-
     }
 
     private void addLanguageToFireBase(String langCode, String langName) {
