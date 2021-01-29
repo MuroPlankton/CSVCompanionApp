@@ -63,7 +63,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:onClick="onAddLanguageClicked"
+        android:onClick="onButtonClick"
         android:text="@string/add_lang"
         />
 
@@ -80,7 +80,7 @@
         android:id="@+id/library_activity_new_translation_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="onNewTranslationClicked"
+        android:onClick="onButtonClick"
         android:text="@string/new_translation"
         />
 
