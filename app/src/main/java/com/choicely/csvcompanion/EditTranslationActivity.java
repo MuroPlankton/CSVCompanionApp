@@ -36,7 +36,7 @@ import static com.choicely.csvcompanion.IntentKeys.TRANSLATION_ID;
 
 public class EditTranslationActivity extends AppCompatActivity {
 
-    private PopUpAlert popUpAlert = new PopUpAlert();
+    private final PopUpAlert popUpAlert = new PopUpAlert();
     private static final String TAG = "EditTranslationActivity";
     private String CurrentLibraryKey;
     private String currentTextKey;
@@ -47,9 +47,9 @@ public class EditTranslationActivity extends AppCompatActivity {
     private Button submitTranslationButton;
     private LibraryData currentLibrary;
     private TextData currentText;
-    private List<String> langKeys = new ArrayList<>();
-    private List<String> langNames = new ArrayList<>();
-    private boolean isTranslationSaveScheduled = false;
+    private final List<String> langKeys = new ArrayList<>();
+    private final List<String> langNames = new ArrayList<>();
+    private final boolean isTranslationSaveScheduled = false;
     private Timer translationTextSaveTimer;
 
 
@@ -98,7 +98,7 @@ public class EditTranslationActivity extends AppCompatActivity {
         langSpinner.setAdapter(langAdapter);
     }
 
-    private AdapterView.OnItemSelectedListener langSelectedListener = new AdapterView.OnItemSelectedListener() {
+    private final AdapterView.OnItemSelectedListener langSelectedListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             if (translationValue.getText().length() > 0) {
@@ -158,7 +158,7 @@ public class EditTranslationActivity extends AppCompatActivity {
         webKey.setText(currentText.getWebKey());
     }
 
-    private View.OnClickListener buttonListener = v -> {
+    private final View.OnClickListener buttonListener = v -> {
         if (!checkIfRowsAreEmpty()) {
             saveCurrentText();
             clearAndCreateNew();

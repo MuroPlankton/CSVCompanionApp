@@ -7,7 +7,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -43,6 +45,10 @@ public class LibraryActivity extends AppCompatActivity {
     private EditText libraryNameEditText;
     private EditText langCodeEditText;
     private EditText langEditText;
+    private TextView languageCountTextView;
+
+    private Button addLanguageButton;
+    private Button newTranslationButton;
 
     private RecyclerView contentRecyclerView;
     private LibraryContentAdapter adapter;
@@ -55,7 +61,10 @@ public class LibraryActivity extends AppCompatActivity {
     private String libraryID;
     private FirebaseUser user;
 
-    private Realm realm = RealmHelper.getInstance().getRealm();
+    private int languageCount = 0;
+
+    private final Realm realm = RealmHelper.getInstance().getRealm();
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +74,11 @@ public class LibraryActivity extends AppCompatActivity {
         langCodeEditText = findViewById(R.id.library_activity_language_code_field);
         langEditText = findViewById(R.id.library_activity_language_field);
         libraryNameEditText = findViewById(R.id.library_activity_library_name);
+
+        languageCountTextView = findViewById(R.id.library_activity_language_count);
+
+        addLanguageButton = findViewById(R.id.library_activity_language_button);
+        newTranslationButton = findViewById(R.id.library_activity_new_translation_button);
 
         contentRecyclerView = findViewById(R.id.library_activity_recycler);
         contentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -78,6 +92,10 @@ public class LibraryActivity extends AppCompatActivity {
         } else {
             loadLibrary();
         }
+        setOnLanguageAddedListener(() -> {
+            languageCount += 1;
+            updateLanguageTextCount();
+        });
     }
 
     @Override
@@ -105,6 +123,7 @@ public class LibraryActivity extends AppCompatActivity {
 
         Log.d(TAG, "new Library created with the ID:" + libraryID);
         Log.d(TAG, "newLibrary: user:" + user);
+        languageCountTextView.setText(String.format("Amount of languages: %d", languageCount));
 
         addUser();
         saveLibrary();
@@ -113,7 +132,7 @@ public class LibraryActivity extends AppCompatActivity {
     private void loadLibrary() {
         Realm realm = RealmHelper.getInstance().getRealm();
         LibraryData library = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
-        if(library != null){
+        if (library != null) {
             libraryNameEditText.setText(library.getLibraryName());
         }
         updateContent();
@@ -124,7 +143,6 @@ public class LibraryActivity extends AppCompatActivity {
         try {
             super.onResume();
             updateContent();
-
             currentLibrary = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
         } catch (NullPointerException e) {
             e.getMessage();
@@ -135,6 +153,25 @@ public class LibraryActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         saveLibrary();
+    }
+
+    public void onButtonClick(View v) {
+        if (v == addLanguageButton) {
+            addLanguage();
+        } else if (v == newTranslationButton) {
+            newTranslation();
+        }
+    }
+
+    private void updateLanguageTextCount() {
+        LibraryData libraryData = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
+
+        if (libraryData != null) {
+            for (int i = 0; i < libraryData.getLanguages().size(); i++) {
+                languageCount = i;
+            }
+        }
+        languageCountTextView.setText(String.format("Amount of languages: %d", languageCount));
     }
 
     private void saveLibrary() {
@@ -151,7 +188,7 @@ public class LibraryActivity extends AppCompatActivity {
         addLibraryToUserLibraries(libraryName);
     }
 
-    private void addLibraryToUserLibraries(String libraryName){
+    private void addLibraryToUserLibraries(String libraryName) {
         DatabaseReference libRef = ref.child("user_libraries/" + user.getUid());
 
         Map<String, Object> userLibraryMap = new HashMap<>();
@@ -176,7 +213,7 @@ public class LibraryActivity extends AppCompatActivity {
         }
     }
 
-    public void onAddLanguageClicked(View view) {
+    public void addLanguage() {
         @NotNull
         String langCode = langCodeEditText.getText().toString();
         String language = langEditText.getText().toString();
@@ -184,20 +221,25 @@ public class LibraryActivity extends AppCompatActivity {
         if (!checkIfLanguageAlreadyExists(langCode) && !langCode.isEmpty()) {
             addLanguageToFireBase(langCode, language);
             Toast.makeText(this, "Language: " + '"' + langCode + '"' + " added", Toast.LENGTH_SHORT).show();
+
             clearLanguageEditTexts();
             updateContent();
+
+            languageAddedListener.onLanguageAdded();
         } else if (!checkIfLanguageAlreadyExists(langCode) && langCode.isEmpty()) {
             Toast.makeText(this, "Language code field cannot be empty!", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Language: " + '"' + langCode + '"' + " already exists", Toast.LENGTH_SHORT).show();
         }
     }
+
     private void clearLanguageEditTexts() {
         langCodeEditText.setText("");
         langEditText.setText("");
     }
 
     private boolean checkIfLanguageAlreadyExists(String langCode) {
+//        currentLibrary = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
 
         try {
             List<LanguageData> languages = currentLibrary.getLanguages();
@@ -207,7 +249,7 @@ public class LibraryActivity extends AppCompatActivity {
                 }
             }
         } catch (NullPointerException e) {
-            e.getMessage();
+            Log.d(TAG, e.getMessage());
         }
         return false;
     }
@@ -227,10 +269,20 @@ public class LibraryActivity extends AppCompatActivity {
         librariesRef.updateChildren(langMap);
     }
 
-    public void onNewTranslationClicked(View view) {
+    public void newTranslation() {
         saveLibrary();
         Intent intent = new Intent(LibraryActivity.this, EditTranslationActivity.class);
         intent.putExtra(IntentKeys.LIBRARY_ID, libraryID);
         startActivity(intent);
+    }
+
+    private LanguageAddedListener languageAddedListener;
+
+    public void setOnLanguageAddedListener(LanguageAddedListener listener) {
+        this.languageAddedListener = listener;
+    }
+
+    public interface LanguageAddedListener {
+        void onLanguageAdded();
     }
 }
