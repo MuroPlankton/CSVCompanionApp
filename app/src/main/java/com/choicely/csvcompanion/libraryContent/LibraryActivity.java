@@ -63,7 +63,9 @@ public class LibraryActivity extends AppCompatActivity {
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final DatabaseReference ref = database.getReference();
     private String libraryID;
-    private FirebaseUser user;
+
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
     private int languageCount = 0;
     private final Realm realm = RealmHelper.getInstance().getRealm();
 
@@ -155,9 +157,6 @@ public class LibraryActivity extends AppCompatActivity {
 
     private void newLibrary() {
         libraryID = String.valueOf(UUID.randomUUID());
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        currentLibrary.setUser(user);
-
         Log.d(TAG, "new Library created with the ID:" + libraryID);
         Log.d(TAG, "newLibrary: user:" + user);
         languageCountTextView.setText(String.format("Amount of languages: %d", languageCount));
@@ -169,7 +168,6 @@ public class LibraryActivity extends AppCompatActivity {
     private void loadLibrary() {
         updateCurrentLibrary();
         if (currentLibrary != null) {
-            user = (FirebaseUser) currentLibrary.getUser();
             libraryNameEditText.setText(currentLibrary.getLibraryName());
         }
         updateContent();
@@ -323,7 +321,7 @@ public class LibraryActivity extends AppCompatActivity {
 
     private boolean checkIfRowsAreEmpty() {
         if (libraryNameEditText.getText().toString().isEmpty()) {
-            popUpAlert.alertPopUp(this, R.string.pop_up_message, "Warning");
+            popUpAlert.alertPopUp(this, R.string.pop_up_message_library_activity, "Warning");
             return true;
         }
         return false;
