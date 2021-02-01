@@ -1,4 +1,4 @@
-package com.choicely.csvcompanion.libraryContent;
+    package com.choicely.csvcompanion.libraryContent;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.choicely.csvcompanion.CSVWriter;
 import com.choicely.csvcompanion.EditTranslationActivity;
 import com.choicely.csvcompanion.IntentKeys;
+import com.choicely.csvcompanion.PopUpAlert;
 import com.choicely.csvcompanion.R;
 import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
@@ -51,27 +52,19 @@ public class LibraryActivity extends AppCompatActivity {
     private EditText langCodeEditText;
     private EditText langEditText;
     private TextView languageCountTextView;
-
     private Button addLanguageButton;
     private Button newTranslationButton;
     private ListPopupWindow listPopupWindow;
-
     private String[] sampleLanguages = {"en | English", "fi | Suomi", "sv | Svenska", "ee | Eestlane", "it | Italiano"};
     private List<Pair<String, String>> sampleLanguageList = new ArrayList<>();
-
     private RecyclerView contentRecyclerView;
     private LibraryContentAdapter adapter;
-
     private LibraryData currentLibrary;
-
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final DatabaseReference ref = database.getReference();
-
     private String libraryID;
     private FirebaseUser user;
-
     private int languageCount = 0;
-
     private final Realm realm = RealmHelper.getInstance().getRealm();
 
     @Override
@@ -163,6 +156,7 @@ public class LibraryActivity extends AppCompatActivity {
     private void newLibrary() {
         libraryID = String.valueOf(UUID.randomUUID());
         user = FirebaseAuth.getInstance().getCurrentUser();
+        currentLibrary.setUser(user);
 
         Log.d(TAG, "new Library created with the ID:" + libraryID);
         Log.d(TAG, "newLibrary: user:" + user);
@@ -174,7 +168,8 @@ public class LibraryActivity extends AppCompatActivity {
 
     private void loadLibrary() {
         updateCurrentLibrary();
-        if(currentLibrary != null){
+        if (currentLibrary != null) {
+            user = (FirebaseUser) currentLibrary.getUser();
             libraryNameEditText.setText(currentLibrary.getLibraryName());
         }
         updateContent();
@@ -268,6 +263,7 @@ public class LibraryActivity extends AppCompatActivity {
             updateContent();
 
             languageAddedListener.onLanguageAdded();
+
         } else if (!checkIfLanguageAlreadyExists(langCode) && langCode.isEmpty()) {
             Toast.makeText(this, "Language code field cannot be empty!", Toast.LENGTH_SHORT).show();
         } else {
@@ -280,7 +276,7 @@ public class LibraryActivity extends AppCompatActivity {
         langEditText.setText("");
     }
 
-    private Boolean checkIfLanguageAlreadyExists(String langCode) {
+    private boolean checkIfLanguageAlreadyExists(String langCode) {
         updateCurrentLibrary();
 
         try {
@@ -321,6 +317,16 @@ public class LibraryActivity extends AppCompatActivity {
             intent.putExtra(IntentKeys.LIBRARY_ID, libraryID);
             startActivity(intent);
         }
+    }
+
+    PopUpAlert popUpAlert = new PopUpAlert();
+
+    private boolean checkIfRowsAreEmpty() {
+        if (libraryNameEditText.getText().toString().isEmpty()) {
+            popUpAlert.alertPopUp(this, R.string.pop_up_message, "Warning");
+            return true;
+        }
+        return false;
     }
 
     private void updateCurrentLibrary() {

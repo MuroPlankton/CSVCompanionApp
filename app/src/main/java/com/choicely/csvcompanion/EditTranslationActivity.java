@@ -1,9 +1,6 @@
 package com.choicely.csvcompanion;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,8 +22,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 
 import io.realm.Realm;
@@ -160,7 +155,7 @@ public class EditTranslationActivity extends AppCompatActivity {
         FirebaseDatabase.getInstance().getReference().child("libraries").child(CurrentLibraryKey).child("texts").child(currentTextKey).updateChildren(textToSave);
     }
 
-    private Boolean checkIfRowsAreEmpty() {
+    private boolean checkIfRowsAreEmpty() {
         if (translationName.getText().toString().isEmpty() || transLationDesc.getText().toString().isEmpty()) {
             popUpAlert.alertPopUp(EditTranslationActivity.this, R.string.pop_up_message, "Warning");
             return true;

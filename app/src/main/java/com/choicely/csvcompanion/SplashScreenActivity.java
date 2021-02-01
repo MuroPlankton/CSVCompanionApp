@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 
 import com.choicely.csvcompanion.home.LibraryHomeActivity;
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
