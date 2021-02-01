@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.choicely.csvcompanion.CSVWriter;
 import com.choicely.csvcompanion.EditTranslationActivity;
 import com.choicely.csvcompanion.IntentKeys;
+import com.choicely.csvcompanion.PopUpAlert;
 import com.choicely.csvcompanion.R;
 import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
@@ -155,6 +156,7 @@ public class LibraryActivity extends AppCompatActivity {
     private void newLibrary() {
         libraryID = String.valueOf(UUID.randomUUID());
         user = FirebaseAuth.getInstance().getCurrentUser();
+        currentLibrary.setUser(user);
 
         Log.d(TAG, "new Library created with the ID:" + libraryID);
         Log.d(TAG, "newLibrary: user:" + user);
@@ -167,6 +169,7 @@ public class LibraryActivity extends AppCompatActivity {
     private void loadLibrary() {
         updateCurrentLibrary();
         if (currentLibrary != null) {
+            user = (FirebaseUser) currentLibrary.getUser();
             libraryNameEditText.setText(currentLibrary.getLibraryName());
         }
         updateContent();
@@ -314,6 +317,16 @@ public class LibraryActivity extends AppCompatActivity {
             intent.putExtra(IntentKeys.LIBRARY_ID, libraryID);
             startActivity(intent);
         }
+    }
+
+    PopUpAlert popUpAlert = new PopUpAlert();
+
+    private boolean checkIfRowsAreEmpty() {
+        if (libraryNameEditText.getText().toString().isEmpty()) {
+            popUpAlert.alertPopUp(this, R.string.pop_up_message, "Warning");
+            return true;
+        }
+        return false;
     }
 
     private void updateCurrentLibrary() {

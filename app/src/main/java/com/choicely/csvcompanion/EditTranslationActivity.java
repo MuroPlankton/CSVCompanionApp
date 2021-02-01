@@ -155,7 +155,7 @@ public class EditTranslationActivity extends AppCompatActivity {
         FirebaseDatabase.getInstance().getReference().child("libraries").child(CurrentLibraryKey).child("texts").child(currentTextKey).updateChildren(textToSave);
     }
 
-    private Boolean checkIfRowsAreEmpty() {
+    private boolean checkIfRowsAreEmpty() {
         if (translationName.getText().toString().isEmpty() || transLationDesc.getText().toString().isEmpty()) {
             popUpAlert.alertPopUp(EditTranslationActivity.this, R.string.pop_up_message, "Warning");
             return true;
