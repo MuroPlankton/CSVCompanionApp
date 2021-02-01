@@ -6,7 +6,6 @@ import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.data.SingleTranslationData;
 import com.choicely.csvcompanion.data.TextData;
-import com.choicely.csvcompanion.db.RealmHelper;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -15,8 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import io.realm.Realm;
 
 public class CSVWriter {
 
