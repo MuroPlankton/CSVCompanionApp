@@ -1,5 +1,7 @@
 package com.choicely.csvcompanion.data;
 
+import androidx.annotation.StringDef;
+
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -9,7 +11,7 @@ public class LibraryData extends RealmObject {
     @PrimaryKey
     private String libraryID;
     private String libraryName;
-    private Object user;
+//    private String user;
     private RealmList<LanguageData> languages = new RealmList<>();
     private RealmList<TextData> texts = new RealmList<>();
 
@@ -29,13 +31,13 @@ public class LibraryData extends RealmObject {
         this.libraryName = libraryName;
     }
 
-    public Object getUser() {
-        return user;
-    }
-
-    public void setUser(Object user) {
-        this.user = user;
-    }
+//    public Object getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(Object user) {
+//        this.user = user;
+//    }
 
     public RealmList<LanguageData> getLanguages() {
         return languages;
