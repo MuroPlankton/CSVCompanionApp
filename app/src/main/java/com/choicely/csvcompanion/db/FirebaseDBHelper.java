@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -29,7 +30,6 @@ public class FirebaseDBHelper {
     private static final String TAG = "FirebaseDBHelper";
     private static FirebaseDBHelper instance;
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private final String currentUserString = FirebaseAuth.getInstance().getCurrentUser().getUid();
     private final LibraryData libraryData = new LibraryData();
     private final List<String> libIDList = new ArrayList<>();
 
@@ -56,20 +56,24 @@ public class FirebaseDBHelper {
 
     public void listenForUserLibraryDataChange() {
         new Thread(() -> {
-            DatabaseReference myRef = database.getReference("user_libraries").child(currentUserString);
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            if(currentUser != null) {
+                String currentUserString = currentUser.getUid();
+                DatabaseReference myRef = database.getReference("user_libraries").child(currentUserString);
 
-            myRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    final Object changedData = snapshot.getValue();
-                    readUserLibraries(changedData);
-                }
+                myRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        final Object changedData = snapshot.getValue();
+                        readUserLibraries(changedData);
+                    }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.d(TAG, "Failed to read users value", error.toException());
-                }
-            });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d(TAG, "Failed to read users library values", error.toException());
+                    }
+                });
+            }
         }).start();
     }
 
@@ -84,7 +88,6 @@ public class FirebaseDBHelper {
     }
 
     public void listenForLibraryDataChange() {
-        new Thread(() -> {
             for (String libID : libIDList) {
                 DatabaseReference myRef = database.getReference("libraries").child(libID);
                 libraryData.setLibraryID(libID);
@@ -102,7 +105,6 @@ public class FirebaseDBHelper {
                     }
                 });
             }
-        }).start();
     }
 
     @SuppressWarnings("unchecked")
@@ -114,73 +116,70 @@ public class FirebaseDBHelper {
             Realm realm = helper.getRealm();
 
             realm.executeTransaction(realm1 -> {
-                if (libraryMap != null) {
-                    libraryData.setLibraryName((String) libraryMap.get("library_name"));
+                libraryData.setLibraryName((String) libraryMap.get("library_name"));
 
-                    Object languagesObject = libraryMap.get("languages");
-                    Map<String, Object> languagesMap = (Map<String, Object>) languagesObject;
-                    RealmList<LanguageData> languageDataRealmList = new RealmList<>();
+                Object languagesObject = libraryMap.get("languages");
+                Map<String, Object> languagesMap = (Map<String, Object>) languagesObject;
+                RealmList<LanguageData> languageDataRealmList = new RealmList<>();
 
-                    if (languagesMap != null) {
-                        for (String key1 : languagesMap.keySet()) {
-                            Object languageValue = languagesMap.get(key1);
+                if (languagesMap != null) {
+                    for (String key1 : languagesMap.keySet()) {
+                        Object languageValue = languagesMap.get(key1);
 
-                            LanguageData language = new LanguageData();
-                            language.setLangKey(key1);
-                            language.setLangName((String) languageValue);
-                            languageDataRealmList.add(language);
+                        LanguageData language = new LanguageData();
+                        language.setLangKey(key1);
+                        language.setLangName((String) languageValue);
+                        languageDataRealmList.add(language);
 
-                            //I will set the list of these to libraryData
-                            libraryData.setLanguages(languageDataRealmList);
+                        libraryData.setLanguages(languageDataRealmList);
 
-                            Log.d(TAG, "key: " + key1);
-                            Log.d(TAG, "languageValue: " + languageValue);
-                        }
+                        Log.d(TAG, "key: " + key1);
+                        Log.d(TAG, "languageValue: " + languageValue);
                     }
+                }
 
-                    Object textsObject = libraryMap.get("texts");
-                    Log.d(TAG, "textsObject: " + textsObject);
-                    Map<String, Object> textsMap = (Map<String, Object>) textsObject;
-                    RealmList<TextData> textDataRealmList = new RealmList<>();
+                Object textsObject = libraryMap.get("texts");
+                Log.d(TAG, "textsObject: " + textsObject);
+                Map<String, Object> textsMap = (Map<String, Object>) textsObject;
+                RealmList<TextData> textDataRealmList = new RealmList<>();
 
-                    if (textsMap != null) {
-                        for (String key2 : textsMap.keySet()) {
-                            Object textObject = textsMap.get(key2);
-                            Map<String, Object> textMap = (Map<String, Object>) textObject;
+                if (textsMap != null) {
+                    for (String key2 : textsMap.keySet()) {
+                        Object textObject = textsMap.get(key2);
+                        Map<String, Object> textMap = (Map<String, Object>) textObject;
 
-                            if (textMap != null) {
-                                TextData text = new TextData();
+                        if (textMap != null) {
+                            TextData text = new TextData();
 
-                                text.setTextKey(key2);
-                                text.setTranslationName((String) textMap.get("name"));
-                                text.setTranslationDesc((String) textMap.get("description"));
-                                text.setAndroidKey((String) textMap.get("android_key"));
-                                text.setIosKey((String) textMap.get("ios_key"));
-                                text.setWebKey((String) textMap.get("web_key"));
+                            text.setTextKey(key2);
+                            text.setTranslationName((String) textMap.get("name"));
+                            text.setTranslationDesc((String) textMap.get("description"));
+                            text.setAndroidKey((String) textMap.get("android_key"));
+                            text.setIosKey((String) textMap.get("ios_key"));
+                            text.setWebKey((String) textMap.get("web_key"));
 
-                                Object translationsObject = textMap.get("translations");
-                                Map<String, Object> translationsMap = (Map<String, Object>) translationsObject;
-                                RealmList<SingleTranslationData> translationDataRealmList = new RealmList<>();
+                            Object translationsObject = textMap.get("translations");
+                            Map<String, Object> translationsMap = (Map<String, Object>) translationsObject;
+                            RealmList<SingleTranslationData> translationDataRealmList = new RealmList<>();
 
-                                if (translationsMap != null) {
-                                    for (String key3 : translationsMap.keySet()) {
-                                        Object translationValue = translationsMap.get(key3);
+                            if (translationsMap != null) {
+                                for (String key3 : translationsMap.keySet()) {
+                                    Object translationValue = translationsMap.get(key3);
 
-                                        SingleTranslationData translation = new SingleTranslationData();
-                                        translation.setLangKey(key3);
-                                        translation.setTranslation((String) translationValue);
+                                    SingleTranslationData translation = new SingleTranslationData();
+                                    translation.setLangKey(key3);
+                                    translation.setTranslation((String) translationValue);
 
-                                        translationDataRealmList.add(translation);
-                                        text.setTranslations(translationDataRealmList);
+                                    translationDataRealmList.add(translation);
+                                    text.setTranslations(translationDataRealmList);
 
-                                        Log.d(TAG, "key4: " + key3);
-                                        Log.d(TAG, "translationValue: " + translationValue);
-                                    }
+                                    Log.d(TAG, "key4: " + key3);
+                                    Log.d(TAG, "translationValue: " + translationValue);
                                 }
-
-                                textDataRealmList.add(text);
-                                libraryData.setTexts(textDataRealmList);
                             }
+
+                            textDataRealmList.add(text);
+                            libraryData.setTexts(textDataRealmList);
                         }
                     }
                 }
@@ -191,7 +190,6 @@ public class FirebaseDBHelper {
             }
         }
     }
-
 //    @SuppressWarnings("unchecked")
 //    public void readFirebaseLibraries(Object libraries) {
 //        if (libraries instanceof Map) {

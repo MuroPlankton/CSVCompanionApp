@@ -104,7 +104,7 @@ public class LibraryHomeActivity extends AppCompatActivity {
     private void startFireBaseListening() {
         FirebaseDBHelper helper = FirebaseDBHelper.getInstance();
         helper.setListener(this::updateContent);
-        helper.listenForLibraryDataChange();
+        helper.listenForUserLibraryDataChange();
     }
 
     private void updateContent() {
