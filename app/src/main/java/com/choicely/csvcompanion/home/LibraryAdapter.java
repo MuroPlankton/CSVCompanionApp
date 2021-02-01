@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -56,12 +57,14 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
 
         public String libraryID;
         public TextView libraryName;
+        public ImageButton shareButton;
 
         public LibraryViewHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setOnClickListener(onRowClick);
 
             libraryName = itemView.findViewById(R.id.library_list_row_library_name);
+            shareButton = itemView.findViewById(R.id.library_list_row_share);
         }
 
         private final View.OnClickListener onRowClick = view -> {
