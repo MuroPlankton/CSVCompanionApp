@@ -1,4 +1,4 @@
-    package com.choicely.csvcompanion.libraryContent;
+package com.choicely.csvcompanion.libraryContent;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -186,15 +186,19 @@ public class LibraryActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        saveLibrary();
+        if (!checkIfNameIsEmpty()) {
+            super.onBackPressed();
+            saveLibrary();
+        }
     }
 
     public void onButtonClick(View v) {
         if (v == addLanguageButton) {
             addLanguage();
         } else if (v == newTranslationButton) {
-            newTranslation();
+            if (!checkIfNameIsEmpty()) {
+                newTranslation();
+            }
         }
     }
 
@@ -319,7 +323,7 @@ public class LibraryActivity extends AppCompatActivity {
 
     PopUpAlert popUpAlert = new PopUpAlert();
 
-    private boolean checkIfRowsAreEmpty() {
+    private boolean checkIfNameIsEmpty() {
         if (libraryNameEditText.getText().toString().isEmpty()) {
             popUpAlert.alertPopUp(this, R.string.pop_up_message_library_activity, "Warning");
             return true;
