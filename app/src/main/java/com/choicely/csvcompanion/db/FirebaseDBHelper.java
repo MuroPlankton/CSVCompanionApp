@@ -57,11 +57,11 @@ public class FirebaseDBHelper {
     public void listenForUserLibraryDataChange() {
         new Thread(() -> {
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-            if(currentUser != null) {
+            if (currentUser != null) {
                 String currentUserString = currentUser.getUid();
                 DatabaseReference myRef = database.getReference("user_libraries").child(currentUserString);
 
-                myRef.addValueEventListener(new ValueEventListener() {
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         final Object changedData = snapshot.getValue();
@@ -78,37 +78,54 @@ public class FirebaseDBHelper {
     }
 
     @SuppressWarnings("unchecked")
-    private void readUserLibraries(Object userLibraries) {
+    public void readUserLibraries(Object userLibraries) {
         if (userLibraries instanceof Map) {
             final Map<String, Object> userLibrariesMap = (Map<String, Object>) userLibraries;
-
+            libIDList.clear();
             libIDList.addAll(userLibrariesMap.keySet());
         }
         listenForLibraryDataChange();
     }
 
     public void listenForLibraryDataChange() {
-            for (String libID : libIDList) {
-                DatabaseReference myRef = database.getReference("libraries").child(libID);
-                libraryData.setLibraryID(libID);
+        for (String libID : libIDList) {
+            DatabaseReference myRef = database.getReference("libraries").child(libID);
 
-                myRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        final Object changedData = snapshot.getValue();
-                        readSingleLibrary(changedData);
-                    }
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    final Object changedData = snapshot.getValue();
+                    readSingleLibrary(changedData);
+                }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.d(TAG, "Failed to read libraries value", error.toException());
-                    }
-                });
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.d(TAG, "Failed to read libraries value", error.toException());
+                }
+            });
+        }
     }
 
     @SuppressWarnings("unchecked")
-    private void readSingleLibrary(Object library) {
+    public void loadLibraryNameAndID(Object library) {
+        if (library instanceof Map) {
+            final Map<String, Object> libraryMap = (Map<String, Object>) library;
+
+            RealmHelper helper = RealmHelper.getInstance();
+            Realm realm = helper.getRealm();
+
+            realm.executeTransaction(realm1 -> {
+                for (String libID : libIDList) {
+                    libraryData.setLibraryID(libID);
+                }
+                libraryData.setLibraryName((String) libraryMap.get("library_name"));
+                realm.copyToRealmOrUpdate(libraryData);
+            });
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void readSingleLibrary(Object library) {
         if (library instanceof Map) {
             final Map<String, Object> libraryMap = (Map<String, Object>) library;
 
