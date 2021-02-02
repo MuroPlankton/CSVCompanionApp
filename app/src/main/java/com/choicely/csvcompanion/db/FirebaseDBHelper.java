@@ -22,6 +22,7 @@ import java.util.Map;
 import io.realm.Realm;
 import io.realm.RealmList;
 
+@SuppressWarnings("unchecked")
 public class FirebaseDBHelper {
 
     private static final String TAG = "FirebaseDBHelper";
@@ -77,28 +78,27 @@ public class FirebaseDBHelper {
         }).start();
     }
 
-    @SuppressWarnings("unchecked")
-    private void readUserLibraries(Object userLibraries) {
+    public void readUserLibraries(Object userLibraries) {
         if (userLibraries instanceof Map) {
             final Map<String, Object> userLibrariesMap = (Map<String, Object>) userLibraries;
             libIDList.clear();
             libIDList.addAll(userLibrariesMap.keySet());
             Log.d(TAG, "readUserLibraries: " + libIDList);
             listenForLibraryDataChange();
-        } 
+        }
     }
 
     public void listenForLibraryDataChange() {
         for (String libID : libIDList) {
             DatabaseReference myRef = database.getReference("libraries").child(libID);
-            libraryData.setLibraryID(libID);
 
             myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     final Object changedData = snapshot.getValue();
-                    Log.d(TAG, "onDataChange: " + changedData);
 //                    readSingleLibrary(changedData);
+                    loadLibraryNameAndID(changedData);
+                    Log.d(TAG, "onDataChange: " + changedData);
                 }
 
                 @Override
@@ -106,6 +106,27 @@ public class FirebaseDBHelper {
                     Log.e(TAG, "Failed to read libraries value", error.toException());
                 }
             });
+        }
+    }
+
+    public void loadLibraryNameAndID(Object library) {
+        if (library instanceof Map) {
+            final Map<String, Object> libraryMap = (Map<String, Object>) library;
+
+            RealmHelper helper = RealmHelper.getInstance();
+            Realm realm = helper.getRealm();
+
+            realm.executeTransaction(realm1 -> {
+                for (String libID : libIDList) {
+                    libraryData.setLibraryID(libID);
+                }
+                libraryData.setLibraryName((String) libraryMap.get("library_name"));
+                realm.copyToRealmOrUpdate(libraryData);
+            });
+
+            if (listener != null) {
+                listener.onDatabaseUpdate();
+            }
         }
     }
 
@@ -163,82 +184,85 @@ public class FirebaseDBHelper {
 //            Realm realm = helper.getRealm();
 //
 //            realm.executeTransaction(realm1 -> {
-////                libraryData.setLibraryName((String) libraryMap.get("library_name"));
-////                Object languagesObject = libraryMap.get("languages");
-////                Map<String, Object> languagesMap = (Map<String, Object>) languagesObject;
-////                RealmList<LanguageData> languageDataRealmList = new RealmList<>();
-////
-////                if (languagesMap != null) {
-////                    for (String key1 : languagesMap.keySet()) {
-////                        Object languageValue = languagesMap.get(key1);
-////
-////                        LanguageData language = new LanguageData();
-////                        language.setLangKey(key1);
-////                        language.setLangName((String) languageValue);
-////                        languageDataRealmList.add(language);
-////
-////                        libraryData.setLanguages(languageDataRealmList);
-////
-////                        Log.d(TAG, "key: " + key1);
-////                        Log.d(TAG, "languageValue: " + languageValue);
-////                    }
-////                }
-////
-////                Object textsObject = libraryMap.get("texts");
-////                Log.d(TAG, "textsObject: " + textsObject);
-////                Map<String, Object> textsMap = (Map<String, Object>) textsObject;
-////                RealmList<TextData> textDataRealmList = new RealmList<>();
-////
-////                if (textsMap != null) {
-////                    for (String key2 : textsMap.keySet()) {
-////                        Object textObject = textsMap.get(key2);
-////                        Map<String, Object> textMap = (Map<String, Object>) textObject;
-////
-////                        if (textMap != null) {
-////                            TextData text = new TextData();
-////
-////                            text.setTextKey(key2);
-////                            text.setTranslationName((String) textMap.get("name"));
-////                            text.setTranslationDesc((String) textMap.get("description"));
-////                            text.setAndroidKey((String) textMap.get("android_key"));
-////                            text.setIosKey((String) textMap.get("ios_key"));
-////                            text.setWebKey((String) textMap.get("web_key"));
-////
-////                            Object translationsObject = textMap.get("translations");
-////                            Map<String, Object> translationsMap = (Map<String, Object>) translationsObject;
-////                            RealmList<SingleTranslationData> translationDataRealmList = new RealmList<>();
-////
-////                            if (translationsMap != null) {
-////                                for (String key3 : translationsMap.keySet()) {
-////                                    Object translationValue = translationsMap.get(key3);
-////
-////                                    SingleTranslationData translation = new SingleTranslationData();
-////                                    translation.setLangKey(key3);
-////                                    translation.setTranslation((String) translationValue);
-////
-////                                    translationDataRealmList.add(translation);
-////                                    text.setTranslations(translationDataRealmList);
-////
-////                                    Log.d(TAG, "key4: " + key3);
-////                                    Log.d(TAG, "translationValue: " + translationValue);
-////                                }
-////                            }
-////
-////                            textDataRealmList.add(text);
-////                            libraryData.setTexts(textDataRealmList);
-////                        }
-////                    }
-////                }
-////
-////                realm.copyToRealmOrUpdate(libraryData);
-////            });
+//                libraryData.setLibraryName((String) libraryMap.get("library_name"));
+//
+//                Object languagesObject = libraryMap.get("languages");
+//                Map<String, Object> languagesMap = (Map<String, Object>) languagesObject;
+//                RealmList<LanguageData> languageDataRealmList = new RealmList<>();
+//
+//                if (languagesMap != null) {
+//                    for (String key1 : languagesMap.keySet()) {
+//                        Object languageValue = languagesMap.get(key1);
+//
+//                        LanguageData language = new LanguageData();
+//                        language.setLangKey(key1);
+//                        language.setLangName((String) languageValue);
+//                        languageDataRealmList.add(language);
+//
+//                        libraryData.setLanguages(languageDataRealmList);
+//
+//                        Log.d(TAG, "key: " + key1);
+//                        Log.d(TAG, "languageValue: " + languageValue);
+//                    }
+//                }
+//
+//                Object textsObject = libraryMap.get("texts");
+//                Log.d(TAG, "textsObject: " + textsObject);
+//                Map<String, Object> textsMap = (Map<String, Object>) textsObject;
+//                RealmList<TextData> textDataRealmList = new RealmList<>();
+//
+//                if (textsMap != null) {
+//                    for (String key2 : textsMap.keySet()) {
+//                        Object textObject = textsMap.get(key2);
+//                        Map<String, Object> textMap = (Map<String, Object>) textObject;
+//
+//                        if (textMap != null) {
+//                            TextData text = new TextData();
+//
+//                            text.setTextKey(key2);
+//                            text.setTranslationName((String) textMap.get("name"));
+//                            text.setTranslationDesc((String) textMap.get("description"));
+//                            text.setAndroidKey((String) textMap.get("android_key"));
+//                            text.setIosKey((String) textMap.get("ios_key"));
+//                            text.setWebKey((String) textMap.get("web_key"));
+//
+//                            Object translationsObject = textMap.get("translations");
+//                            Map<String, Object> translationsMap = (Map<String, Object>) translationsObject;
+//                            RealmList<SingleTranslationData> translationDataRealmList = new RealmList<>();
+//
+//                            if (translationsMap != null) {
+//                                for (String key3 : translationsMap.keySet()) {
+//                                    Object translationValue = translationsMap.get(key3);
+//
+//                                    SingleTranslationData translation = new SingleTranslationData();
+//                                    translation.setLangKey(key3);
+//                                    translation.setTranslation((String) translationValue);
+//
+//                                    translationDataRealmList.add(translation);
+//                                    text.setTranslations(translationDataRealmList);
+//
+//                                    Log.d(TAG, "key4: " + key3);
+//                                    Log.d(TAG, "translationValue: " + translationValue);
+//                                }
+//                            }
+//
+//                            textDataRealmList.add(text);
+//                            libraryData.setTexts(textDataRealmList);
+//                        }
+//                    }
+//                }
+//                realm.copyToRealmOrUpdate(libraryData);
+//            });
 //            if (listener != null) {
 //                listener.onDatabaseUpdate();
 //            }
 //                ()}
 //    }
 
+//        }
 //    }
+
+
 //    @SuppressWarnings("unchecked")
 //    public void readFirebaseLibraries(Object libraries) {
 //        if (libraries instanceof Map) {

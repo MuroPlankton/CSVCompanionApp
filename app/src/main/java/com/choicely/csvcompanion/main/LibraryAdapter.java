@@ -1,4 +1,4 @@
-package com.choicely.csvcompanion.home;
+package com.choicely.csvcompanion.main;
 
 import android.content.Context;
 import android.content.Intent;
