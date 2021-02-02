@@ -24,9 +24,9 @@ public class LibraryContentAdapter extends RecyclerView.Adapter<LibraryContentAd
     private final Context context;
     private LibraryData libraryData;
 
-    List<String> textNameList = new ArrayList<>();
-    List<String> textDescList = new ArrayList<>();
-    List<String> textIDList = new ArrayList<>();
+    private final List<String> textNameList = new ArrayList<>();
+    private final List<String> textDescList = new ArrayList<>();
+    private final List<String> textIDList = new ArrayList<>();
 
     public LibraryContentAdapter(Context context) {
         this.context = context;
