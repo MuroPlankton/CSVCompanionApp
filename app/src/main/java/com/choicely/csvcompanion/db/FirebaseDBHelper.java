@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.choicely.csvcompanion.FireBaseParameters;
 import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.data.TextData;
@@ -35,7 +36,7 @@ public class FirebaseDBHelper {
     private onDatabaseUpdateListener listener;
 
 
-    private FirebaseDBHelper() {
+    public FirebaseDBHelper() {
     }
 
     public static void init() {
@@ -54,7 +55,7 @@ public class FirebaseDBHelper {
         return instance;
     }
 
-    public void listenForUserLibraryDataChange() {
+    public void listenForUserLibraryDataChange(int parameter) {
         new Thread(() -> {
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
             if (currentUser != null) {
@@ -66,7 +67,7 @@ public class FirebaseDBHelper {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         final Object changedData = snapshot.getValue();
                         Log.d(TAG, "onDataChange: " + changedData);
-                        readUserLibraries(changedData);
+                        readUserLibraries(changedData, parameter);
                     }
 
                     @Override
@@ -78,17 +79,17 @@ public class FirebaseDBHelper {
         }).start();
     }
 
-    public void readUserLibraries(Object userLibraries) {
+    public void readUserLibraries(Object userLibraries, int parameter) {
         if (userLibraries instanceof Map) {
             final Map<String, Object> userLibrariesMap = (Map<String, Object>) userLibraries;
             libIDList.clear();
             libIDList.addAll(userLibrariesMap.keySet());
             Log.d(TAG, "readUserLibraries: " + libIDList);
-            listenForLibraryDataChange();
+            listenForLibraryDataChange(parameter);
         }
     }
 
-    public void listenForLibraryDataChange() {
+    public void listenForLibraryDataChange(int parameter) {
         for (String libID : libIDList) {
             DatabaseReference myRef = database.getReference("libraries").child(libID);
 
@@ -96,8 +97,12 @@ public class FirebaseDBHelper {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     final Object changedData = snapshot.getValue();
-//                    readSingleLibrary(changedData);
-                    loadLibraryNameAndID(changedData);
+                    Log.d(TAG, "onDataChange: PARAMETER: " + parameter);
+                    if (parameter == FireBaseParameters.NAME_AND_ID_PARAMETERS) {
+                        loadLibraryNameAndID(changedData);
+                    } else if (parameter == FireBaseParameters.LIBRARY_CONTENT_PARAMETERS) {
+                        loadSingleLibraryContent(changedData);
+                    }
                     Log.d(TAG, "onDataChange: " + changedData);
                 }
 
@@ -173,6 +178,9 @@ public class FirebaseDBHelper {
             }
             realm.insertOrUpdate(libraryData);
         });
+        if (listener != null) {
+            listener.onDatabaseUpdate();
+        }
     }
 
 //    @SuppressWarnings("unchecked")

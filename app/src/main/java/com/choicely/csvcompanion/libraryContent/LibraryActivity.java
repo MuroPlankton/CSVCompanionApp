@@ -24,12 +24,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.choicely.csvcompanion.CSVWriter;
 import com.choicely.csvcompanion.EditTranslationActivity;
+import com.choicely.csvcompanion.FireBaseParameters;
 import com.choicely.csvcompanion.IntentKeys;
 import com.choicely.csvcompanion.PopUpAlert;
 import com.choicely.csvcompanion.R;
 import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.data.TextData;
+import com.choicely.csvcompanion.db.FirebaseDBHelper;
 import com.choicely.csvcompanion.db.RealmHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -99,10 +101,7 @@ public class LibraryActivity extends AppCompatActivity {
         } else {
             loadLibrary();
         }
-        setOnLanguageAddedListener(() -> {
-            languageCount += 1;
-            updateLanguageTextCount();
-        });
+
 
         sampleLanguageList.add(new Pair<>("en", "English"));
         sampleLanguageList.add(new Pair<>("fi", "Suomi"));
@@ -113,6 +112,12 @@ public class LibraryActivity extends AppCompatActivity {
         langEditText.setOnFocusChangeListener(onFocusChangeListener);
         langCodeEditText.setOnFocusChangeListener(onFocusChangeListener);
         listPopupWindow.setOnItemClickListener(langPopupItemClickListener);
+    }
+
+    private void startFireBaseListening() {
+        FirebaseDBHelper helper = FirebaseDBHelper.getInstance();
+        helper.setListener(this::updateContent);
+        helper.listenForUserLibraryDataChange(FireBaseParameters.LIBRARY_CONTENT_PARAMETERS);
     }
 
     private AdapterView.OnItemClickListener langPopupItemClickListener = new AdapterView.OnItemClickListener() {
@@ -175,8 +180,14 @@ public class LibraryActivity extends AppCompatActivity {
     protected void onResume() {
         try {
             super.onResume();
+            startFireBaseListening();
+            setOnLanguageAddedListener(() -> {
+                languageCount += 1;
+                updateLanguageTextCount();
+            });
+            updateCurrentLibrary();
             updateContent();
-            currentLibrary = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
+
         } catch (NullPointerException e) {
             e.getMessage();
         }
@@ -234,8 +245,6 @@ public class LibraryActivity extends AppCompatActivity {
     private void updateContent() {
         adapter.clear();
 
-        updateCurrentLibrary();
-
         try {
             List<TextData> textList = currentLibrary.getTexts();
             adapter.setLibrary(currentLibrary);
@@ -275,8 +284,6 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     private boolean checkIfLanguageAlreadyExists(String langCode) {
-        updateCurrentLibrary();
-
         try {
             List<LanguageData> languages = currentLibrary.getLanguages();
             for (LanguageData language : languages) {
@@ -317,7 +324,7 @@ public class LibraryActivity extends AppCompatActivity {
         }
     }
 
-    PopUpAlert popUpAlert = new PopUpAlert();
+    private final PopUpAlert popUpAlert = new PopUpAlert();
 
     private boolean checkIfNameIsEmpty() {
         if (libraryNameEditText.getText().toString().isEmpty()) {
