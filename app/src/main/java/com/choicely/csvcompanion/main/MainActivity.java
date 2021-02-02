@@ -1,4 +1,4 @@
-package com.choicely.csvcompanion.home;
+package com.choicely.csvcompanion.main;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,9 +24,9 @@ import com.choicely.csvcompanion.libraryContent.LibraryActivity;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class LibraryHomeActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "LibraryHomeActivity";
+    private static final String TAG = "MainActivity";
 
     private Button newLibraryButton;
     private SearchView searchView;
@@ -37,12 +37,12 @@ public class LibraryHomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.library_home_activity);
+        setContentView(R.layout.main_activity);
 
-        newLibraryButton = findViewById(R.id.activity_library_home_new_library);
-        heading = findViewById(R.id.library_home_activity_heading);
+        newLibraryButton = findViewById(R.id.main_activity_new_library);
+        heading = findViewById(R.id.main_activity_heading);
 
-        libraryRecycler = findViewById(R.id.library_home_activity_recycler);
+        libraryRecycler = findViewById(R.id.main_activity_recycler);
         libraryRecycler.setLayoutManager(new LinearLayoutManager(this));
         adapter = new LibraryAdapter(this);
         libraryRecycler.setAdapter(adapter);
@@ -53,7 +53,7 @@ public class LibraryHomeActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.library_home_activity_actions, menu);
+        inflater.inflate(R.menu.main_activity_actions, menu);
 
         MenuItem searchItem = menu.findItem(R.id.action_search_libraries);
         searchView = (SearchView) searchItem.getActionView();

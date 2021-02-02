@@ -8,7 +8,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.choicely.csvcompanion.home.LibraryHomeActivity;
+import com.choicely.csvcompanion.main.MainActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,7 +32,7 @@ public class SplashScreenActivity extends Activity {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            startActivity(new Intent(this, LibraryHomeActivity.class));
+            startActivity(new Intent(this, MainActivity.class));
             finish();
         } else {
             List<AuthUI.IdpConfig> providers = Arrays.asList(
@@ -53,7 +53,7 @@ public class SplashScreenActivity extends Activity {
             DatabaseReference UIDReference = FirebaseDatabase.getInstance().getReference();
             UIDReference.addListenerForSingleValueEvent(UIDListener);
 
-            Intent libraryHomeIntent = new Intent(getApplicationContext(), LibraryHomeActivity.class);
+            Intent libraryHomeIntent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(libraryHomeIntent);
         }
     }
