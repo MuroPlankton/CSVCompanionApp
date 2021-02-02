@@ -102,7 +102,6 @@ public class LibraryActivity extends AppCompatActivity {
             loadLibrary();
         }
 
-
         sampleLanguageList.add(new Pair<>("en", "English"));
         sampleLanguageList.add(new Pair<>("fi", "Suomi"));
         sampleLanguageList.add(new Pair<>("sv", "Svenska"));
@@ -117,7 +116,7 @@ public class LibraryActivity extends AppCompatActivity {
     private void startFireBaseListening() {
         FirebaseDBHelper helper = FirebaseDBHelper.getInstance();
         helper.setListener(this::updateContent);
-        helper.listenForUserLibraryDataChange(FireBaseParameters.LIBRARY_CONTENT_PARAMETERS);
+        helper.listenForUserLibraryDataChange(FireBaseParameters.LIBRARY_ACTIVITY);
     }
 
     private AdapterView.OnItemClickListener langPopupItemClickListener = new AdapterView.OnItemClickListener() {
