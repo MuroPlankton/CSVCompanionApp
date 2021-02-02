@@ -63,11 +63,9 @@ public class LibraryActivity extends AppCompatActivity {
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final DatabaseReference ref = database.getReference();
     private String libraryID;
-
-    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
     private int languageCount = 0;
     private final Realm realm = RealmHelper.getInstance().getRealm();
+    private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -195,10 +193,8 @@ public class LibraryActivity extends AppCompatActivity {
     public void onButtonClick(View v) {
         if (v == addLanguageButton) {
             addLanguage();
-        } else if (v == newTranslationButton) {
-            if (!checkIfNameIsEmpty()) {
-                newTranslation();
-            }
+        } else if (v == newTranslationButton && !checkIfNameIsEmpty()) {
+            newTranslation();
         }
     }
 
