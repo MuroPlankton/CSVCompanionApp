@@ -85,9 +85,7 @@ public class FirebaseDBHelper {
             libIDList.addAll(userLibrariesMap.keySet());
             Log.d(TAG, "readUserLibraries: " + libIDList);
             listenForLibraryDataChange();
-        } else {
-            Log.d(TAG, "readUserLibraries: NEVER WENT HERE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        }
+        } 
     }
 
     public void listenForLibraryDataChange() {
@@ -117,41 +115,41 @@ public class FirebaseDBHelper {
         Map<String, Object> languagesMap = (Map<String, Object>) languagesObject;
         RealmList<LanguageData> languageDataRealmList = new RealmList<>();
 
-        if (languagesMap != null) {
-            for (String langKey : languagesMap.keySet()) {
-                Object languageValue = languagesMap.get(langKey);
+        realm.executeTransaction(realm1 -> {
+            if (languagesMap != null) {
+                for (String langKey : languagesMap.keySet()) {
+                    Object languageValue = languagesMap.get(langKey);
 
-                LanguageData language = new LanguageData();
-                language.setLangKey(langKey);
-                language.setLangName((String) languageValue);
-                languageDataRealmList.add(language);
+                    LanguageData language = new LanguageData();
+                    language.setLangKey(langKey);
+                    language.setLangName((String) languageValue);
+                    languageDataRealmList.add(language);
 
-                libraryData.setLanguages(languageDataRealmList);
-            }
-        }
-
-        Object textsObject = libraryMap.get("texts");
-        Log.d(TAG, "textsObject: " + textsObject);
-        Map<String, Object> textsMap = (Map<String, Object>) textsObject;
-        RealmList<TextData> textDataRealmList = new RealmList<>();
-
-        if (textsMap != null) {
-            for (String key2 : textsMap.keySet()) {
-                Object textObject = textsMap.get(key2);
-                Map<String, Object> textMap = (Map<String, Object>) textObject;
-
-                if (textMap != null) {
-                    TextData text = new TextData();
-
-                    text.setTextKey(key2);
-                    text.setTranslationName((String) textMap.get("name"));
-                    text.setTranslationDesc((String) textMap.get("description"));
-                    textDataRealmList.add(text);
-                    libraryData.setTexts(textDataRealmList);
+                    libraryData.setLanguages(languageDataRealmList);
                 }
             }
-        }
-        realm.executeTransaction(realm1 -> {
+
+            Object textsObject = libraryMap.get("texts");
+            Log.d(TAG, "textsObject: " + textsObject);
+            Map<String, Object> textsMap = (Map<String, Object>) textsObject;
+            RealmList<TextData> textDataRealmList = new RealmList<>();
+
+            if (textsMap != null) {
+                for (String key2 : textsMap.keySet()) {
+                    Object textObject = textsMap.get(key2);
+                    Map<String, Object> textMap = (Map<String, Object>) textObject;
+
+                    if (textMap != null) {
+                        TextData text = new TextData();
+
+                        text.setTextKey(key2);
+                        text.setTranslationName((String) textMap.get("name"));
+                        text.setTranslationDesc((String) textMap.get("description"));
+                        textDataRealmList.add(text);
+                        libraryData.setTexts(textDataRealmList);
+                    }
+                }
+            }
             realm.insertOrUpdate(libraryData);
         });
     }
@@ -239,6 +237,7 @@ public class FirebaseDBHelper {
 //            }
 //                ()}
 //    }
+
 //    }
 //    @SuppressWarnings("unchecked")
 //    public void readFirebaseLibraries(Object libraries) {
