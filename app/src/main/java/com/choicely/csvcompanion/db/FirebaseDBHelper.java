@@ -4,7 +4,9 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
+import com.choicely.csvcompanion.data.TextData;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -16,6 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Map;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 
 @SuppressWarnings("unchecked")
 public class FirebaseDBHelper {
@@ -68,7 +71,7 @@ public class FirebaseDBHelper {
     }
 
     private void updateUserLibraryData(Object userLibrary) {
-        if(userLibrary instanceof Map) {
+        if (userLibrary instanceof Map) {
             final Map<String, Object> userLibraryMap = (Map<String, Object>) userLibrary;
 
             realm.executeTransaction(realm1 -> {
@@ -85,58 +88,77 @@ public class FirebaseDBHelper {
             });
         }
 
-        if(listener != null){
+        if (listener != null) {
             listener.onDatabaseUpdate();
         }
     }
 
-//    public void loadSingleLibraryContent(Object library) {
-//        final Map<String, Object> libraryMap = (Map<String, Object>) library;
-//        Object languagesObject = libraryMap.get("languages");
-//        Map<String, Object> languagesMap = (Map<String, Object>) languagesObject;
-//        RealmList<LanguageData> languageDataRealmList = new RealmList<>();
-//
-//        realm.executeTransaction(realm1 -> {
-//            if (languagesMap != null) {
-//                for (String langKey : languagesMap.keySet()) {
-//                    Object languageValue = languagesMap.get(langKey);
-//
-//                    LanguageData language = new LanguageData();
-//                    language.setLangKey(langKey);
-//                    language.setLangName((String) languageValue);
-//                    languageDataRealmList.add(language);
-//
-//                    libraryData.setLanguages(languageDataRealmList);
-//                }
-//            }
-//
-//            Object textsObject = libraryMap.get("texts");
-//            Map<String, Object> textsMap = (Map<String, Object>) textsObject;
-//            RealmList<TextData> textDataRealmList = new RealmList<>();
-//
-//            if (textsMap != null) {
-//                for (String key2 : textsMap.keySet()) {
-//                    Object textObject = textsMap.get(key2);
-//                    Map<String, Object> textMap = (Map<String, Object>) textObject;
-//
-//                    if (textMap != null) {
-//                        TextData text = new TextData();
-//
-//                        text.setTextKey(key2);
-//                        text.setTranslationName((String) textMap.get("name"));
-//                        text.setTranslationDesc((String) textMap.get("description"));
-//                        textDataRealmList.add(text);
-//                        libraryData.setTexts(textDataRealmList);
-//                    }
-//                }
-//            }
-//            realm.insertOrUpdate(libraryData);
-//        });
-//
-//        if (listener != null) {
-//            listener.onDatabaseUpdate();
-//        }
-//    }
+    public void updateLibrary(String libraryID) {
+        DatabaseReference myRef = database.getReference("libraries").child(libraryID);
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                final Object changedData = snapshot.getValue();
+                loadSingleLibraryContent(changedData);
+                Log.w(TAG, "onDataChange: " + changedData);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "Failed to read libraries value", error.toException());
+            }
+        });
+    }
+
+    public void loadSingleLibraryContent(Object library) {
+        final Map<String, Object> libraryMap = (Map<String, Object>) library;
+        Object languagesObject = libraryMap.get("languages");
+
+        Map<String, Object> languagesMap = (Map<String, Object>) languagesObject;
+        RealmList<LanguageData> languageDataRealmList = new RealmList<>();
+
+        realm.executeTransaction(realm1 -> {
+            if (languagesMap != null) {
+                for (String langKey : languagesMap.keySet()) {
+                    Object languageValue = languagesMap.get(langKey);
+
+                    LanguageData language = new LanguageData();
+                    language.setLangKey(langKey);
+                    language.setLangName((String) languageValue);
+                    languageDataRealmList.add(language);
+
+                    libraryData.setLanguages(languageDataRealmList);
+                }
+            }
+
+            Object textsObject = libraryMap.get("texts");
+            Map<String, Object> textsMap = (Map<String, Object>) textsObject;
+            RealmList<TextData> textDataRealmList = new RealmList<>();
+
+            if (textsMap != null) {
+                for (String key2 : textsMap.keySet()) {
+                    Object textObject = textsMap.get(key2);
+                    Map<String, Object> textMap = (Map<String, Object>) textObject;
+
+                    if (textMap != null) {
+                        TextData text = new TextData();
+
+                        text.setTextKey(key2);
+                        text.setTranslationName((String) textMap.get("name"));
+                        text.setTranslationDesc((String) textMap.get("description"));
+                        textDataRealmList.add(text);
+                        libraryData.setTexts(textDataRealmList);
+                    }
+                }
+            }
+            realm.copyToRealmOrUpdate(libraryData);
+        });
+
+        if (listener != null) {
+            listener.onDatabaseUpdate();
+        }
+    }
 
     public void setListener(onDatabaseUpdateListener listener) {
         this.listener = listener;
