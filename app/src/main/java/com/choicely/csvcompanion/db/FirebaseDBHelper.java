@@ -30,6 +30,7 @@ public class FirebaseDBHelper {
     private final Realm realm = RealmHelper.getInstance().getRealm();
 
     private onDatabaseUpdateListener listener;
+    private onSingleTextLoadedListener textLoadedListener;
 
     public FirebaseDBHelper() {
     }
@@ -195,28 +196,39 @@ public class FirebaseDBHelper {
         text.setIosKey(textSnapshot.get("ios_key").toString());
         text.setWebKey(textSnapshot.get("web_key").toString());
 
-        Map<String, Object> translationsMap = (Map<String, Object>) textSnapshot.get("translations");
-        RealmList<SingleTranslationData> translations = new RealmList<>();
+        if (textSnapshot.get("translations") != null) {
+            Map<String, Object> translationsMap = (Map<String, Object>) textSnapshot.get("translations");
+            RealmList<SingleTranslationData> translations = new RealmList<>();
 
-        for (String translationLangKey : textSnapshot.keySet()) {
-            SingleTranslationData data = new SingleTranslationData();
-            data.setLangKey(translationLangKey);
-            data.setTranslation(translationsMap.get(translationLangKey).toString());
-            translations.add(data);
+            for (String translationLangKey : translationsMap.keySet()) {
+                SingleTranslationData data = new SingleTranslationData();
+                data.setLangKey(translationLangKey);
+                data.setTranslation(translationsMap.get(translationLangKey).toString());
+                translations.add(realm.copyToRealmOrUpdate(data));
+            }
+            text.setTranslations(translations);
         }
 
-        text.setTranslations(translations);
         texts.set(textIndex, text);
         library.setTexts(texts);
         realm.insertOrUpdate(library);
         realm.commitTransaction();
+        textLoadedListener.onSingleTextLoaded();
     }
 
     public void setListener(onDatabaseUpdateListener listener) {
         this.listener = listener;
     }
 
+    public void setTextLoadListener(onSingleTextLoadedListener listener) {
+        this.textLoadedListener = listener;
+    }
+
     public interface onDatabaseUpdateListener {
         void onDatabaseUpdate();
+    }
+
+    public interface onSingleTextLoadedListener {
+        void onSingleTextLoaded();
     }
 }

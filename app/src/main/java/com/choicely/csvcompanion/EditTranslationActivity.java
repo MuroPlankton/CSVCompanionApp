@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import io.realm.Realm;
 import io.realm.RealmList;
 
 import static com.choicely.csvcompanion.IntentKeys.LIBRARY_ID;
@@ -42,23 +41,24 @@ public class EditTranslationActivity extends AppCompatActivity {
     private EditText translationValue;
     private Button submitTranslationButton;
 
+    private String currentLibraryKey;
     private String currentTextKey;
     private TextData currentText;
     private final List<String> langKeys = new ArrayList<>();
     private final List<String> langNames = new ArrayList<>();
-
     private Map<String, String> translations = new HashMap<>();
+    private String currentSelectedLang;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_translation_activity);
 
-        String libraryKey = getIntent().getStringExtra(LIBRARY_ID);
+        currentLibraryKey = getIntent().getStringExtra(LIBRARY_ID);
         currentTextKey = getIntent().getStringExtra(TRANSLATION_ID);
-        if (currentTextKey != null && libraryKey != null) {
-            if (!(currentTextKey.equals("") && libraryKey.equals(""))) {
-                FirebaseDBHelper.getInstance().readAndUpdateSingleText(libraryKey, currentTextKey);
+        if (currentTextKey != null && currentLibraryKey != null) {
+            if (!(currentTextKey.equals("") && currentLibraryKey.equals(""))) {
+                FirebaseDBHelper.getInstance().readAndUpdateSingleText(currentLibraryKey, currentTextKey);
             }
         }
 
@@ -71,25 +71,23 @@ public class EditTranslationActivity extends AppCompatActivity {
         translationValue = findViewById(R.id.edit_translation_act_write_translation);
         submitTranslationButton = findViewById(R.id.edit_translation_act_submit_translation);
 
-        Realm realm = RealmHelper.getInstance().getRealm();
-        currentText = realm.where(LibraryData.class).equalTo("libraryID", libraryKey).findFirst()
-                .getTexts().where().equalTo(TRANSLATION_ID, currentTextKey).findFirst();
-
         if (currentTextKey != null) {
-            updateUIWithText();
+            FirebaseDBHelper.getInstance().setTextLoadListener(textLoadedListener);
         } else {
             currentTextKey = UUID.randomUUID().toString();
         }
 
-        putLanguagesIntoLists(realm, libraryKey);
+        putLanguagesIntoLists();
 
+        translationValue.setText(translations.get(langKeys.get(langSpinner.getSelectedItemPosition())));
         langSpinner.setOnItemSelectedListener(langSelectedListener);
         submitTranslationButton.setOnClickListener(buttonListener);
     }
 
-    private void putLanguagesIntoLists(Realm realm, String libraryKey) {
-        RealmList<LanguageData> languageDataRealmList = realm.where(LibraryData.class)
-                .equalTo(LIBRARY_ID, libraryKey).findFirst().getLanguages();
+    private void putLanguagesIntoLists() {
+        RealmList<LanguageData> languageDataRealmList = RealmHelper.getInstance().getRealm()
+                .where(LibraryData.class).equalTo("libraryID", currentLibraryKey).findFirst().getLanguages();
+
         for (LanguageData language : languageDataRealmList) {
             langNames.add(language.getLangName());
             langKeys.add(language.getLangKey());
@@ -103,9 +101,10 @@ public class EditTranslationActivity extends AppCompatActivity {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             if (translationValue.getText().length() > 0) {
-                translations.put(langKeys.get(langSpinner.getSelectedItemPosition()), translationValue.getText().toString());
+                translations.put(currentSelectedLang, translationValue.getText().toString());
             }
             translationValue.setText(translations.get(langKeys.get(langSpinner.getSelectedItemPosition())));
+            currentSelectedLang = langKeys.get(langSpinner.getSelectedItemPosition());
         }
 
         @Override
@@ -114,7 +113,18 @@ public class EditTranslationActivity extends AppCompatActivity {
         }
     };
 
-    private void updateUIWithText() {
+    private FirebaseDBHelper.onSingleTextLoadedListener textLoadedListener = new FirebaseDBHelper.onSingleTextLoadedListener() {
+        @Override
+        public void onSingleTextLoaded() {
+            loadText();
+        }
+    };
+
+    private void loadText() {
+        currentText = RealmHelper.getInstance().getRealm()
+                .where(LibraryData.class).equalTo("libraryID", currentLibraryKey).findFirst()
+                .getTexts().where().equalTo("textKey", currentTextKey).findFirst();
+
         translationName.setText(currentText.getTranslationName());
         transLationDesc.setText(currentText.getTranslationDesc());
         androidKey.setText(currentText.getAndroidKey());
@@ -149,6 +159,7 @@ public class EditTranslationActivity extends AppCompatActivity {
         textToSave.put("android_key", androidKey.getText().toString());
         textToSave.put("ios_key", iosKey.getText().toString());
         textToSave.put("web_key", webKey.getText().toString());
+        translations.put(currentSelectedLang, translationValue.getText().toString());
         textToSave.put("translations", translations);
         FirebaseDatabase.getInstance().getReference().child("libraries")
                 .child(getIntent().getStringExtra(LIBRARY_ID)).child("texts")
