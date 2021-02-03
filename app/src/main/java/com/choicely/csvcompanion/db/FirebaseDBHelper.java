@@ -51,24 +51,24 @@ public class FirebaseDBHelper {
     }
 
     public void listenForUserLibraryDataChange() {
-            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-            if (currentUser != null) {
-                String currentUserString = currentUser.getUid();
-                DatabaseReference myRef = database.getReference("user_libraries").child(currentUserString);
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String currentUserString = currentUser.getUid();
+            DatabaseReference myRef = database.getReference("user_libraries").child(currentUserString);
 
-                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        final Object changedData = snapshot.getValue();
-                        updateUserLibraryData(changedData);
-                    }
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    final Object changedData = snapshot.getValue();
+                    updateUserLibraryData(changedData);
+                }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.w(TAG, "Failed to read users library values", error.toException());
-                    }
-                });
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.w(TAG, "Failed to read users library values", error.toException());
+                }
+            });
+        }
     }
 
     private void updateUserLibraryData(Object userLibrary) {
@@ -88,7 +88,6 @@ public class FirebaseDBHelper {
                 }
             });
         }
-
         if (listener != null) {
             listener.onDatabaseUpdate();
         }
@@ -119,10 +118,13 @@ public class FirebaseDBHelper {
         Map<String, Object> languagesMap = (Map<String, Object>) languagesObject;
         RealmList<LanguageData> languageDataRealmList = new RealmList<>();
 
-        Realm realm = RealmHelper.getInstance().getRealm();
         LibraryData libraryData = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
 
-        realm.executeTransaction(realm1 -> {
+        realm.beginTransaction();
+
+        if (libraryData == null) {
+            libraryData = new LibraryData();
+        } else {
             if (languagesMap != null) {
                 for (String langKey : languagesMap.keySet()) {
                     Object languageValue = languagesMap.get(langKey);
@@ -130,34 +132,34 @@ public class FirebaseDBHelper {
                     LanguageData language = new LanguageData();
                     language.setLangKey(langKey);
                     language.setLangName((String) languageValue);
-                    languageDataRealmList.add(language);
+                    languageDataRealmList.add(realm.copyToRealmOrUpdate(language));
 
                     libraryData.setLanguages(languageDataRealmList);
                 }
             }
+        }
+        Object textsObject = libraryMap.get("texts");
+        Map<String, Object> textsMap = (Map<String, Object>) textsObject;
+        RealmList<TextData> textDataRealmList = new RealmList<>();
 
-            Object textsObject = libraryMap.get("texts");
-            Map<String, Object> textsMap = (Map<String, Object>) textsObject;
-            RealmList<TextData> textDataRealmList = new RealmList<>();
+        if (textsMap != null) {
+            for (String key2 : textsMap.keySet()) {
+                Object textObject = textsMap.get(key2);
+                Map<String, Object> textMap = (Map<String, Object>) textObject;
 
-            if (textsMap != null) {
-                for (String key2 : textsMap.keySet()) {
-                    Object textObject = textsMap.get(key2);
-                    Map<String, Object> textMap = (Map<String, Object>) textObject;
+                if (textMap != null) {
+                    TextData text = new TextData();
 
-                    if (textMap != null) {
-                        TextData text = new TextData();
-
-                        text.setTextKey(key2);
-                        text.setTranslationName((String) textMap.get("name"));
-                        text.setTranslationDesc((String) textMap.get("description"));
-                        textDataRealmList.add(text);
-                        libraryData.setTexts(textDataRealmList);
-                    }
+                    text.setTextKey(key2);
+                    text.setTranslationName((String) textMap.get("name"));
+                    text.setTranslationDesc((String) textMap.get("description"));
+                    textDataRealmList.add(realm.copyToRealmOrUpdate(text));
+                    libraryData.setTexts(textDataRealmList);
                 }
             }
-            realm.insertOrUpdate(libraryData);
-        });
+        }
+        realm.copyToRealmOrUpdate(libraryData);
+        realm.commitTransaction();
 
         if (listener != null) {
             listener.onDatabaseUpdate();

@@ -72,7 +72,7 @@ public class EditTranslationActivity extends AppCompatActivity {
         submitTranslationButton = findViewById(R.id.edit_translation_act_submit_translation);
 
         Realm realm = RealmHelper.getInstance().getRealm();
-        currentText = realm.where(LibraryData.class).equalTo(LIBRARY_ID, libraryKey).findFirst()
+        currentText = realm.where(LibraryData.class).equalTo("libraryID", libraryKey).findFirst()
                 .getTexts().where().equalTo(TRANSLATION_ID, currentTextKey).findFirst();
 
         if (currentTextKey != null) {
