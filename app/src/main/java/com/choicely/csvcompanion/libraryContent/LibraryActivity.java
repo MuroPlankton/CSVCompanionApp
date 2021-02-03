@@ -174,8 +174,8 @@ public class LibraryActivity extends AppCompatActivity {
 
     private void loadLibrary() {
         updateCurrentLibrary();
-        startFireBaseListening();
         if (currentLibrary != null) {
+            startFireBaseListening();
             libraryNameEditText.setText(currentLibrary.getLibraryName());
         }
     }
@@ -212,7 +212,7 @@ public class LibraryActivity extends AppCompatActivity {
             for (int i = 0; i < currentLibrary.getLanguages().size(); i++) {
                 languageCount = i;
             }
-            languageCountTextView.setText(String.format("Amount of languages: %d", (languageCount +1)));
+            languageCountTextView.setText(String.format("Amount of languages: %d", (languageCount + 1)));
         }
     }
 
@@ -279,15 +279,17 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     private boolean checkIfLanguageAlreadyExists(String langCode) {
-        try {
-            List<LanguageData> languages = currentLibrary.getLanguages();
-            for (LanguageData language : languages) {
-                if (langCode.equals(language.getLangKey())) {
-                    return true;
+        if (currentLibrary != null) {
+            try {
+                List<LanguageData> languages = currentLibrary.getLanguages();
+                for (LanguageData language : languages) {
+                    if (langCode.equals(language.getLangKey())) {
+                        return true;
+                    }
                 }
+            } catch (NullPointerException e) {
+                Log.d(TAG, e.getMessage());
             }
-        } catch (NullPointerException e) {
-            Log.d(TAG, e.getMessage());
         }
         return false;
     }
@@ -305,12 +307,14 @@ public class LibraryActivity extends AppCompatActivity {
         Map<String, Object> langMap = new HashMap<>();
         langMap.put(langCode, langName);
         librariesRef.updateChildren(langMap);
+
+        helper.updateLibrary(libraryID);
     }
 
     public void newTranslation() {
         saveLibrary();
+        helper.updateLibrary(libraryID);
         updateCurrentLibrary();
-        currentLibrary = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
 
         if (currentLibrary != null && currentLibrary.getLanguages().size() == 0) {
             Toast.makeText(this, "No languages", Toast.LENGTH_SHORT).show();
