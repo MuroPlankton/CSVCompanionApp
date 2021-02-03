@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
+import com.choicely.csvcompanion.data.SingleTranslationData;
 import com.choicely.csvcompanion.data.TextData;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -15,6 +16,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.realm.Realm;
@@ -158,6 +162,52 @@ public class FirebaseDBHelper {
         if (listener != null) {
             listener.onDatabaseUpdate();
         }
+    }
+
+    public void readAndUpdateSingleText(String libraryKey, String TextKey) {
+        DatabaseReference textReference = FirebaseDatabase.getInstance().getReference().child("libraries").child(libraryKey).child("texts").child(TextKey);
+
+        textReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                final Map<String, Object> textMap = (Map<String, Object>) snapshot.getValue();
+                addTextToRealm(textMap, libraryKey, TextKey);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void addTextToRealm(Map<String, Object> textSnapshot, String libraryKey, String textKey) {
+        LibraryData library = realm.where(LibraryData.class).equalTo("libraryID", libraryKey).findFirst();
+
+        RealmList<TextData> texts = library.getTexts();
+        TextData text = texts.where().equalTo("textKey", textKey).findFirst();
+        int textIndex = texts.indexOf(text);
+
+        realm.beginTransaction();
+        text.setAndroidKey(textSnapshot.get("android_key").toString());
+        text.setIosKey(textSnapshot.get("ios_key").toString());
+        text.setWebKey(textSnapshot.get("web_key").toString());
+
+        Map<String, Object> translationsMap = (Map<String, Object>) textSnapshot.get("translations");
+        RealmList<SingleTranslationData> translations = new RealmList<>();
+
+        for (String translationLangKey : textSnapshot.keySet()) {
+            SingleTranslationData data = new SingleTranslationData();
+            data.setLangKey(translationLangKey);
+            data.setTranslation(translationsMap.get(translationLangKey).toString());
+            translations.add(data);
+        }
+        
+        text.setTranslations(translations);
+        texts.set(textIndex, text);
+        library.setTexts(texts);
+        realm.insertOrUpdate(library);
+        realm.commitTransaction();
     }
 
     public void setListener(onDatabaseUpdateListener listener) {

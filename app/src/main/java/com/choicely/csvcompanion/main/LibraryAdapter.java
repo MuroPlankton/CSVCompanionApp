@@ -61,7 +61,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
     public void clear() {
         list.clear();
     }
-//ryhanenjarno@gmail.com
+
     public static class LibraryViewHolder extends RecyclerView.ViewHolder {
 
         public String libraryID;
