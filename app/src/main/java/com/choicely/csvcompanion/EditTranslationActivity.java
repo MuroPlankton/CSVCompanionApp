@@ -15,6 +15,7 @@ import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.data.SingleTranslationData;
 import com.choicely.csvcompanion.data.TextData;
+import com.choicely.csvcompanion.db.FirebaseDBHelper;
 import com.choicely.csvcompanion.db.RealmHelper;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -25,6 +26,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 
 import static com.choicely.csvcompanion.IntentKeys.LIBRARY_ID;
 import static com.choicely.csvcompanion.IntentKeys.TRANSLATION_ID;
@@ -33,14 +35,14 @@ public class EditTranslationActivity extends AppCompatActivity {
 
     private final PopUpAlert popUpAlert = new PopUpAlert();
     private static final String TAG = "EditTranslationActivity";
-    private String CurrentLibraryKey;
-    private String currentTextKey;
+
     private EditText translationName, transLationDesc;
     private EditText androidKey, iosKey, webKey;
     private Spinner langSpinner;
     private EditText translationValue;
     private Button submitTranslationButton;
-    private LibraryData currentLibrary;
+
+    private String currentTextKey;
     private TextData currentText;
     private final List<String> langKeys = new ArrayList<>();
     private final List<String> langNames = new ArrayList<>();
@@ -52,8 +54,13 @@ public class EditTranslationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_translation_activity);
 
-        CurrentLibraryKey = getIntent().getStringExtra(LIBRARY_ID);
+        String libraryKey = getIntent().getStringExtra(LIBRARY_ID);
         currentTextKey = getIntent().getStringExtra(TRANSLATION_ID);
+        if (currentTextKey != null && libraryKey != null) {
+            if (!(currentTextKey.equals("") && libraryKey.equals(""))) {
+                FirebaseDBHelper.getInstance().readAndUpdateSingleText(libraryKey, currentTextKey);
+            }
+        }
 
         translationName = findViewById(R.id.edit_translation_act_translation_name);
         transLationDesc = findViewById(R.id.edit_translation_act_translation_desc);
@@ -64,29 +71,30 @@ public class EditTranslationActivity extends AppCompatActivity {
         translationValue = findViewById(R.id.edit_translation_act_write_translation);
         submitTranslationButton = findViewById(R.id.edit_translation_act_submit_translation);
 
-        String libraryKey = getIntent().getStringExtra(LIBRARY_ID);
         Realm realm = RealmHelper.getInstance().getRealm();
-        currentLibrary = realm.where(LibraryData.class).equalTo("libraryID", libraryKey).findFirst();
+        currentText = realm.where(LibraryData.class).equalTo(LIBRARY_ID, libraryKey).findFirst()
+                .getTexts().where().equalTo(TRANSLATION_ID, currentTextKey).findFirst();
 
         if (currentTextKey != null) {
-            findCurrentText();
-            loadText();
+            updateUIWithText();
         } else {
             currentTextKey = UUID.randomUUID().toString();
         }
-        loadLanguages();
+
+        putLanguagesIntoLists(realm, libraryKey);
 
         langSpinner.setOnItemSelectedListener(langSelectedListener);
-
         submitTranslationButton.setOnClickListener(buttonListener);
     }
 
-    private void loadLanguages() {
-        List<LanguageData> languages = currentLibrary.getLanguages();
-        for (LanguageData language : languages) {
+    private void putLanguagesIntoLists(Realm realm, String libraryKey) {
+        RealmList<LanguageData> languageDataRealmList = realm.where(LibraryData.class)
+                .equalTo(LIBRARY_ID, libraryKey).findFirst().getLanguages();
+        for (LanguageData language : languageDataRealmList) {
             langNames.add(language.getLangName());
             langKeys.add(language.getLangKey());
         }
+
         ArrayAdapter<String> langAdapter = new ArrayAdapter<String>(this, R.layout.language_text_layout, R.id.language_text_view, langNames);
         langSpinner.setAdapter(langAdapter);
     }
@@ -106,17 +114,7 @@ public class EditTranslationActivity extends AppCompatActivity {
         }
     };
 
-    private void findCurrentText() {
-        List<TextData> texts = currentLibrary.getTexts();
-        for (TextData text : texts) {
-            if (text.getTextKey().equals(currentTextKey)) {
-                currentText = text;
-                break;
-            }
-        }
-    }
-
-    private void loadText() {
+    private void updateUIWithText() {
         translationName.setText(currentText.getTranslationName());
         transLationDesc.setText(currentText.getTranslationDesc());
         androidKey.setText(currentText.getAndroidKey());
@@ -152,7 +150,9 @@ public class EditTranslationActivity extends AppCompatActivity {
         textToSave.put("ios_key", iosKey.getText().toString());
         textToSave.put("web_key", webKey.getText().toString());
         textToSave.put("translations", translations);
-        FirebaseDatabase.getInstance().getReference().child("libraries").child(CurrentLibraryKey).child("texts").child(currentTextKey).updateChildren(textToSave);
+        FirebaseDatabase.getInstance().getReference().child("libraries")
+                .child(getIntent().getStringExtra(LIBRARY_ID)).child("texts")
+                .child(currentTextKey).updateChildren(textToSave);
     }
 
     private boolean checkIfRowsAreEmpty() {
@@ -170,6 +170,7 @@ public class EditTranslationActivity extends AppCompatActivity {
         iosKey.setText("");
         webKey.setText("");
         translationValue.setText("");
+        translations.clear();
 
         currentTextKey = UUID.randomUUID().toString();
     }
