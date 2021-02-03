@@ -27,9 +27,9 @@ public class FirebaseDBHelper {
     private static final String TAG = "FirebaseDBHelper";
     private static FirebaseDBHelper instance;
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private final Realm realm = RealmHelper.getInstance().getRealm();
 
     private onDatabaseUpdateListener listener;
-
 
     public FirebaseDBHelper() {
     }
@@ -60,8 +60,7 @@ public class FirebaseDBHelper {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         final Object changedData = snapshot.getValue();
-                        Log.d(TAG, "onDataChange: " + changedData);
-//                        readUserLibraries(changedData);
+                        updateUserLibraryData(changedData);
                     }
 
                     @Override
@@ -70,6 +69,29 @@ public class FirebaseDBHelper {
                     }
                 });
             }
+    }
+
+    private void updateUserLibraryData(Object userLibrary) {
+        if (userLibrary instanceof Map) {
+            final Map<String, Object> userLibraryMap = (Map<String, Object>) userLibrary;
+
+            realm.executeTransaction(realm1 -> {
+                if (userLibraryMap != null) {
+                    for (String key : userLibraryMap.keySet()) {
+                        Object libraryName = userLibraryMap.get(key);
+
+                        LibraryData libraryData = new LibraryData();
+                        libraryData.setLibraryID(key);
+                        libraryData.setLibraryName((String) libraryName);
+                        realm.copyToRealmOrUpdate(libraryData);
+                    }
+                }
+            });
+        }
+
+        if (listener != null) {
+            listener.onDatabaseUpdate();
+        }
     }
 
     public void updateLibrary(String libraryID) {
@@ -93,9 +115,10 @@ public class FirebaseDBHelper {
     public void loadSingleLibraryContent(Object library, String libraryID) {
         final Map<String, Object> libraryMap = (Map<String, Object>) library;
         Object languagesObject = libraryMap.get("languages");
+
         Map<String, Object> languagesMap = (Map<String, Object>) languagesObject;
         RealmList<LanguageData> languageDataRealmList = new RealmList<>();
-        
+
         Realm realm = RealmHelper.getInstance().getRealm();
         LibraryData libraryData = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
 
@@ -158,9 +181,9 @@ public class FirebaseDBHelper {
         });
     }
 
-    private void addTextToRealm(Map textSnapshot, String libraryKey, String textKey) {
-        Realm realm = RealmHelper.getInstance().getRealm();
+    private void addTextToRealm(Map<String, Object> textSnapshot, String libraryKey, String textKey) {
         LibraryData library = realm.where(LibraryData.class).equalTo("libraryID", libraryKey).findFirst();
+
         RealmList<TextData> texts = library.getTexts();
         TextData text = texts.where().equalTo("textKey", textKey).findFirst();
         int textIndex = texts.indexOf(text);
@@ -173,9 +196,9 @@ public class FirebaseDBHelper {
         Map<String, Object> translationsMap = (Map<String, Object>) textSnapshot.get("translations");
         RealmList<SingleTranslationData> translations = new RealmList<>();
 
-        for (Object translationLangKey : textSnapshot.keySet()) {
+        for (String translationLangKey : textSnapshot.keySet()) {
             SingleTranslationData data = new SingleTranslationData();
-            data.setLangKey(translationLangKey.toString());
+            data.setLangKey(translationLangKey);
             data.setTranslation(translationsMap.get(translationLangKey).toString());
             translations.add(data);
         }

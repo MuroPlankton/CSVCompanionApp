@@ -47,7 +47,15 @@ import java.util.UUID;
 import io.realm.Realm;
 
 public class LibraryActivity extends AppCompatActivity {
+
     private static final String TAG = "LibraryActivity";
+    private final String[] sampleLanguages = {"en | English", "fi | Suomi", "sv | Svenska", "ee | Eestlane", "it | Italiano"};
+    private final List<Pair<String, String>> sampleLanguageList = new ArrayList<>();
+    private final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private final DatabaseReference ref = database.getReference();
+    private final Realm realm = RealmHelper.getInstance().getRealm();
+    private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private final FirebaseDBHelper helper = FirebaseDBHelper.getInstance();
 
     private EditText libraryNameEditText;
     private EditText langCodeEditText;
@@ -56,20 +64,11 @@ public class LibraryActivity extends AppCompatActivity {
     private Button addLanguageButton;
     private Button newTranslationButton;
     private ListPopupWindow listPopupWindow;
-    private final String[] sampleLanguages = {"en | English", "fi | Suomi", "sv | Svenska", "ee | Eestlane", "it | Italiano"};
-    private final List<Pair<String, String>> sampleLanguageList = new ArrayList<>();
     private RecyclerView contentRecyclerView;
     private LibraryContentAdapter adapter;
     private LibraryData currentLibrary;
-    private final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private final DatabaseReference ref = database.getReference();
     private String libraryID;
     private int languageCount = 0;
-    private final Realm realm = RealmHelper.getInstance().getRealm();
-    private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-    private final FirebaseDBHelper helper = FirebaseDBHelper.getInstance();
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -175,6 +174,7 @@ public class LibraryActivity extends AppCompatActivity {
 
     private void loadLibrary() {
         updateCurrentLibrary();
+        startFireBaseListening();
         if (currentLibrary != null) {
             libraryNameEditText.setText(currentLibrary.getLibraryName());
         }
@@ -183,7 +183,6 @@ public class LibraryActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         try {
-            startFireBaseListening();
             super.onResume();
             updateContent();
         } catch (NullPointerException e) {
@@ -320,7 +319,6 @@ public class LibraryActivity extends AppCompatActivity {
             intent.putExtra(IntentKeys.LIBRARY_ID, libraryID);
             startActivity(intent);
         }
-
     }
 
     private final PopUpAlert popUpAlert = new PopUpAlert();

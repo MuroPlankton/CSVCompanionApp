@@ -2,14 +2,11 @@ package com.choicely.csvcompanion.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.SearchView;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
 
     private Button newLibraryButton;
     private SearchView searchView;
-    private TextView heading;
     private RecyclerView libraryRecycler;
     private LibraryAdapter adapter;
 
@@ -41,7 +37,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_activity);
 
         newLibraryButton = findViewById(R.id.main_activity_new_library);
-        heading = findViewById(R.id.main_activity_heading);
+
+        newLibraryButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, LibraryActivity.class);
+            startActivity(intent);
+        });
 
         libraryRecycler = findViewById(R.id.main_activity_recycler);
         libraryRecycler.setLayoutManager(new LinearLayoutManager(this));
@@ -49,13 +49,6 @@ public class MainActivity extends AppCompatActivity {
         libraryRecycler.setAdapter(adapter);
 
         startFireBaseListening();
-    }
-
-    public void onClick(View v) {
-        if (v == newLibraryButton) {
-            Intent intent = new Intent(this, LibraryActivity.class);
-            startActivity(intent);
-        }
     }
 
     @Override
