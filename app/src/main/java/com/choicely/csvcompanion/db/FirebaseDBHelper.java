@@ -83,11 +83,13 @@ public class FirebaseDBHelper {
                         LibraryData libraryData = new LibraryData();
                         libraryData.setLibraryID(key);
                         libraryData.setLibraryName((String) libraryName);
+//                        Log.d(TAG, "updateUserLibraryData: " + libraryData.getLibraryName() + " " + libraryData.getLibraryID());
                         realm.copyToRealmOrUpdate(libraryData);
                     }
                 }
             });
         }
+
         if (listener != null) {
             listener.onDatabaseUpdate();
         }

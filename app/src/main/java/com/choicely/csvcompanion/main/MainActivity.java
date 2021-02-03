@@ -2,6 +2,7 @@ package com.choicely.csvcompanion.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -47,8 +48,6 @@ public class MainActivity extends AppCompatActivity {
         libraryRecycler.setLayoutManager(new LinearLayoutManager(this));
         adapter = new LibraryAdapter(this);
         libraryRecycler.setAdapter(adapter);
-
-        startFireBaseListening();
     }
 
     @Override

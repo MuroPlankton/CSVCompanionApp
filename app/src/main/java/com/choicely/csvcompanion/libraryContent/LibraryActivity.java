@@ -185,6 +185,7 @@ public class LibraryActivity extends AppCompatActivity {
         try {
             super.onResume();
             updateContent();
+            startFireBaseListening();
         } catch (NullPointerException e) {
             Log.e(TAG, "onResume: ", e);
         }
