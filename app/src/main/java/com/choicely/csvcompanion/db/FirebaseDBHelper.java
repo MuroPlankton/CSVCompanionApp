@@ -29,7 +29,6 @@ public class FirebaseDBHelper {
     private static FirebaseDBHelper instance;
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final LibraryData libraryData = new LibraryData();
-    private final List<String> libIDList = new ArrayList<>();
     private final Realm realm = RealmHelper.getInstance().getRealm();
 
     private onDatabaseUpdateListener listener;
