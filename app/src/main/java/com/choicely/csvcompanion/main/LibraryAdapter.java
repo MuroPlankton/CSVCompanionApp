@@ -64,7 +64,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
             itemView.setOnClickListener(onRowClick);
 
             libraryName = itemView.findViewById(R.id.library_list_row_library_name);
-            shareButton = itemView.findViewById(R.id.library_list_row_share);
+            shareButton = itemView.findViewById(R.id.library_list_row_share_button);
         }
 
         private final View.OnClickListener onRowClick = view -> {

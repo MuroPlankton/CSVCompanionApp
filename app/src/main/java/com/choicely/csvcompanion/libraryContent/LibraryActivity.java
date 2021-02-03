@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.choicely.csvcompanion.CSVWriter;
 import com.choicely.csvcompanion.EditTranslationActivity;
-import com.choicely.csvcompanion.FireBaseParameters;
 import com.choicely.csvcompanion.IntentKeys;
 import com.choicely.csvcompanion.PopUpAlert;
 import com.choicely.csvcompanion.R;
@@ -116,7 +115,7 @@ public class LibraryActivity extends AppCompatActivity {
     private void startFireBaseListening() {
         FirebaseDBHelper helper = FirebaseDBHelper.getInstance();
         helper.setListener(this::updateContent);
-        helper.listenForUserLibraryDataChange(FireBaseParameters.LIBRARY_ACTIVITY);
+//        helper.listenForUserLibraryDataChange(FireBaseParameters.LIBRARY_ACTIVITY);
     }
 
     private AdapterView.OnItemClickListener langPopupItemClickListener = new AdapterView.OnItemClickListener() {
