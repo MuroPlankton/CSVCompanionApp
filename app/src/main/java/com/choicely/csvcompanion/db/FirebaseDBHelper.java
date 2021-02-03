@@ -121,24 +121,23 @@ public class FirebaseDBHelper {
 
         LibraryData libraryData = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
 
-        realm.beginTransaction();
-
         if (libraryData == null) {
             libraryData = new LibraryData();
-        } else {
-            if (languagesMap != null) {
-                for (String langKey : languagesMap.keySet()) {
-                    Object languageValue = languagesMap.get(langKey);
+        }
 
-                    LanguageData language = new LanguageData();
-                    language.setLangKey(langKey);
-                    language.setLangName((String) languageValue);
-                    languageDataRealmList.add(realm.copyToRealmOrUpdate(language));
+        realm.beginTransaction();
+        if (languagesMap != null) {
+            for (String langKey : languagesMap.keySet()) {
+                Object languageValue = languagesMap.get(langKey);
 
-                    libraryData.setLanguages(languageDataRealmList);
-                }
+                LanguageData language = new LanguageData();
+                language.setLangKey(langKey);
+                language.setLangName((String) languageValue);
+                languageDataRealmList.add(realm.copyToRealmOrUpdate(language));
+                libraryData.setLanguages(languageDataRealmList);
             }
         }
+
         Object textsObject = libraryMap.get("texts");
         Map<String, Object> textsMap = (Map<String, Object>) textsObject;
         RealmList<TextData> textDataRealmList = new RealmList<>();

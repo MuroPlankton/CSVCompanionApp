@@ -53,22 +53,22 @@ public class LibraryActivity extends AppCompatActivity {
     private final List<Pair<String, String>> sampleLanguageList = new ArrayList<>();
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final DatabaseReference ref = database.getReference();
-    private final Realm realm = RealmHelper.getInstance().getRealm();
     private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private final FirebaseDBHelper helper = FirebaseDBHelper.getInstance();
+    private final Realm realm = RealmHelper.getInstance().getRealm();
 
     private EditText libraryNameEditText;
     private EditText langCodeEditText;
     private EditText langEditText;
-    private TextView languageCountTextView;
     private Button addLanguageButton;
     private Button newTranslationButton;
+    private TextView languageCountTextView;
     private ListPopupWindow listPopupWindow;
     private RecyclerView contentRecyclerView;
     private LibraryContentAdapter adapter;
     private LibraryData currentLibrary;
     private String libraryID;
-    private int languageCount = 0;
+    private int languageCount;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -119,6 +119,24 @@ public class LibraryActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        try {
+            super.onResume();
+            updateContent();
+        } catch (NullPointerException e) {
+            Log.e(TAG, "onResume: ", e);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!checkIfNameIsEmpty()) {
+            super.onBackPressed();
+            saveLibrary();
+        }
+    }
+
     private void startFireBaseListening() {
         helper.setListener(this::updateContent);
         helper.updateLibrary(libraryID);
@@ -164,8 +182,6 @@ public class LibraryActivity extends AppCompatActivity {
 
     private void newLibrary() {
         libraryID = String.valueOf(UUID.randomUUID());
-        Log.d(TAG, "new Library created with the ID:" + libraryID);
-        Log.d(TAG, "newLibrary: user:" + user);
         languageCountTextView.setText(String.format("Amount of languages: %d", languageCount));
 
         addUser();
@@ -180,24 +196,6 @@ public class LibraryActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        try {
-            super.onResume();
-            updateContent();
-        } catch (NullPointerException e) {
-            Log.e(TAG, "onResume: ", e);
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (!checkIfNameIsEmpty()) {
-            super.onBackPressed();
-            saveLibrary();
-        }
-    }
-
     public void onButtonClick(View v) {
         if (v == addLanguageButton) {
             addLanguage();
@@ -207,12 +205,9 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     private void updateLanguageTextCount() {
-        Log.d(TAG, "loadLibrary: language count: " + languageCount);
         if (currentLibrary != null) {
-            for (int i = 0; i < currentLibrary.getLanguages().size(); i++) {
-                languageCount = i;
-            }
-            languageCountTextView.setText(String.format("Amount of languages: %d", (languageCount + 1)));
+            languageCount = currentLibrary.getLanguages().size();
+            languageCountTextView.setText(String.format("Amount of languages: %d", languageCount));
         }
     }
 
@@ -224,9 +219,6 @@ public class LibraryActivity extends AppCompatActivity {
         Map<String, Object> library = new HashMap<>();
         library.put("library_name", libraryName);
         libRef.updateChildren(library);
-
-        Log.d(TAG, "saveLibrary: library saved with the ID:" + libraryID);
-
         addLibraryToUserLibraries(libraryName);
     }
 
@@ -241,7 +233,6 @@ public class LibraryActivity extends AppCompatActivity {
     private void updateContent() {
         adapter.clear();
         updateLanguageTextCount();
-
         try {
             List<TextData> textList = currentLibrary.getTexts();
             adapter.setLibrary(currentLibrary);
@@ -262,7 +253,6 @@ public class LibraryActivity extends AppCompatActivity {
         if (!checkIfLanguageAlreadyExists(langCode) && !langCode.isEmpty()) {
             addLanguageToFireBase(langCode, language);
             Toast.makeText(this, "Language: " + '"' + langCode + '"' + " added", Toast.LENGTH_SHORT).show();
-            clearLanguageEditTexts();
             languageAddedListener.onLanguageAdded();
 
         } else if (!checkIfLanguageAlreadyExists(langCode) && langCode.isEmpty()) {
@@ -308,6 +298,7 @@ public class LibraryActivity extends AppCompatActivity {
         librariesRef.updateChildren(langMap);
 
         helper.updateLibrary(libraryID);
+        clearLanguageEditTexts();
     }
 
     public void newTranslation() {
