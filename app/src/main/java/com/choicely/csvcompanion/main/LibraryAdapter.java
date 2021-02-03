@@ -25,7 +25,9 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
     private final Context context;
     private final List<LibraryData> list = new ArrayList<>();
 
-    public LibraryAdapter(Context context) { this.context = context; }
+    public LibraryAdapter(Context context) {
+        this.context = context;
+    }
 
     @NonNull
     @Override
@@ -36,23 +38,30 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
     @Override
     public void onBindViewHolder(@NonNull LibraryViewHolder holder, int position) {
         LibraryData library = list.get(position);
-
         holder.libraryID = library.getLibraryID();
 
-        if (library.getLibraryName().isEmpty()) {
-            holder.libraryName.setHint("library has no name...");
-        } else {
-            holder.libraryName.setText(library.getLibraryName());
+        if (library.getLibraryName() != null) {
+            if (library.getLibraryName().isEmpty()) {
+                holder.libraryName.setHint("library has no name...");
+            } else {
+                holder.libraryName.setText(library.getLibraryName());
+            }
         }
     }
 
-    public void add(LibraryData library) { list.add(library); }
+    public void add(LibraryData library) {
+        list.add(library);
+    }
 
     @Override
-    public int getItemCount() { return list.size(); }
+    public int getItemCount() {
+        return list.size();
+    }
 
-    public void clear() { list.clear(); }
-
+    public void clear() {
+        list.clear();
+    }
+//ryhanenjarno@gmail.com
     public static class LibraryViewHolder extends RecyclerView.ViewHolder {
 
         public String libraryID;

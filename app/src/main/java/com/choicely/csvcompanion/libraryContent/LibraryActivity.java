@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.choicely.csvcompanion.CSVWriter;
 import com.choicely.csvcompanion.EditTranslationActivity;
-import com.choicely.csvcompanion.FireBaseParameters;
 import com.choicely.csvcompanion.IntentKeys;
 import com.choicely.csvcompanion.PopUpAlert;
 import com.choicely.csvcompanion.R;
@@ -57,8 +56,8 @@ public class LibraryActivity extends AppCompatActivity {
     private Button addLanguageButton;
     private Button newTranslationButton;
     private ListPopupWindow listPopupWindow;
-    private String[] sampleLanguages = {"en | English", "fi | Suomi", "sv | Svenska", "ee | Eestlane", "it | Italiano"};
-    private List<Pair<String, String>> sampleLanguageList = new ArrayList<>();
+    private final String[] sampleLanguages = {"en | English", "fi | Suomi", "sv | Svenska", "ee | Eestlane", "it | Italiano"};
+    private final List<Pair<String, String>> sampleLanguageList = new ArrayList<>();
     private RecyclerView contentRecyclerView;
     private LibraryContentAdapter adapter;
     private LibraryData currentLibrary;
@@ -68,6 +67,9 @@ public class LibraryActivity extends AppCompatActivity {
     private int languageCount = 0;
     private final Realm realm = RealmHelper.getInstance().getRealm();
     private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+    private final FirebaseDBHelper helper = FirebaseDBHelper.getInstance();
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,7 +104,6 @@ public class LibraryActivity extends AppCompatActivity {
             loadLibrary();
         }
 
-
         sampleLanguageList.add(new Pair<>("en", "English"));
         sampleLanguageList.add(new Pair<>("fi", "Suomi"));
         sampleLanguageList.add(new Pair<>("sv", "Svenska"));
@@ -112,12 +113,16 @@ public class LibraryActivity extends AppCompatActivity {
         langEditText.setOnFocusChangeListener(onFocusChangeListener);
         langCodeEditText.setOnFocusChangeListener(onFocusChangeListener);
         listPopupWindow.setOnItemClickListener(langPopupItemClickListener);
+
+        setOnLanguageAddedListener(() -> {
+            languageCount += 1;
+            languageCountTextView.setText(String.format("Amount of languages: %d", languageCount));
+        });
     }
 
     private void startFireBaseListening() {
-        FirebaseDBHelper helper = FirebaseDBHelper.getInstance();
         helper.setListener(this::updateContent);
-        helper.listenForUserLibraryDataChange(FireBaseParameters.LIBRARY_CONTENT_PARAMETERS);
+        helper.updateLibrary(libraryID);
     }
 
     private AdapterView.OnItemClickListener langPopupItemClickListener = new AdapterView.OnItemClickListener() {
@@ -173,23 +178,16 @@ public class LibraryActivity extends AppCompatActivity {
         if (currentLibrary != null) {
             libraryNameEditText.setText(currentLibrary.getLibraryName());
         }
-        updateContent();
     }
 
     @Override
     protected void onResume() {
         try {
-            super.onResume();
             startFireBaseListening();
-            setOnLanguageAddedListener(() -> {
-                languageCount += 1;
-                updateLanguageTextCount();
-            });
-            updateCurrentLibrary();
+            super.onResume();
             updateContent();
-
         } catch (NullPointerException e) {
-            e.getMessage();
+            Log.e(TAG, "onResume: ", e);
         }
     }
 
@@ -210,14 +208,13 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     private void updateLanguageTextCount() {
-        LibraryData libraryData = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
-
-        if (libraryData != null) {
-            for (int i = 0; i < libraryData.getLanguages().size(); i++) {
+        Log.d(TAG, "loadLibrary: language count: " + languageCount);
+        if (currentLibrary != null) {
+            for (int i = 0; i < currentLibrary.getLanguages().size(); i++) {
                 languageCount = i;
             }
+            languageCountTextView.setText(String.format("Amount of languages: %d", (languageCount +1)));
         }
-        languageCountTextView.setText(String.format("Amount of languages: %d", languageCount));
     }
 
     private void saveLibrary() {
@@ -244,6 +241,7 @@ public class LibraryActivity extends AppCompatActivity {
 
     private void updateContent() {
         adapter.clear();
+        updateLanguageTextCount();
 
         try {
             List<TextData> textList = currentLibrary.getTexts();
@@ -265,11 +263,10 @@ public class LibraryActivity extends AppCompatActivity {
         if (!checkIfLanguageAlreadyExists(langCode) && !langCode.isEmpty()) {
             addLanguageToFireBase(langCode, language);
             Toast.makeText(this, "Language: " + '"' + langCode + '"' + " added", Toast.LENGTH_SHORT).show();
-
             clearLanguageEditTexts();
-            updateContent();
-
             languageAddedListener.onLanguageAdded();
+//            helper.listenForLibraryDataChange(FireBaseParameters.LIBRARY_CONTENT_PARAMETERS);
+
 
         } else if (!checkIfLanguageAlreadyExists(langCode) && langCode.isEmpty()) {
             Toast.makeText(this, "Language code field cannot be empty!", Toast.LENGTH_SHORT).show();
@@ -315,13 +312,16 @@ public class LibraryActivity extends AppCompatActivity {
     public void newTranslation() {
         saveLibrary();
         updateCurrentLibrary();
-        if (currentLibrary.getLanguages().size() < 1) {
+        currentLibrary = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
+
+        if (currentLibrary != null && currentLibrary.getLanguages().size() == 0) {
             Toast.makeText(this, "No languages", Toast.LENGTH_SHORT).show();
         } else {
             Intent intent = new Intent(LibraryActivity.this, EditTranslationActivity.class);
             intent.putExtra(IntentKeys.LIBRARY_ID, libraryID);
             startActivity(intent);
         }
+
     }
 
     private final PopUpAlert popUpAlert = new PopUpAlert();

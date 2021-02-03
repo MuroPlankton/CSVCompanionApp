@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.choicely.csvcompanion.FireBaseParameters;
 import com.choicely.csvcompanion.R;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.db.FirebaseDBHelper;
@@ -105,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
     private void startFireBaseListening() {
         FirebaseDBHelper helper = FirebaseDBHelper.getInstance();
         helper.setListener(this::updateContent);
-        helper.listenForUserLibraryDataChange(FireBaseParameters.NAME_AND_ID_PARAMETERS);
     }
 
     private void updateContent() {
