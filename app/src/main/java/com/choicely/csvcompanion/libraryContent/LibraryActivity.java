@@ -265,8 +265,7 @@ public class LibraryActivity extends AppCompatActivity {
             Toast.makeText(this, "Language: " + '"' + langCode + '"' + " added", Toast.LENGTH_SHORT).show();
             clearLanguageEditTexts();
             languageAddedListener.onLanguageAdded();
-//            helper.listenForLibraryDataChange(FireBaseParameters.LIBRARY_CONTENT_PARAMETERS);
-
+            helper.updateLibrary(libraryID);
 
         } else if (!checkIfLanguageAlreadyExists(langCode) && langCode.isEmpty()) {
             Toast.makeText(this, "Language code field cannot be empty!", Toast.LENGTH_SHORT).show();

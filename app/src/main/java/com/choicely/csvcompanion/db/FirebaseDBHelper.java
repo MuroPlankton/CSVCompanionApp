@@ -16,9 +16,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import io.realm.Realm;
@@ -30,8 +27,6 @@ public class FirebaseDBHelper {
     private static final String TAG = "FirebaseDBHelper";
     private static FirebaseDBHelper instance;
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private final LibraryData libraryData = new LibraryData();
-    private final Realm realm = RealmHelper.getInstance().getRealm();
 
     private onDatabaseUpdateListener listener;
 
@@ -84,7 +79,7 @@ public class FirebaseDBHelper {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 final Object changedData = snapshot.getValue();
-                loadSingleLibraryContent(changedData);
+                loadSingleLibraryContent(changedData, libraryID);
                 Log.w(TAG, "onDataChange: " + changedData);
             }
 
@@ -95,11 +90,14 @@ public class FirebaseDBHelper {
         });
     }
 
-    public void loadSingleLibraryContent(Object library) {
+    public void loadSingleLibraryContent(Object library, String libraryID) {
         final Map<String, Object> libraryMap = (Map<String, Object>) library;
         Object languagesObject = libraryMap.get("languages");
         Map<String, Object> languagesMap = (Map<String, Object>) languagesObject;
         RealmList<LanguageData> languageDataRealmList = new RealmList<>();
+        
+        Realm realm = RealmHelper.getInstance().getRealm();
+        LibraryData libraryData = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
 
         realm.executeTransaction(realm1 -> {
             if (languagesMap != null) {
@@ -135,7 +133,7 @@ public class FirebaseDBHelper {
                     }
                 }
             }
-            realm.copyToRealmOrUpdate(libraryData);
+            realm.insertOrUpdate(libraryData);
         });
 
         if (listener != null) {
@@ -181,7 +179,7 @@ public class FirebaseDBHelper {
             data.setTranslation(translationsMap.get(translationLangKey).toString());
             translations.add(data);
         }
-        
+
         text.setTranslations(translations);
         texts.set(textIndex, text);
         library.setTexts(texts);
