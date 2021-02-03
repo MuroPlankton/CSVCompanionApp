@@ -55,25 +55,55 @@ public class FirebaseDBHelper {
     }
 
     public void listenForUserLibraryDataChange() {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            String currentUserString = currentUser.getUid();
-            DatabaseReference myRef = database.getReference("user_libraries/" + currentUserString);
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (currentUser != null) {
+                String currentUserString = currentUser.getUid();
+                DatabaseReference myRef = database.getReference("user_libraries").child(currentUserString);
 
-            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    final Object changedData = snapshot.getValue();
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        final Object changedData = snapshot.getValue();
+                        Log.d(TAG, "onDataChange: " + changedData);
 //                        readUserLibraries(changedData);
-                }
+                    }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.w(TAG, "Failed to read users library values", error.toException());
-                }
-            });
-        }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.w(TAG, "Failed to read users library values", error.toException());
+                    }
+                });
+            }
     }
+
+//    public void listenForLibraryDataChange(int parameter) {
+//        for (String libID : libIDList) {
+//            DatabaseReference myRef = database.getReference("libraries").child(libID);
+//
+//            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    final Object changedData = snapshot.getValue();
+//<<<<<<< HEAD
+////                        readUserLibraries(changedData);
+//=======
+//                    Log.d(TAG, "onDataChange: PARAMETER: " + parameter);
+//                    if (parameter == FireBaseParameters.MAIN_ACTIVITY) {
+//                        loadLibraryNameAndID(changedData);
+//                    } else if (parameter == FireBaseParameters.LIBRARY_ACTIVITY) {
+//                        loadSingleLibraryContent(changedData);
+//                    }
+////                    Log.d(TAG, "onDataChange: " + changedData);
+//>>>>>>> a2c6dde08c2251249d0b00e79f9c26198712bf86
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//                    Log.w(TAG, "Failed to read users library values", error.toException());
+//                }
+//            });
+//        }
+//    }
 
 
     public void updateLibrary(String libraryID) {
@@ -115,7 +145,6 @@ public class FirebaseDBHelper {
             }
 
             Object textsObject = libraryMap.get("texts");
-            Log.d(TAG, "textsObject: " + textsObject);
             Map<String, Object> textsMap = (Map<String, Object>) textsObject;
             RealmList<TextData> textDataRealmList = new RealmList<>();
 
@@ -137,6 +166,7 @@ public class FirebaseDBHelper {
             }
             realm.copyToRealmOrUpdate(libraryData);
         });
+
         if (listener != null) {
             listener.onDatabaseUpdate();
         }

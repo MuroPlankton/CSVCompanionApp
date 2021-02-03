@@ -2,6 +2,7 @@ package com.choicely.csvcompanion.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -50,6 +51,25 @@ public class MainActivity extends AppCompatActivity {
         startFireBaseListening();
     }
 
+    public void onClick(View v) {
+        if (v == newLibraryButton) {
+            Intent intent = new Intent(this, LibraryActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startFireBaseListening();
+    }
+
+    private void startFireBaseListening() {
+        FirebaseDBHelper helper = FirebaseDBHelper.getInstance();
+        helper.setListener(this::updateContent);
+        helper.listenForUserLibraryDataChange();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -73,19 +93,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        startFireBaseListening();
-    }
-
-    public void onClick(View v) {
-        if (v == newLibraryButton) {
-            Intent intent = new Intent(this, LibraryActivity.class);
-            startActivity(intent);
-        }
-    }
-
     private void updateSearchedContent() {
         adapter.clear();
 
@@ -99,11 +106,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         adapter.notifyDataSetChanged();
-    }
-
-    private void startFireBaseListening() {
-        FirebaseDBHelper helper = FirebaseDBHelper.getInstance();
-        helper.setListener(this::updateContent);
     }
 
     private void updateContent() {
