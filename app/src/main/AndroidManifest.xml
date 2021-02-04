@@ -13,15 +13,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CSVCompanion"
         >
-        <activity android:name=".main.MainActivity"/>
-        <activity android:name=".libraryContent.LibraryActivity"/>
-        <activity android:name=".EditTranslationActivity"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".SplashScreenActivity"
-            android:theme="@style/SplashScreenTheme">
+        <activity android:name=".main.MainActivity" />
+        <activity android:name=".UserProfileActivity" android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".libraryContent.LibraryActivity" />
+        <activity
+            android:name=".EditTranslationActivity"
+            android:windowSoftInputMode="adjustResize"
+            />
+        <activity
+            android:name=".SplashScreenActivity"
+            android:theme="@style/SplashScreenTheme"
+            >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
