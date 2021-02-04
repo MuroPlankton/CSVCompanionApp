@@ -3,10 +3,7 @@ package com.choicely.csvcompanion;
 import android.app.Activity;
 import android.app.AlertDialog;
 
-import com.choicely.csvcompanion.main.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
-
-import android.os.Process;
 
 
 public class PopUpAlert {

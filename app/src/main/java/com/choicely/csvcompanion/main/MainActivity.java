@@ -2,12 +2,13 @@ package com.choicely.csvcompanion.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Process;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 
 import androidx.annotation.Nullable;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.choicely.csvcompanion.IntentKeys;
 import com.choicely.csvcompanion.R;
+import com.choicely.csvcompanion.SharingActivity;
 import com.choicely.csvcompanion.UserProfileActivity;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.db.FirebaseDBHelper;
@@ -37,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView libraryRecycler;
     private LibraryAdapter adapter;
 
+    private ImageButton shareLibraryButton;
+
     private ArrayList<String> libraryIdList = new ArrayList<>();
 
     @Override
@@ -45,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_activity);
 
         newLibraryButton = findViewById(R.id.main_activity_new_library);
+        shareLibraryButton = findViewById(R.id.library_list_row_share_button);
 
         newLibraryButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, LibraryActivity.class);

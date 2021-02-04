@@ -15,6 +15,7 @@
         >
         <activity android:name=".main.MainActivity" android:label="@string/libraries"/>
         <activity android:name=".libraryContent.LibraryActivity"/>
+        <activity android:name=".SharingActivity"/>
         <activity android:name=".EditTranslationActivity" android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".UserProfileActivity" android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".SplashScreenActivity" android:theme="@style/SplashScreenTheme">

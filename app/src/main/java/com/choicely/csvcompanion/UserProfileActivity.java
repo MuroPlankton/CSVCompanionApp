@@ -64,12 +64,6 @@ public class UserProfileActivity extends AppCompatActivity {
         popUpAlert.askForUserValidation(this, R.string.pop_up_message_user_profile_activity, "sign out?");
     }
 
-    @Override
-    protected void onDestroy() {
-        Process.killProcess(Process.myPid());
-        super.onDestroy();
-    }
-
     public void updateUserNamesInAllLibraries() {
 
         ArrayList<String> libraryIDArrayList = getIntent().getStringArrayListExtra(IntentKeys.LIBRARY_LIST_ID);
