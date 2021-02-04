@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CSV translator</string>
+    <string name="app_name">CSV maker</string>
     <string name="new_library">New library</string>
     <string name="add_lang">Add language</string>
     <string name="type_lang_code">Lang code</string>
@@ -22,4 +22,7 @@
     <string name="search_by_name">search by name...</string>
     <string name="search">Search</string>
     <string name="backspace">backspace</string>
+    <string name="save_changes">Save changes</string>
+    <string name="user_name">User name</string>
+    <string name="profile">Profile</string>
 </resources>

@@ -119,27 +119,9 @@ public class LibraryActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onResume() {
-        try {
-            super.onResume();
-            updateContent();
-        } catch (NullPointerException e) {
-            Log.e(TAG, "onResume: ", e);
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (!checkIfNameIsEmpty()) {
-            super.onBackPressed();
-            saveLibrary();
-        }
-    }
-
     private void startFireBaseListening() {
         helper.setListener(this::updateContent);
-        helper.updateLibrary(libraryID);
+        helper.listenForLibraryDataChange(libraryID);
     }
 
     private AdapterView.OnItemClickListener langPopupItemClickListener = new AdapterView.OnItemClickListener() {
@@ -214,6 +196,25 @@ public class LibraryActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        try {
+            super.onResume();
+            updateContent();
+            startFireBaseListening();
+        } catch (NullPointerException e) {
+            Log.e(TAG, "onResume: ", e);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!checkIfNameIsEmpty()) {
+            super.onBackPressed();
+            saveLibrary();
+        }
+    }
+
     public void onButtonClick(View v) {
         if (v == addLanguageButton) {
             addLanguage();
@@ -273,6 +274,7 @@ public class LibraryActivity extends AppCompatActivity {
             Toast.makeText(this, "Language: " + '"' + langCode + '"' + " added", Toast.LENGTH_SHORT).show();
             languageAddedListener.onLanguageAdded();
 
+            helper.listenForLibraryDataChange(libraryID);
         } else if (!checkIfLanguageAlreadyExists(langCode) && langCode.isEmpty()) {
             Toast.makeText(this, "Language code field cannot be empty!", Toast.LENGTH_SHORT).show();
         } else {
@@ -315,13 +317,13 @@ public class LibraryActivity extends AppCompatActivity {
         langMap.put(langCode, langName);
         librariesRef.updateChildren(langMap);
 
-        helper.updateLibrary(libraryID);
+        helper.listenForLibraryDataChange(libraryID);
         clearLanguageEditTexts();
     }
 
     public void newTranslation() {
         saveLibrary();
-        helper.updateLibrary(libraryID);
+        helper.listenForLibraryDataChange(libraryID);
         updateCurrentLibrary();
 
         if (currentLibrary != null && currentLibrary.getLanguages().size() == 0) {

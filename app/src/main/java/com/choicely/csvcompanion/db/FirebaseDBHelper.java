@@ -77,24 +77,24 @@ public class FirebaseDBHelper {
             final Map<String, Object> userLibraryMap = (Map<String, Object>) userLibrary;
 
             realm.executeTransaction(realm1 -> {
-                if (userLibraryMap != null) {
-                    for (String key : userLibraryMap.keySet()) {
-                        Object libraryName = userLibraryMap.get(key);
+                for (String key : userLibraryMap.keySet()) {
+                    Object libraryName = userLibraryMap.get(key);
 
-                        LibraryData libraryData = new LibraryData();
-                        libraryData.setLibraryID(key);
-                        libraryData.setLibraryName((String) libraryName);
-                        realm.copyToRealmOrUpdate(libraryData);
-                    }
+                    LibraryData libraryData = new LibraryData();
+                    libraryData.setLibraryID(key);
+                    libraryData.setLibraryName((String) libraryName);
+//                    Log.d(TAG, "updateUserLibraryData: " + libraryData.getLibraryName() + " " + libraryData.getLibraryID());
+                    realm.copyToRealmOrUpdate(libraryData);
                 }
             });
         }
+
         if (listener != null) {
             listener.onDatabaseUpdate();
         }
     }
 
-    public void updateLibrary(String libraryID) {
+    public void listenForLibraryDataChange(String libraryID) {
         DatabaseReference myRef = database.getReference("libraries").child(libraryID);
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -173,12 +173,14 @@ public class FirebaseDBHelper {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 final Map<String, Object> textMap = (Map<String, Object>) snapshot.getValue();
-                addTextToRealm(textMap, libraryKey, TextKey);
+                if (textMap != null) {
+                    addTextToRealm(textMap, libraryKey, TextKey);
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.e(TAG, "Failed to read text value", error.toException());
             }
         });
     }
