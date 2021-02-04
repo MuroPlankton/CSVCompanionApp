@@ -91,12 +91,10 @@ public class MainActivity extends AppCompatActivity {
 
         MenuItem profileItem = menu.findItem(R.id.action_user_profile);
         profileItem.setOnMenuItemClickListener(item -> {
-
             Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);
             startActivity(intent);
             return false;
         });
-
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -126,11 +124,10 @@ public class MainActivity extends AppCompatActivity {
 
         for (LibraryData library : libraries) {
             adapter.add(library);
-            Log.w(TAG, "updateContent realm data: " + library);
+            Log.w(TAG, "object added to adapter: " + library);
         }
 
         adapter.notifyDataSetChanged();
-//        Log.w(TAG, "updateContent realm count: " + libraries.size());
-        Log.w(TAG, "updateContent adapter count: " + adapter.getItemCount());
+        Log.w(TAG, "adapter count: " + adapter.getItemCount());
     }
 }

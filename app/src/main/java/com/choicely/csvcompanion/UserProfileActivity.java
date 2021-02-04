@@ -27,7 +27,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private final DatabaseReference ref = database.getReference();
     private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-    private PopUpAlert popUpAlert = new PopUpAlert();
+    private final PopUpAlert popUpAlert = new PopUpAlert();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
