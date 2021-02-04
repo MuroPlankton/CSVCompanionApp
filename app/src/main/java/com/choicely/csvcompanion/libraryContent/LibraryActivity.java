@@ -155,11 +155,29 @@ public class LibraryActivity extends AppCompatActivity {
             return true;
         } else if (item.getItemId() == R.id.action_export) {
             saveLibrary();
-            CSVWriter.writeCSVFile(currentLibrary);
+            updateCurrentLibrary();
+//            askUserToPickFileLocation();
+            CSVWriter.writeCSVFile(libraryID, this);
             return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void askUserToPickFileLocation() {
+        Intent pickFileLocationIntent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        pickFileLocationIntent.addCategory(Intent.CATEGORY_OPENABLE);
+        pickFileLocationIntent.setType("*/*");
+        pickFileLocationIntent.putExtra(Intent.EXTRA_TITLE, currentLibrary.getLibraryName() + ".csv");
+
+        startActivityForResult(pickFileLocationIntent, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Log.d(TAG, "moi | " + data.toString());
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void newLibrary() {
