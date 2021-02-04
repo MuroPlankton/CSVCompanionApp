@@ -1,7 +1,7 @@
 package com.choicely.csvcompanion;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Process;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,19 +21,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.realm.Realm;
-
 public class UserProfileActivity extends AppCompatActivity {
 
     private final static String TAG = "UserProfileActivity";
 
     private Button saveChangesButton;
+    private Button signOutButton;
     private EditText userNameEditText;
 
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final DatabaseReference ref = database.getReference();
     private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+    private PopUpAlert popUpAlert = new PopUpAlert();
     private List<String> libraryList = new ArrayList<>();
 
     @Override
@@ -42,6 +42,7 @@ public class UserProfileActivity extends AppCompatActivity {
         setContentView(R.layout.user_profile_activity);
 
         saveChangesButton = findViewById(R.id.user_profile_activity_save_changes_button);
+        signOutButton = findViewById(R.id.user_profile_activity_sign_out_button);
         userNameEditText = findViewById(R.id.user_profile_activity_user_name_edit_text);
 
         setUserNameToEditText();
@@ -54,7 +55,19 @@ public class UserProfileActivity extends AppCompatActivity {
     public void onClick(View view) {
         if (view == saveChangesButton) {
             saveChanges();
+        } else if (view == signOutButton) {
+            signUserOut();
         }
+    }
+
+    private void signUserOut() {
+        popUpAlert.askForUserValidation(this, R.string.pop_up_message_user_profile_activity, "sign out?");
+    }
+
+    @Override
+    protected void onDestroy() {
+        Process.killProcess(Process.myPid());
+        super.onDestroy();
     }
 
     public void updateUserNamesInAllLibraries() {
