@@ -1,6 +1,7 @@
 package com.choicely.csvcompanion.main;
 
 import android.content.Intent;
+import android.net.sip.SipSession;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -16,11 +17,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.choicely.csvcompanion.IntentKeys;
 import com.choicely.csvcompanion.R;
+import com.choicely.csvcompanion.UserProfileActivity;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.db.FirebaseDBHelper;
 import com.choicely.csvcompanion.db.RealmHelper;
 import com.choicely.csvcompanion.libraryContent.LibraryActivity;
+import com.firebase.ui.auth.data.model.User;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -84,6 +88,16 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        MenuItem profileItem = menu.findItem(R.id.action_user_profile);
+        profileItem.setOnMenuItemClickListener(item -> {
+
+            Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);
+            startActivity(intent);
+            return false;
+        });
+
+
         return super.onCreateOptionsMenu(menu);
     }
 
