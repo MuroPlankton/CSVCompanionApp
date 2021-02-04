@@ -30,6 +30,7 @@ public class FirebaseDBHelper {
     private final Realm realm = RealmHelper.getInstance().getRealm();
 
     private onDatabaseUpdateListener listener;
+    private onSingleTextLoadedListener textLoadedListener;
 
     public FirebaseDBHelper() {
     }
@@ -76,16 +77,14 @@ public class FirebaseDBHelper {
             final Map<String, Object> userLibraryMap = (Map<String, Object>) userLibrary;
 
             realm.executeTransaction(realm1 -> {
-                if (userLibraryMap != null) {
-                    for (String key : userLibraryMap.keySet()) {
-                        Object libraryName = userLibraryMap.get(key);
+                for (String key : userLibraryMap.keySet()) {
+                    Object libraryName = userLibraryMap.get(key);
 
-                        LibraryData libraryData = new LibraryData();
-                        libraryData.setLibraryID(key);
-                        libraryData.setLibraryName((String) libraryName);
-//                        Log.d(TAG, "updateUserLibraryData: " + libraryData.getLibraryName() + " " + libraryData.getLibraryID());
-                        realm.copyToRealmOrUpdate(libraryData);
-                    }
+                    LibraryData libraryData = new LibraryData();
+                    libraryData.setLibraryID(key);
+                    libraryData.setLibraryName((String) libraryName);
+//                    Log.d(TAG, "updateUserLibraryData: " + libraryData.getLibraryName() + " " + libraryData.getLibraryID());
+                    realm.copyToRealmOrUpdate(libraryData);
                 }
             });
         }
@@ -95,7 +94,7 @@ public class FirebaseDBHelper {
         }
     }
 
-    public void updateLibrary(String libraryID) {
+    public void listenForLibraryDataChange(String libraryID) {
         DatabaseReference myRef = database.getReference("libraries").child(libraryID);
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -122,24 +121,23 @@ public class FirebaseDBHelper {
 
         LibraryData libraryData = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
 
-        realm.beginTransaction();
-
         if (libraryData == null) {
             libraryData = new LibraryData();
-        } else {
-            if (languagesMap != null) {
-                for (String langKey : languagesMap.keySet()) {
-                    Object languageValue = languagesMap.get(langKey);
+        }
 
-                    LanguageData language = new LanguageData();
-                    language.setLangKey(langKey);
-                    language.setLangName((String) languageValue);
-                    languageDataRealmList.add(realm.copyToRealmOrUpdate(language));
+        realm.beginTransaction();
+        if (languagesMap != null) {
+            for (String langKey : languagesMap.keySet()) {
+                Object languageValue = languagesMap.get(langKey);
 
-                    libraryData.setLanguages(languageDataRealmList);
-                }
+                LanguageData language = new LanguageData();
+                language.setLangKey(langKey);
+                language.setLangName((String) languageValue);
+                languageDataRealmList.add(realm.copyToRealmOrUpdate(language));
+                libraryData.setLanguages(languageDataRealmList);
             }
         }
+
         Object textsObject = libraryMap.get("texts");
         Map<String, Object> textsMap = (Map<String, Object>) textsObject;
         RealmList<TextData> textDataRealmList = new RealmList<>();
@@ -175,12 +173,14 @@ public class FirebaseDBHelper {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 final Map<String, Object> textMap = (Map<String, Object>) snapshot.getValue();
-                addTextToRealm(textMap, libraryKey, TextKey);
+                if (textMap != null) {
+                    addTextToRealm(textMap, libraryKey, TextKey);
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.e(TAG, "Failed to read text value", error.toException());
             }
         });
     }
@@ -197,28 +197,39 @@ public class FirebaseDBHelper {
         text.setIosKey(textSnapshot.get("ios_key").toString());
         text.setWebKey(textSnapshot.get("web_key").toString());
 
-        Map<String, Object> translationsMap = (Map<String, Object>) textSnapshot.get("translations");
-        RealmList<SingleTranslationData> translations = new RealmList<>();
+        if (textSnapshot.get("translations") != null) {
+            Map<String, Object> translationsMap = (Map<String, Object>) textSnapshot.get("translations");
+            RealmList<SingleTranslationData> translations = new RealmList<>();
 
-        for (String translationLangKey : textSnapshot.keySet()) {
-            SingleTranslationData data = new SingleTranslationData();
-            data.setLangKey(translationLangKey);
-            data.setTranslation(translationsMap.get(translationLangKey).toString());
-            translations.add(data);
+            for (String translationLangKey : translationsMap.keySet()) {
+                SingleTranslationData data = new SingleTranslationData();
+                data.setLangKey(translationLangKey);
+                data.setTranslation(translationsMap.get(translationLangKey).toString());
+                translations.add(realm.copyToRealmOrUpdate(data));
+            }
+            text.setTranslations(translations);
         }
 
-        text.setTranslations(translations);
         texts.set(textIndex, text);
         library.setTexts(texts);
         realm.insertOrUpdate(library);
         realm.commitTransaction();
+        textLoadedListener.onSingleTextLoaded();
     }
 
     public void setListener(onDatabaseUpdateListener listener) {
         this.listener = listener;
     }
 
+    public void setTextLoadListener(onSingleTextLoadedListener listener) {
+        this.textLoadedListener = listener;
+    }
+
     public interface onDatabaseUpdateListener {
         void onDatabaseUpdate();
+    }
+
+    public interface onSingleTextLoadedListener {
+        void onSingleTextLoaded();
     }
 }

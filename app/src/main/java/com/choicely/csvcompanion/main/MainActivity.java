@@ -8,8 +8,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.SearchView;
+import android.widget.Toolbar;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -110,8 +112,11 @@ public class MainActivity extends AppCompatActivity {
 
         for (LibraryData library : libraries) {
             adapter.add(library);
+            Log.w(TAG, "updateContent realm data: " + library);
         }
 
         adapter.notifyDataSetChanged();
+//        Log.w(TAG, "updateContent realm count: " + libraries.size());
+        Log.w(TAG, "updateContent adapter count: " + adapter.getItemCount());
     }
 }
