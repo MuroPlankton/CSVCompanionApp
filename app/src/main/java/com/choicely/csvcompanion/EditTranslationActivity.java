@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -139,6 +140,7 @@ public class EditTranslationActivity extends AppCompatActivity {
     private final View.OnClickListener buttonListener = v -> {
         if (!checkIfRowsAreEmpty()) {
             saveCurrentText();
+            Toast.makeText(this, "Translation saved", Toast.LENGTH_SHORT).show();
             clearAndCreateNew();
         }
     };

@@ -11,4 +11,11 @@
         app:actionViewClass="android.widget.SearchView"
         />
 
+    <item
+        android:id="@+id/action_user_profile"
+        android:icon="@drawable/ic_account_circle_24px"
+        android:title="@string/profile"
+        app:showAsAction="ifRoom|collapseActionView"
+        />
+
 </menu>

@@ -182,6 +182,7 @@ public class LibraryActivity extends AppCompatActivity {
 
     private void newLibrary() {
         libraryID = String.valueOf(UUID.randomUUID());
+        Log.w(TAG, "newLibrary: " + libraryID);
         languageCountTextView.setText(String.format("Amount of languages: %d", languageCount));
 
         addUser();
@@ -305,9 +306,11 @@ public class LibraryActivity extends AppCompatActivity {
 
     public void addUser() {
         DatabaseReference libRef = ref.child("libraries/" + libraryID + "/users");
+
         Map<String, Object> userMap = new HashMap<>();
         userMap.put(user.getUid(), user.getDisplayName());
         Log.d(TAG, "user_id: " + user.getUid());
+
         libRef.updateChildren(userMap);
     }
 

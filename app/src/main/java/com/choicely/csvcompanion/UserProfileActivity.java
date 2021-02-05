@@ -30,7 +30,6 @@ public class UserProfileActivity extends AppCompatActivity {
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final DatabaseReference ref = database.getReference();
     private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
     private final PopUpAlert popUpAlert = new PopUpAlert();
 
     @Override
@@ -83,8 +82,7 @@ public class UserProfileActivity extends AppCompatActivity {
         });
     }
 
-    public void updateUserNamesInAllLibraries() {
-
+    private void updateUserNamesInAllLibraries() {
         ArrayList<String> libraryIDArrayList = getIntent().getStringArrayListExtra(IntentKeys.LIBRARY_LIST_ID);
         for (int i = 0; i < libraryIDArrayList.size(); i++) {
             String id = libraryIDArrayList.get(i);
