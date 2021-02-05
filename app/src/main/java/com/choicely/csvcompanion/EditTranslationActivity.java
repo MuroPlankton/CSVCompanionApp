@@ -114,12 +114,7 @@ public class EditTranslationActivity extends AppCompatActivity {
         }
     };
 
-    private FirebaseDBHelper.onSingleTextLoadedListener textLoadedListener = new FirebaseDBHelper.onSingleTextLoadedListener() {
-        @Override
-        public void onSingleTextLoaded() {
-            loadText();
-        }
-    };
+    private FirebaseDBHelper.onSingleTextLoadedListener textLoadedListener = () -> loadText();
 
     private void loadText() {
         currentText = RealmHelper.getInstance().getRealm()

@@ -184,9 +184,6 @@ public class LibraryActivity extends AppCompatActivity {
         libraryID = String.valueOf(UUID.randomUUID());
         Log.w(TAG, "newLibrary: " + libraryID);
         languageCountTextView.setText(String.format("Amount of languages: %d", languageCount));
-
-        addUser();
-        saveLibrary();
     }
 
     private void loadLibrary() {
@@ -232,6 +229,7 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     private void saveLibrary() {
+        addUser();
         DatabaseReference libRef = ref.child("libraries/" + libraryID);
 
         String libraryName = libraryNameEditText.getText().toString();

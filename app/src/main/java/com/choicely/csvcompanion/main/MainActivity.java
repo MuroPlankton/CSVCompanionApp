@@ -24,6 +24,7 @@ import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.db.FirebaseDBHelper;
 import com.choicely.csvcompanion.db.RealmHelper;
 import com.choicely.csvcompanion.libraryContent.LibraryActivity;
+import com.google.firebase.installations.FirebaseInstallations;
 
 import java.util.ArrayList;
 
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
+        Log.d(TAG, "onCreate: " + FirebaseInstallations.getInstance().getId());
         newLibraryButton = findViewById(R.id.main_activity_new_library);
         shareLibraryButton = findViewById(R.id.library_list_row_share_button);
 
