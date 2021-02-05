@@ -60,23 +60,6 @@ public class UserProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void signUserOut() {
-        popUpAlert.askForUserValidation(this, R.string.pop_up_message_user_profile_activity, "sign out?");
-    }
-
-    public void updateUserNamesInAllLibraries() {
-
-        ArrayList<String> libraryIDArrayList = getIntent().getStringArrayListExtra(IntentKeys.LIBRARY_LIST_ID);
-        for (int i = 0; i < libraryIDArrayList.size(); i++) {
-            String id = libraryIDArrayList.get(i);
-            DatabaseReference myRef = ref.child("libraries/" + id + "/users");
-
-            Map<String, Object> userMap = new HashMap<>();
-            userMap.put(user.getUid(), user.getDisplayName());
-            myRef.updateChildren(userMap);
-        }
-    }
-
     private void saveChanges() {
         DatabaseReference myRef = ref.child("users/" + user.getUid());
 
@@ -96,5 +79,22 @@ public class UserProfileActivity extends AppCompatActivity {
                 updateUserNamesInAllLibraries();
             }
         });
+    }
+
+    private void signUserOut() {
+        popUpAlert.askForUserValidation(this, R.string.pop_up_message_user_profile_activity, "sign out?");
+    }
+
+    public void updateUserNamesInAllLibraries() {
+        ArrayList<String> libraryIDArrayList = getIntent().getStringArrayListExtra(IntentKeys.LIBRARY_LIST_ID);
+
+        for (int i = 0; i < libraryIDArrayList.size(); i++) {
+            String id = libraryIDArrayList.get(i);
+            DatabaseReference myRef = ref.child("libraries/" + id + "/users");
+
+            Map<String, Object> userMap = new HashMap<>();
+            userMap.put(user.getUid(), user.getDisplayName());
+            myRef.updateChildren(userMap);
+        }
     }
 }

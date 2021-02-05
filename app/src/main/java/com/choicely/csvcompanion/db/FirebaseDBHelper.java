@@ -262,12 +262,12 @@ public class FirebaseDBHelper {
         this.listener = listener;
     }
 
-    public void setTextLoadListener(onSingleTextLoadedListener listener) {
-        this.textLoadedListener = listener;
-    }
-
     public interface onDatabaseUpdateListener {
         void onDatabaseUpdate();
+    }
+
+    public void setTextLoadListener(onSingleTextLoadedListener listener) {
+        this.textLoadedListener = listener;
     }
 
     public interface onSingleTextLoadedListener {
