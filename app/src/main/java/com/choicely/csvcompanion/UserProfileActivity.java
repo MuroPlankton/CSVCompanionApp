@@ -61,7 +61,7 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void saveChanges() {
-        DatabaseReference myRef = ref.child("users");
+        DatabaseReference myRef = ref.child("users/" + user.getUid());
 
         String newUserName = userNameEditText.getText().toString();
 
@@ -73,7 +73,7 @@ public class UserProfileActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
 
                 Map<String, Object> userNameMap = new HashMap<>();
-                userNameMap.put(user.getUid(), newUserName);
+                userNameMap.put("name", newUserName);
                 myRef.updateChildren(userNameMap);
 
                 Toast.makeText(UserProfileActivity.this, "Username changed to " + newUserName, Toast.LENGTH_SHORT).show();
