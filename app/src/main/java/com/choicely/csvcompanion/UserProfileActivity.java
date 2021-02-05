@@ -1,7 +1,6 @@
 package com.choicely.csvcompanion;
 
 import android.os.Bundle;
-import android.os.Process;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,7 +17,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class UserProfileActivity extends AppCompatActivity {
@@ -33,8 +31,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private final DatabaseReference ref = database.getReference();
     private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-    private PopUpAlert popUpAlert = new PopUpAlert();
-    private List<String> libraryList = new ArrayList<>();
+    private final PopUpAlert popUpAlert = new PopUpAlert();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +61,28 @@ public class UserProfileActivity extends AppCompatActivity {
         popUpAlert.askForUserValidation(this, R.string.pop_up_message_user_profile_activity, "sign out?");
     }
 
+    private void saveChanges() {
+        DatabaseReference myRef = ref.child("users");
+
+        String newUserName = userNameEditText.getText().toString();
+
+        UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
+                .setDisplayName(newUserName)
+                .build();
+
+        user.updateProfile(profileChangeRequest).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+
+                Map<String, Object> userNameMap = new HashMap<>();
+                userNameMap.put(user.getUid(), newUserName);
+                myRef.updateChildren(userNameMap);
+
+                Toast.makeText(UserProfileActivity.this, "Username changed to " + newUserName, Toast.LENGTH_SHORT).show();
+                updateUserNamesInAllLibraries();
+            }
+        });
+    }
+
     public void updateUserNamesInAllLibraries() {
 
         ArrayList<String> libraryIDArrayList = getIntent().getStringArrayListExtra(IntentKeys.LIBRARY_LIST_ID);
@@ -75,26 +94,5 @@ public class UserProfileActivity extends AppCompatActivity {
             userMap.put(user.getUid(), user.getDisplayName());
             myRef.updateChildren(userMap);
         }
-    }
-
-    private void saveChanges() {
-        DatabaseReference myRef = ref.child("users/" + user.getUid());
-
-        String newUserName = userNameEditText.getText().toString();
-
-        UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
-                .setDisplayName(newUserName)
-                .build();
-
-        user.updateProfile(profileChangeRequest).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Map<String, Object> userNameMap = new HashMap<>();
-                userNameMap.put("name", newUserName);
-                myRef.updateChildren(userNameMap);
-
-                Toast.makeText(UserProfileActivity.this, "Username changed to " + newUserName, Toast.LENGTH_SHORT).show();
-                updateUserNamesInAllLibraries();
-            }
-        });
     }
 }
