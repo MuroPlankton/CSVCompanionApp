@@ -7,13 +7,17 @@ public class InboxData extends RealmObject {
 
     @PrimaryKey
     private String messageID;
-    private String message;
+    private String messageContent;
 
-    public String getMessage() {
-        return message;
+    public String getMessageID() { return messageID; }
+
+    public void setMessageID(String messageID) { this.messageID = messageID; }
+
+    public String getMessageContent() {
+        return messageContent;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMessageContent(String messageContent) {
+        this.messageContent = messageContent;
     }
 }

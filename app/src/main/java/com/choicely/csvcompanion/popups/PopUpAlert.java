@@ -1,16 +1,15 @@
-package com.choicely.csvcompanion;
+package com.choicely.csvcompanion.popups;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Notification;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.choicely.csvcompanion.R;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 
 
 public class PopUpAlert {
@@ -20,9 +19,8 @@ public class PopUpAlert {
     public void alertPopUp(Activity activity, int message, String title) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setMessage(message)
-                .setPositiveButton("Yes", (dialog, which) -> activity.finish())
-                .setNegativeButton("No", (dialog, which) -> {
-                });
+                .setNegativeButton(R.string.continue_editing_popup_text, (dialog, which) -> { })
+                .setPositiveButton(R.string.dont_save_popup_text, (dialog, which) -> activity.finish());
 
         AlertDialog alert = builder.create();
         alert.setTitle(title);

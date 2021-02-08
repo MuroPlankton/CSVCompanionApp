@@ -32,7 +32,7 @@ public class SharingActivity extends AppCompatActivity {
         button = findViewById(R.id.send_library_to_jarno);
 
         button.setOnClickListener(v -> {
-            DatabaseReference myRef = ref.child("user_libraries/" + user.getUid());
+            DatabaseReference myRef = ref.child("user_inbox/7TEd1NfrdxfyvVXhYB7FKmL6s5t1");
 
             Map<String, Object> map = new HashMap<>();
             map.put(UUID.randomUUID().toString(), "71823bbd-ab9a-4397-b62e-479dd18e79bd");

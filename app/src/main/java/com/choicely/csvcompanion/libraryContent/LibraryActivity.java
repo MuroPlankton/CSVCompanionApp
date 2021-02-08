@@ -25,13 +25,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.choicely.csvcompanion.CSVWriter;
 import com.choicely.csvcompanion.EditTranslationActivity;
 import com.choicely.csvcompanion.IntentKeys;
-import com.choicely.csvcompanion.PopUpAlert;
+import com.choicely.csvcompanion.popups.PopUpAlert;
 import com.choicely.csvcompanion.R;
 import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.data.TextData;
 import com.choicely.csvcompanion.db.FirebaseDBHelper;
 import com.choicely.csvcompanion.db.RealmHelper;
+import com.choicely.csvcompanion.popups.SharePopup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -50,8 +51,6 @@ import io.realm.Realm;
 public class LibraryActivity extends AppCompatActivity {
 
     private static final String TAG = "LibraryActivity";
-    private final String[] sampleLanguages = {"en | English", "fi | Suomi", "sv | Svenska", "ee | Eestlane", "it | Italiano"};
-    private final List<Pair<String, String>> sampleLanguageList = new ArrayList<>();
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final DatabaseReference ref = database.getReference();
     private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -64,9 +63,13 @@ public class LibraryActivity extends AppCompatActivity {
     private Button addLanguageButton;
     private Button newTranslationButton;
     private TextView languageCountTextView;
-    private ListPopupWindow listPopupWindow;
-    private RecyclerView contentRecyclerView;
+
+    private ListPopupWindow languagePopupWindow;
+    private RecyclerView langContentRecycler;
+    private final List<Pair<String, String>> sampleLanguageList = new ArrayList<>();
+
     private LibraryContentAdapter adapter;
+
     private LibraryData currentLibrary;
     private String libraryID;
     private int languageCount;
@@ -76,6 +79,16 @@ public class LibraryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.library_activity);
 
+        langCodeEditText = findViewById(R.id.library_activity_language_code_field);
+        langEditText = findViewById(R.id.library_activity_language_field);
+        languagePopupWindow = new ListPopupWindow(this);
+        languagePopupWindow.setAdapter(new ArrayAdapter<>(this,
+                R.layout.language_text_layout, R.id.language_text_view,
+                new String[] {"en | English", "fi | Suomi", "sv | Svenska", "ee | Eestlane", "it | Italiano"}));
+        languagePopupWindow.setAnchorView(langCodeEditText);
+        languagePopupWindow.setWidth(ListPopupWindow.MATCH_PARENT);
+        languagePopupWindow.setHeight(ListPopupWindow.WRAP_CONTENT);
+
         libraryNameEditText = findViewById(R.id.library_activity_library_name);
         languageCountTextView = findViewById(R.id.library_activity_language_count);
         addLanguageButton = findViewById(R.id.library_activity_language_button);
@@ -83,16 +96,10 @@ public class LibraryActivity extends AppCompatActivity {
         langCodeEditText = findViewById(R.id.library_activity_language_code_field);
         langEditText = findViewById(R.id.library_activity_language_field);
 
-        contentRecyclerView = findViewById(R.id.library_activity_recycler);
-        contentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        langContentRecycler = findViewById(R.id.library_activity_recycler);
+        langContentRecycler.setLayoutManager(new LinearLayoutManager(this));
         adapter = new LibraryContentAdapter(this);
-        contentRecyclerView.setAdapter(adapter);
-
-        listPopupWindow = new ListPopupWindow(this);
-        listPopupWindow.setAdapter(new ArrayAdapter<>(this, R.layout.language_text_layout, R.id.language_text_view, sampleLanguages));
-        listPopupWindow.setAnchorView(langCodeEditText);
-        listPopupWindow.setWidth(ListPopupWindow.MATCH_PARENT);
-        listPopupWindow.setHeight(ListPopupWindow.WRAP_CONTENT);
+        langContentRecycler.setAdapter(adapter);
 
         libraryID = getIntent().getStringExtra(IntentKeys.LIBRARY_ID);
 
@@ -110,7 +117,7 @@ public class LibraryActivity extends AppCompatActivity {
 
         langEditText.setOnFocusChangeListener(onFocusChangeListener);
         langCodeEditText.setOnFocusChangeListener(onFocusChangeListener);
-        listPopupWindow.setOnItemClickListener(langPopupItemClickListener);
+        languagePopupWindow.setOnItemClickListener(langPopupItemClickListener);
 
         setOnLanguageAddedListener(() -> {
             languageCount += 1;
@@ -125,6 +132,15 @@ public class LibraryActivity extends AppCompatActivity {
         return true;
     }
 
+    private AdapterView.OnItemClickListener langPopupItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            langCodeEditText.setText(sampleLanguageList.get(position).first);
+            langEditText.setText((sampleLanguageList.get(position).second));
+            languagePopupWindow.dismiss();
+        }
+    };
+
     @Override
     protected void onResume() {
         try {
@@ -135,7 +151,6 @@ public class LibraryActivity extends AppCompatActivity {
             Log.e(TAG, "onResume: ", e);
         }
     }
-//    ryhanenjarno@gmail.com
 
     private void startFireBaseListening() {
         firebaseDBHelper.setListener(this::updateContent);
@@ -145,18 +160,9 @@ public class LibraryActivity extends AppCompatActivity {
     View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
-            if (hasFocus && !listPopupWindow.isShowing()) {
-                listPopupWindow.show();
+            if (hasFocus && !languagePopupWindow.isShowing()) {
+                languagePopupWindow.show();
             }
-        }
-    };
-
-    private final AdapterView.OnItemClickListener langPopupItemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            langCodeEditText.setText(sampleLanguageList.get(position).first);
-            langEditText.setText((sampleLanguageList.get(position).second));
-            listPopupWindow.dismiss();
         }
     };
 
@@ -171,33 +177,16 @@ public class LibraryActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_share) {
+            new SharePopup(this, libraryID);
             return true;
         } else if (item.getItemId() == R.id.action_export) {
             saveLibrary();
+            CSVWriter writer = new CSVWriter(libraryID, this);
             updateCurrentLibrary();
-
-//            askUserToPickFileLocation();
-            CSVWriter.writeCSVFile(libraryID, this);
             return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void askUserToPickFileLocation() {
-        Intent pickFileLocationIntent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-        pickFileLocationIntent.addCategory(Intent.CATEGORY_OPENABLE);
-        pickFileLocationIntent.setType("*/*");
-        pickFileLocationIntent.putExtra(Intent.EXTRA_TITLE, currentLibrary.getLibraryName() + ".csv");
-
-        startActivityForResult(pickFileLocationIntent, 1);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        Log.d(TAG, "moi | " + data.toString());
-
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void newLibrary() {
