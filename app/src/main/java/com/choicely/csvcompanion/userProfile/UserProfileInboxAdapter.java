@@ -37,7 +37,7 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
     public void onBindViewHolder(@NonNull UserProfileInboxViewHolder holder, int position) {
         InboxData content = itemList.get(position);
 
-        holder.content.setText(content.getMessage());
+        holder.content.setText(content.getMessageContent());
     }
 
     @Override

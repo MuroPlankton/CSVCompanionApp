@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.choicely.csvcompanion.data.InboxData;
 import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.data.SingleTranslationData;
@@ -262,7 +263,7 @@ public class FirebaseDBHelper {
         }
     }
 
-    public void listenForInboxDataChange() {
+    public void listenForUserInboxDataChange() {
         if (currentUser != null) {
             String currentUserString = currentUser.getUid();
             DatabaseReference ref = database.getReference("user_inbox").child(currentUserString);
@@ -271,7 +272,7 @@ public class FirebaseDBHelper {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     final Object changedData = snapshot.getValue();
-                    updateInboxData(changedData);
+                    updateUserInboxData(changedData);
                 }
 
                 @Override
@@ -282,11 +283,25 @@ public class FirebaseDBHelper {
         }
     }
 
-    private void updateInboxData(Object inbox) {
-        if (inbox instanceof Map) {
-            final Map<String, Object> inboxMap = (Map<String, Object>) inbox;
+    private void updateUserInboxData(Object userInbox) {
+        if (userInbox instanceof Map) {
+            final Map<String, Object> userInboxMap = (Map<String, Object>) userInbox;
 
+            realm.executeTransaction(realm1 -> {
+                for(String key : userInboxMap.keySet()){
+                    Object messageContent = userInboxMap.get(key);
 
+                    InboxData inboxData = new InboxData();
+                    inboxData.setMessageID(key);
+                    inboxData.setMessageContent((String) messageContent);
+
+                    realm.copyToRealmOrUpdate(inboxData);
+                }
+            });
+        }
+
+        if(listener != null){
+            listener.onDatabaseUpdate();
         }
     }
 
