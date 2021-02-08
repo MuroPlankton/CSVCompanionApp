@@ -2,12 +2,14 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android"
     android:opacity="opaque">
 
-    <item android:drawable="@android:color/background_light" />
+    <item android:drawable="@color/light_color" />
 
     <item>
         <bitmap
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:src="@drawable/uml_symbols"
+            android:src="@drawable/csv_writer_icon"
             />
     </item>
 </layer-list>

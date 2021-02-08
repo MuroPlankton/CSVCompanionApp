@@ -1,7 +1,6 @@
 package com.choicely.csvcompanion;
 
 import android.os.Bundle;
-import android.os.Process;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,7 +17,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class UserProfileActivity extends AppCompatActivity {
@@ -33,8 +31,6 @@ public class UserProfileActivity extends AppCompatActivity {
     private final DatabaseReference ref = database.getReference();
     private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private final PopUpAlert popUpAlert = new PopUpAlert();
-
-    private List<String> libraryList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +56,10 @@ public class UserProfileActivity extends AppCompatActivity {
         }
     }
 
+    private void signUserOut() {
+        popUpAlert.askForUserValidation(this, R.string.pop_up_message_user_profile_activity, "sign out?");
+    }
+
     private void saveChanges() {
         DatabaseReference myRef = ref.child("users/" + user.getUid());
 
@@ -71,6 +71,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         user.updateProfile(profileChangeRequest).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+
                 Map<String, Object> userNameMap = new HashMap<>();
                 userNameMap.put("name", newUserName);
                 myRef.updateChildren(userNameMap);
@@ -81,13 +82,8 @@ public class UserProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void signUserOut() {
-        popUpAlert.askForUserValidation(this, R.string.pop_up_message_user_profile_activity, "sign out?");
-    }
-
-    public void updateUserNamesInAllLibraries() {
+    private void updateUserNamesInAllLibraries() {
         ArrayList<String> libraryIDArrayList = getIntent().getStringArrayListExtra(IntentKeys.LIBRARY_LIST_ID);
-
         for (int i = 0; i < libraryIDArrayList.size(); i++) {
             String id = libraryIDArrayList.get(i);
             DatabaseReference myRef = ref.child("libraries/" + id + "/users");

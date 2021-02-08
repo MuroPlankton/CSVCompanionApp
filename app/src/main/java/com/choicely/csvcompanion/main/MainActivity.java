@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.choicely.csvcompanion.FireBaseMessagingClass;
 import com.choicely.csvcompanion.IntentKeys;
 import com.choicely.csvcompanion.R;
 import com.choicely.csvcompanion.SharingActivity;
@@ -24,6 +25,7 @@ import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.db.FirebaseDBHelper;
 import com.choicely.csvcompanion.db.RealmHelper;
 import com.choicely.csvcompanion.libraryContent.LibraryActivity;
+import com.google.firebase.installations.FirebaseInstallations;
 
 import java.util.ArrayList;
 
@@ -40,13 +42,14 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView libraryRecycler;
     private LibraryAdapter adapter;
     private ImageButton shareLibraryButton;
-
+    private FireBaseMessagingClass fireBaseMessagingClass = new FireBaseMessagingClass();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
+        Log.d(TAG, "onCreate: " + FirebaseInstallations.getInstance().getId());
         newLibraryButton = findViewById(R.id.main_activity_new_library);
         shareLibraryButton = findViewById(R.id.library_list_row_share_button);
 
@@ -59,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
         libraryRecycler.setLayoutManager(new LinearLayoutManager(this));
         adapter = new LibraryAdapter(this);
         libraryRecycler.setAdapter(adapter);
+
+        fireBaseMessagingClass.getFCMToken();
+        fireBaseMessagingClass.subscribeToTopic();
     }
 
     @Override

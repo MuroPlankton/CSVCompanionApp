@@ -225,6 +225,7 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     private void saveLibrary() {
+        addUser();
         DatabaseReference libRef = ref.child("libraries/" + libraryID);
 
         String libraryName = libraryNameEditText.getText().toString();
