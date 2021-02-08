@@ -15,16 +15,19 @@
     <string name="translation_description">Translation description</string>
     <string name="libraries">Libraries</string>
     <string name="name_of_the_library">Name of the library</string>
-    <string name="pop_up_message_edit_translation_activity">You have not added a name or a description, do you want to continue without saving?</string>
+    <string name="pop_up_message_edit_translation_activity">A text needs to have at least one key, one translation, it\'s name and it\'s description.?</string>
     <string name="pop_up_message_library_activity">You have not added a name for to library. Do you want to continue?</string>
     <string name="pop_up_message_user_profile_activity">Are you sure you want to sign out?</string>
     <string name="share_library">Share library</string>
     <string name="export_library">Export library to csv</string>
-    <string name="search_by_name">search by name...</string>
+    <string name="search_by_name">search by name…</string>
     <string name="search">Search</string>
     <string name="backspace">backspace</string>
     <string name="save_changes">Save changes</string>
     <string name="user_name">User name</string>
     <string name="sign_out">Sign out</string>
     <string name="profile">Profile</string>
+    <string name="search_users">Search for users to share with</string>
+    <string name="dont_save_popup_text">Don\'t save</string>
+    <string name="continue_editing_popup_text">Continue editing</string>
 </resources>

@@ -16,7 +16,12 @@
         <item name="iconColor">@color/white</item>
     </style>
 
+    <style name="SplashScreenTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_background_dark</item>
+    </style>
+
     <style name="CardBackgroundNight" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="cardBackgroundColor">#3C3C3C</item>
     </style>
+
 </resources>

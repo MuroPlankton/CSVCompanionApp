@@ -1,6 +1,7 @@
 package com.choicely.csvcompanion;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,6 +18,7 @@ import com.choicely.csvcompanion.data.SingleTranslationData;
 import com.choicely.csvcompanion.data.TextData;
 import com.choicely.csvcompanion.db.FirebaseDBHelper;
 import com.choicely.csvcompanion.db.RealmHelper;
+import com.choicely.csvcompanion.popups.PopUpAlert;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
@@ -93,7 +95,7 @@ public class EditTranslationActivity extends AppCompatActivity {
             langKeys.add(language.getLangKey());
         }
 
-        ArrayAdapter<String> langAdapter = new ArrayAdapter<String>(this, R.layout.language_text_layout, R.id.language_text_view, langNames);
+        ArrayAdapter<String> langAdapter = new ArrayAdapter<>(this, R.layout.language_text_layout, R.id.language_text_view, langNames);
         langSpinner.setAdapter(langAdapter);
     }
 
@@ -113,12 +115,7 @@ public class EditTranslationActivity extends AppCompatActivity {
         }
     };
 
-    private FirebaseDBHelper.onSingleTextLoadedListener textLoadedListener = new FirebaseDBHelper.onSingleTextLoadedListener() {
-        @Override
-        public void onSingleTextLoaded() {
-            loadText();
-        }
-    };
+    private FirebaseDBHelper.onSingleTextLoadedListener textLoadedListener = this::loadText;
 
     private void loadText() {
         currentText = RealmHelper.getInstance().getRealm()
@@ -130,6 +127,8 @@ public class EditTranslationActivity extends AppCompatActivity {
         androidKey.setText(currentText.getAndroidKey());
         iosKey.setText(currentText.getIosKey());
         webKey.setText(currentText.getWebKey());
+
+        Log.d(TAG, "current text: " + currentText);
 
         for (SingleTranslationData translationData : currentText.getTranslations()) {
             translations.put(translationData.getLangKey(), translationData.getTranslation());
@@ -149,6 +148,7 @@ public class EditTranslationActivity extends AppCompatActivity {
         if (!checkIfRowsAreEmpty()) {
             super.onBackPressed();
             saveCurrentText();
+            FirebaseDBHelper.getInstance().readAndUpdateSingleText(currentLibraryKey, currentTextKey);
         }
     }
 
@@ -167,7 +167,11 @@ public class EditTranslationActivity extends AppCompatActivity {
     }
 
     private boolean checkIfRowsAreEmpty() {
-        if (translationName.getText().toString().isEmpty() || transLationDesc.getText().toString().isEmpty()) {
+        if (translationName.getText().toString().isEmpty()
+                || transLationDesc.getText().toString().isEmpty()
+                || (androidKey.getText().toString().isEmpty()
+                || iosKey.getText().toString().isEmpty()
+                || webKey.getText().toString().isEmpty()) || translations.size() > 0) {
             popUpAlert.alertPopUp(EditTranslationActivity.this, R.string.pop_up_message_edit_translation_activity, "Warning");
             return true;
         }
