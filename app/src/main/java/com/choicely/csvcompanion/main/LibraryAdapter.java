@@ -2,7 +2,6 @@ package com.choicely.csvcompanion.main;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +39,6 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
     @Override
     public void onBindViewHolder(@NonNull LibraryViewHolder holder, int position) {
         LibraryData library = list.get(position);
-//        Log.w(TAG, "onBindViewHolder: " + library.getLibraryID());
         holder.libraryID = library.getLibraryID();
 
         if (library.getLibraryName() != null) {
@@ -60,12 +58,6 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
     public int getItemCount() {
         return list.size();
     }
-
-//    @Override
-//    public long getItemId(int position) {
-//        long id = super.getItemId(position);
-//        return id;
-//    }
 
     public void clear() {
         list.clear();

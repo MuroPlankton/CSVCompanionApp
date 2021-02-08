@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.choicely.csvcompanion.IntentKeys;
 import com.choicely.csvcompanion.R;
-import com.choicely.csvcompanion.UserProfileActivity;
+import com.choicely.csvcompanion.userProfile.UserProfileActivity;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.db.FirebaseDBHelper;
 import com.choicely.csvcompanion.db.RealmHelper;
@@ -144,10 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
         for (LibraryData library : libraries) {
             adapter.add(library);
-//            Log.w(TAG, "object added to adapter: " + library);
         }
-
         adapter.notifyDataSetChanged();
-//        Log.w(TAG, "adapter count: " + adapter.getItemCount());
     }
 }

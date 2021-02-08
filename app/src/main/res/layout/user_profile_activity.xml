@@ -16,13 +16,20 @@
         tools:text="@string/user_name"
         />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/user_profile_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_profile_activity_save_changes_button"
+        />
+
     <Button
         android:id="@+id/user_profile_activity_save_changes_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/user_profile_activity_user_name_edit_text"
-        android:layout_marginTop="24dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
         android:onClick="onClick"
         android:text="@string/save_changes"
         />
@@ -32,8 +39,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
         android:onClick="onClick"
         android:text="@string/sign_out"
         />
