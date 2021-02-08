@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SearchView;
@@ -16,10 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.choicely.csvcompanion.FireBaseMessagingClass;
 import com.choicely.csvcompanion.IntentKeys;
 import com.choicely.csvcompanion.R;
-import com.choicely.csvcompanion.SharingActivity;
 import com.choicely.csvcompanion.UserProfileActivity;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.db.FirebaseDBHelper;
@@ -42,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView libraryRecycler;
     private LibraryAdapter adapter;
     private ImageButton shareLibraryButton;
-    private FireBaseMessagingClass fireBaseMessagingClass = new FireBaseMessagingClass();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,9 +58,6 @@ public class MainActivity extends AppCompatActivity {
         libraryRecycler.setLayoutManager(new LinearLayoutManager(this));
         adapter = new LibraryAdapter(this);
         libraryRecycler.setAdapter(adapter);
-
-        fireBaseMessagingClass.getFCMToken();
-        fireBaseMessagingClass.subscribeToTopic();
     }
 
     @Override
