@@ -15,7 +15,7 @@
     <string name="translation_description">Translation description</string>
     <string name="libraries">Libraries</string>
     <string name="name_of_the_library">Name of the library</string>
-    <string name="pop_up_message_edit_translation_activity">You have not added a name or a description, do you want to continue without saving?</string>
+    <string name="pop_up_message_edit_translation_activity">You have not added a name, translation or a description, do you want to continue without saving?</string>
     <string name="pop_up_message_library_activity">You have not added a name for to library. Do you want to continue?</string>
     <string name="pop_up_message_user_profile_activity">Are you sure you want to sign out?</string>
     <string name="share_library">Share library</string>

@@ -33,15 +33,14 @@ import io.realm.RealmResults;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    private final ArrayList<String> libraryIdList = new ArrayList<>();
 
     private Button newLibraryButton;
     private SearchView searchView;
     private RecyclerView libraryRecycler;
     private LibraryAdapter adapter;
-
     private ImageButton shareLibraryButton;
 
-    private ArrayList<String> libraryIdList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, LibraryActivity.class);
             startActivity(intent);
         });
+
         libraryRecycler = findViewById(R.id.main_activity_recycler);
         libraryRecycler.setLayoutManager(new LinearLayoutManager(this));
         adapter = new LibraryAdapter(this);
@@ -145,10 +145,10 @@ public class MainActivity extends AppCompatActivity {
 
         for (LibraryData library : libraries) {
             adapter.add(library);
-            Log.w(TAG, "object added to adapter: " + library);
+//            Log.w(TAG, "object added to adapter: " + library);
         }
 
         adapter.notifyDataSetChanged();
-        Log.w(TAG, "adapter count: " + adapter.getItemCount());
+//        Log.w(TAG, "adapter count: " + adapter.getItemCount());
     }
 }
