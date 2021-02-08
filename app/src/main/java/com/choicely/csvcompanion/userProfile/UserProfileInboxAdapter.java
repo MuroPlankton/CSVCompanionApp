@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.choicely.csvcompanion.R;
+import com.choicely.csvcompanion.data.InboxData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
 
     private final static String TAG = "InboxAdapter";
     private final Context context;
-    private final List<String> itemList = new ArrayList<>();
+    private final List<InboxData> itemList = new ArrayList<>();
 
     public UserProfileInboxAdapter(Context context) {
         this.context = context;
@@ -34,9 +35,9 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
 
     @Override
     public void onBindViewHolder(@NonNull UserProfileInboxViewHolder holder, int position) {
-        String content = itemList.get(position);
+        InboxData content = itemList.get(position);
 
-        holder.content.setText(content);
+        holder.content.setText(content.getMessage());
     }
 
     @Override
@@ -44,7 +45,7 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
         return itemList.size();
     }
 
-    public void add(String content) {
+    public void add(InboxData content) {
         itemList.add(content);
     }
 

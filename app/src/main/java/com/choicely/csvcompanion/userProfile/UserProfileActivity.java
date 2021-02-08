@@ -14,6 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.choicely.csvcompanion.IntentKeys;
 import com.choicely.csvcompanion.PopUpAlert;
 import com.choicely.csvcompanion.R;
+import com.choicely.csvcompanion.data.InboxData;
+import com.choicely.csvcompanion.data.LibraryData;
+import com.choicely.csvcompanion.db.RealmHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -23,6 +26,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class UserProfileActivity extends AppCompatActivity {
 
@@ -59,10 +65,17 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void updateContent() {
-        adapter.add("Käyttäjä jarno on lähettänyt sinulle kirjaston mkdsfnh khdkh nfkfhckhdjshk");
+        adapter.clear();
 
+        RealmHelper helper = RealmHelper.getInstance();
+        Realm realm = helper.getRealm();
+
+        RealmResults<InboxData> inboxContent = realm.where(InboxData.class).findAll();
+
+        for (InboxData content : inboxContent) {
+            adapter.add(content);
+        }
         adapter.notifyDataSetChanged();
-
     }
 
     private void setUserNameToEditText() {
