@@ -12,11 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.choicely.csvcompanion.IntentKeys;
-import com.choicely.csvcompanion.PopUpAlert;
 import com.choicely.csvcompanion.R;
 import com.choicely.csvcompanion.data.InboxData;
-import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.db.RealmHelper;
+import com.choicely.csvcompanion.popups.PopUpAlert;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;

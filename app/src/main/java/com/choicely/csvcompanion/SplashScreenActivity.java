@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 
 import com.choicely.csvcompanion.main.MainActivity;
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.data.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -19,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class SplashScreenActivity extends Activity {
@@ -35,7 +37,7 @@ public class SplashScreenActivity extends Activity {
             startActivity(new Intent(this, MainActivity.class));
             finish();
         } else {
-            List<AuthUI.IdpConfig> providers = Arrays.asList(
+            List<AuthUI.IdpConfig> providers = Collections.singletonList(
                     new AuthUI.IdpConfig.EmailBuilder().build());
             startActivityForResult(AuthUI.getInstance()
                             .createSignInIntentBuilder()
@@ -61,11 +63,12 @@ public class SplashScreenActivity extends Activity {
     private final ValueEventListener UIDListener = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
-            String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            String userID = user.getUid();
+            String userName = user.getDisplayName();
             Log.d(TAG, "User_id: " + userID);
             if (!snapshot.hasChild(ROOT_USER_ELEMENT) || !snapshot.child(ROOT_USER_ELEMENT).hasChild(userID)) {
-                FirebaseDatabase.getInstance().getReference().child(ROOT_USER_ELEMENT).child(userID)
-                        .child("name").setValue(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+                FirebaseDatabase.getInstance().getReference().child(ROOT_USER_ELEMENT).child(userID).child("name").setValue(userName);
             }
         }
 
