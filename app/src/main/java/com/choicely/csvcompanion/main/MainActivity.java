@@ -140,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
-
     private void updateContent() {
         adapter.clear();
 

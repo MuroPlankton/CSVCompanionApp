@@ -140,7 +140,6 @@ public class EditTranslationActivity extends AppCompatActivity {
         }
     };
 
-
     @Override
     public void onBackPressed() {
         if (!checkIfRowsAreEmpty()) {
