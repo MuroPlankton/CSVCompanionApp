@@ -151,6 +151,7 @@ public class EditTranslationActivity extends AppCompatActivity {
 
     private void saveCurrentText() {
         Map<String, Object> textToSave = new HashMap<>();
+
         textToSave.put("name", translationName.getText().toString());
         textToSave.put("description", transLationDesc.getText().toString());
         textToSave.put("android_key", androidKey.getText().toString());
@@ -158,13 +159,17 @@ public class EditTranslationActivity extends AppCompatActivity {
         textToSave.put("web_key", webKey.getText().toString());
         translations.put(currentSelectedLang, translationValue.getText().toString());
         textToSave.put("translations", translations);
-        FirebaseDatabase.getInstance().getReference().child("libraries")
-                .child(getIntent().getStringExtra(LIBRARY_ID)).child("texts")
-                .child(currentTextKey).updateChildren(textToSave);
+
+        FirebaseDatabase.getInstance().getReference()
+                .child("libraries")
+                .child(getIntent().getStringExtra(LIBRARY_ID))
+                .child("texts")
+                .child(currentTextKey)
+                .updateChildren(textToSave);
     }
 
     private boolean checkIfRowsAreEmpty() {
-        if (translationName.getText().toString().isEmpty() || transLationDesc.getText().toString().isEmpty()) {
+        if (translationName.getText().toString().isEmpty() || transLationDesc.getText().toString().isEmpty() || translationValue.getText().toString().isEmpty()) {
             popUpAlert.alertPopUp(EditTranslationActivity.this, R.string.pop_up_message_edit_translation_activity, "Warning");
             return true;
         }
@@ -172,12 +177,12 @@ public class EditTranslationActivity extends AppCompatActivity {
     }
 
     private void clearAndCreateNew() {
-        translationName.setText("");
-        transLationDesc.setText("");
-        androidKey.setText("");
-        iosKey.setText("");
-        webKey.setText("");
-        translationValue.setText("");
+        translationName.getText().clear();
+        transLationDesc.getText().clear();
+        androidKey.getText().clear();
+        iosKey.getText().clear();
+        webKey.getText().clear();
+        translationValue.getText().clear();
         translations.clear();
 
         currentTextKey = UUID.randomUUID().toString();

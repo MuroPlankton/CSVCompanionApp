@@ -9,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/main_activity_new_library"
-        android:layout_marginTop="8dp"
         />
 
     <Button
@@ -18,6 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="@string/new_library" />
+        android:text="@string/new_library"
+        />
 
 </RelativeLayout>
