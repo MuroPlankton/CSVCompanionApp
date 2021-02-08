@@ -135,6 +135,7 @@ public class LibraryActivity extends AppCompatActivity {
             Log.e(TAG, "onResume: ", e);
         }
     }
+//    ryhanenjarno@gmail.com
 
     private void startFireBaseListening() {
         firebaseDBHelper.setListener(this::updateContent);

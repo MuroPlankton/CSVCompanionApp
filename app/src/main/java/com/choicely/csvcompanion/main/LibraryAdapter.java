@@ -39,7 +39,6 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
     @Override
     public void onBindViewHolder(@NonNull LibraryViewHolder holder, int position) {
         LibraryData library = list.get(position);
-//        Log.w(TAG, "onBindViewHolder: " + library.getLibraryID());
         holder.libraryID = library.getLibraryID();
 
         if (library.getLibraryName() != null) {

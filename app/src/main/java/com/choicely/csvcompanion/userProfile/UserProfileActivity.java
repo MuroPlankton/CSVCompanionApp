@@ -1,4 +1,4 @@
-package com.choicely.csvcompanion;
+package com.choicely.csvcompanion.userProfile;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,7 +8,15 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.choicely.csvcompanion.IntentKeys;
+import com.choicely.csvcompanion.PopUpAlert;
+import com.choicely.csvcompanion.R;
+import com.choicely.csvcompanion.data.InboxData;
+import com.choicely.csvcompanion.data.LibraryData;
+import com.choicely.csvcompanion.db.RealmHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -19,6 +27,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 public class UserProfileActivity extends AppCompatActivity {
 
     private final static String TAG = "UserProfileActivity";
@@ -26,6 +37,9 @@ public class UserProfileActivity extends AppCompatActivity {
     private Button saveChangesButton;
     private Button signOutButton;
     private EditText userNameEditText;
+
+    private RecyclerView inboxRecyclerView;
+    private UserProfileInboxAdapter adapter;
 
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final DatabaseReference ref = database.getReference();
@@ -40,8 +54,28 @@ public class UserProfileActivity extends AppCompatActivity {
         saveChangesButton = findViewById(R.id.user_profile_activity_save_changes_button);
         signOutButton = findViewById(R.id.user_profile_activity_sign_out_button);
         userNameEditText = findViewById(R.id.user_profile_activity_user_name_edit_text);
-
         setUserNameToEditText();
+
+        inboxRecyclerView = findViewById(R.id.user_profile_recycler_view);
+        inboxRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new UserProfileInboxAdapter(this);
+        inboxRecyclerView.setAdapter(adapter);
+
+        updateContent();
+    }
+
+    private void updateContent() {
+        adapter.clear();
+
+        RealmHelper helper = RealmHelper.getInstance();
+        Realm realm = helper.getRealm();
+
+        RealmResults<InboxData> inboxContent = realm.where(InboxData.class).findAll();
+
+        for (InboxData content : inboxContent) {
+            adapter.add(content);
+        }
+        adapter.notifyDataSetChanged();
     }
 
     private void setUserNameToEditText() {
@@ -61,7 +95,7 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void saveChanges() {
-        DatabaseReference myRef = ref.child("users/" + user.getUid());
+        DatabaseReference myRef = ref.child("users");
 
         String newUserName = userNameEditText.getText().toString();
 
@@ -73,7 +107,7 @@ public class UserProfileActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
 
                 Map<String, Object> userNameMap = new HashMap<>();
-                userNameMap.put("name", newUserName);
+                userNameMap.put(user.getUid(), newUserName);
                 myRef.updateChildren(userNameMap);
 
                 Toast.makeText(UserProfileActivity.this, "Username changed to " + newUserName, Toast.LENGTH_SHORT).show();
