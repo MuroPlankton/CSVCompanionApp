@@ -2,23 +2,19 @@ package com.choicely.csvcompanion.popups;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ListView;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.choicely.csvcompanion.R;
-import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.Timer;
-import java.util.TimerTask;
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 
 public class PopUpAlert {
+
+    private static final String TAG = "PopUpAlert";
 
     public void alertPopUp(Activity activity, int message, String title) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -35,8 +31,15 @@ public class PopUpAlert {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setMessage(message);
         builder.setPositiveButton("Yes", (dialog, which) -> {
-            FirebaseAuth.getInstance().signOut();
-            activity.finish();
+
+            AuthUI.getInstance()
+                    .signOut(activity)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Log.d(TAG, "onComplete: signed out");
+                        }
+                    });
         });
         builder.setNegativeButton("No", (dialog, which) -> {
 

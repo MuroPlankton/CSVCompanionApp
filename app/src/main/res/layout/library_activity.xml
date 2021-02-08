@@ -17,7 +17,7 @@
         android:gravity="center_horizontal"
         android:hint="@string/name_of_the_library"
         android:maxLines="1"
-        android:textSize="32sp"
+        android:textSize="24sp"
         tools:text="Library name"
         />
 
@@ -64,7 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:onClick="onButtonClick"
+        android:onClick="onClick"
         android:text="@string/add_lang"
         />
 
@@ -81,7 +81,7 @@
         android:id="@+id/library_activity_new_translation_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="onButtonClick"
+        android:onClick="onClick"
         android:text="@string/new_translation"
         />
 

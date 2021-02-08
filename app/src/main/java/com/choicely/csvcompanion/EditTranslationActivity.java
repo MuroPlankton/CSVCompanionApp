@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -138,10 +139,10 @@ public class EditTranslationActivity extends AppCompatActivity {
     private final View.OnClickListener buttonListener = v -> {
         if (!checkIfRowsAreEmpty()) {
             saveCurrentText();
+            Toast.makeText(this, "Translation saved", Toast.LENGTH_SHORT).show();
             clearAndCreateNew();
         }
     };
-
 
     @Override
     public void onBackPressed() {
@@ -154,6 +155,7 @@ public class EditTranslationActivity extends AppCompatActivity {
 
     private void saveCurrentText() {
         Map<String, Object> textToSave = new HashMap<>();
+
         textToSave.put("name", translationName.getText().toString());
         textToSave.put("description", transLationDesc.getText().toString());
         textToSave.put("android_key", androidKey.getText().toString());
@@ -161,9 +163,13 @@ public class EditTranslationActivity extends AppCompatActivity {
         textToSave.put("web_key", webKey.getText().toString());
         translations.put(currentSelectedLang, translationValue.getText().toString());
         textToSave.put("translations", translations);
-        FirebaseDatabase.getInstance().getReference().child("libraries")
-                .child(getIntent().getStringExtra(LIBRARY_ID)).child("texts")
-                .child(currentTextKey).updateChildren(textToSave);
+
+        FirebaseDatabase.getInstance().getReference()
+                .child("libraries")
+                .child(getIntent().getStringExtra(LIBRARY_ID))
+                .child("texts")
+                .child(currentTextKey)
+                .updateChildren(textToSave);
     }
 
     private boolean checkIfRowsAreEmpty() {
@@ -179,12 +185,12 @@ public class EditTranslationActivity extends AppCompatActivity {
     }
 
     private void clearAndCreateNew() {
-        translationName.setText("");
-        transLationDesc.setText("");
-        androidKey.setText("");
-        iosKey.setText("");
-        webKey.setText("");
-        translationValue.setText("");
+        translationName.getText().clear();
+        transLationDesc.getText().clear();
+        androidKey.getText().clear();
+        iosKey.getText().clear();
+        webKey.getText().clear();
+        translationValue.getText().clear();
         translations.clear();
 
         currentTextKey = UUID.randomUUID().toString();
