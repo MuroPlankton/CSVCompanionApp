@@ -23,8 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.realm.RealmResults;
-
 public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInboxAdapter.UserProfileInboxViewHolder> {
 
     private final static String TAG = "InboxAdapter";
@@ -103,6 +101,11 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
                     Map<String, Object> map = new HashMap<>();
                     map.put(libraryID, "name");
                     myRef.updateChildren(map);
+                    
+                    DatabaseReference myRef2 = ref.child("libraries/" + libraryID + "/users");
+                    Map<String, Object> map2 = new HashMap<>();
+                    map2.put(user.getUid(), user.getDisplayName());
+                    myRef2.updateChildren(map2);
 
                     Log.d(TAG, "Check clicked ");
                 }
