@@ -72,7 +72,7 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
         list.clear();
     }
 
-    public void removeAt(int position){
+    public void removeAt(int position) {
         list.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, getItemCount());
@@ -80,18 +80,18 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
 
     public static class UserProfileInboxViewHolder extends RecyclerView.ViewHolder {
 
-        public String libraryID;
-        public String libraryName;
-        public TextView content;
-        public TextView customMessage;
-        public Context context;
-
-        public ImageButton decline;
-        public ImageButton accept;
-
         private final FirebaseDatabase database = FirebaseDatabase.getInstance();
         private final DatabaseReference ref = database.getReference();
         private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        public String libraryID;
+        public String libraryName;
+        public Context context;
+
+        public TextView content;
+        public TextView customMessage;
+        public ImageButton decline;
+        public ImageButton accept;
 
         public UserProfileInboxViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -101,16 +101,17 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
             decline = itemView.findViewById(R.id.inbox_decline_image_button);
             accept = itemView.findViewById(R.id.inbox_accept_image_button);
 
-            decline.setOnClickListener(onClickListener);
+//            decline.setOnClickListener(onClickListener);
             accept.setOnClickListener(onClickListener);
         }
 
         private final View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (v == decline) {
+                /*if (v == decline) {
                     //TODO: might call the interface here and make the callback in onBindViewHolder
-                } else if (v == accept) {
+                } else*/
+                if (v == accept) {
                     addSharedLibrary();
                 }
             }
@@ -129,13 +130,13 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
                 myRef2.updateChildren(map2);
 
                 Toast.makeText(itemView.getContext(), "Library has been added", Toast.LENGTH_SHORT).show();
-                }
             }
         }
 
-        public interface onItemRemovedListener{
+        public interface onItemRemovedListener {
             void onItemRemoved();
         }
     }
-
 }
+
+
