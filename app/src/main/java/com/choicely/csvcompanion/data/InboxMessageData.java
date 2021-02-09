@@ -8,7 +8,7 @@ public class InboxMessageData extends RealmObject {
     @PrimaryKey
     private String libraryID;
     private String customMessage;
-    private String senderID;
+    private String senderName;
 
     public String getLibraryID() {
         return libraryID;
@@ -26,12 +26,12 @@ public class InboxMessageData extends RealmObject {
         this.customMessage = customMessage;
     }
 
-    public String getSenderID() {
-        return senderID;
+    public String getSenderName() {
+        return senderName;
     }
 
-    public void setSenderID(String senderID) {
-        this.senderID = senderID;
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
     }
 
 }

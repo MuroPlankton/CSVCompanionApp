@@ -45,8 +45,10 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
     public void onBindViewHolder(@NonNull UserProfileInboxViewHolder holder, int position) {
         InboxMessageData message = itemList.get(position);
 
-        String sender = message.getSenderID();
+        String sender = message.getSenderName();
         String libraryID = message.getLibraryID();
+
+        Log.d(TAG, "onBindViewHolder: sender: " + sender);
 
         holder.content.setText(String.format("The user %s has sent you a library %s", sender, libraryID));
         holder.customMessage.setText(message.getCustomMessage());
@@ -95,12 +97,10 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
             public void onClick(View v) {
                 if (v == close) {
                     Log.d(TAG, "Close clicked ");
-                } else {
-                    String library = content.getText().toString();
-
+                } else if (v == check) {
                     DatabaseReference myRef = ref.child("user_libraries/" + user.getUid());
                     Map<String, Object> map = new HashMap<>();
-                    map.put(library, libraryID);
+                    map.put(libraryID, "name");
                     myRef.updateChildren(map);
 
                     Log.d(TAG, "Check clicked ");
