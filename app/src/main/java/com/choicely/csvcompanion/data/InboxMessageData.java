@@ -3,7 +3,7 @@ package com.choicely.csvcompanion.data;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class InboxData extends RealmObject {
+public class InboxMessageData extends RealmObject {
 
     @PrimaryKey
     private String libraryID;

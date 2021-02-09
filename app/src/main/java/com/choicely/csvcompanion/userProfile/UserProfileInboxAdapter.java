@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.choicely.csvcompanion.R;
-import com.choicely.csvcompanion.data.InboxData;
+import com.choicely.csvcompanion.data.InboxMessageData;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -28,7 +28,7 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
 
     private final static String TAG = "InboxAdapter";
     private final Context context;
-    private final List<InboxData> itemList = new ArrayList<>();
+    private final List<InboxMessageData> itemList = new ArrayList<>();
 
     public UserProfileInboxAdapter(Context context) {
         this.context = context;
@@ -42,7 +42,7 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
 
     @Override
     public void onBindViewHolder(@NonNull UserProfileInboxViewHolder holder, int position) {
-        InboxData content = itemList.get(position);
+        InboxMessageData content = itemList.get(position);
 
         holder.content.setText(content.getCustomMessage());
 //        holder.customMessage.setText(context.);
@@ -53,7 +53,7 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
         return itemList.size();
     }
 
-    public void add(InboxData content) {
+    public void add(InboxMessageData content) {
         itemList.add(content);
     }
 

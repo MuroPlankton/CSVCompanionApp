@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.choicely.csvcompanion.data.InboxMessageData;
 import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.data.SingleTranslationData;
@@ -287,19 +288,24 @@ public class FirebaseDBHelper {
             final Map<String, Object> userInboxMap = (Map<String, Object>) userInbox;
 
             realm.executeTransaction(realm1 -> {
-                for(String key : userInboxMap.keySet()){
+                for (String key : userInboxMap.keySet()) {
+                    InboxMessageData message = new InboxMessageData();
+                    message.setLibraryID(key);
+
                     Object messageContent = userInboxMap.get(key);
+                    Map<String, Object> messageMap = (Map<String, Object>) messageContent;
 
-//                    InboxData inboxData = new InboxData();
-//                    inboxData.setMessageID(key);
-//                    inboxData.setCustomMessage((String) messageContent);>
+                    if (messageMap != null) {
+                        message.setCustomMessage((String) messageMap.get("custom_message"));
+                        message.setSenderID((String) messageMap.get("sender_ID"));
+                    }
 
-//                    realm.copyToRealmOrUpdate(inboxData);
+                    realm.copyToRealmOrUpdate(message);
                 }
             });
         }
 
-        if(listener != null){
+        if (listener != null) {
             listener.onDatabaseUpdate();
         }
     }
