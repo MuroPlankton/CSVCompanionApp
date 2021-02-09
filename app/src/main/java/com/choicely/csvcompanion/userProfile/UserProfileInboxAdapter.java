@@ -23,8 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInboxAdapter.UserProfileInboxViewHolder> {
+import io.realm.RealmResults;
 
+public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInboxAdapter.UserProfileInboxViewHolder> {
 
     private final static String TAG = "InboxAdapter";
     private final Context context;
@@ -42,13 +43,13 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
 
     @Override
     public void onBindViewHolder(@NonNull UserProfileInboxViewHolder holder, int position) {
-        InboxMessageData content = itemList.get(position);
+        InboxMessageData message = itemList.get(position);
 
-        String sender = content.getSenderID();
-        String libraryID = content.getLibraryID();
+        String sender = message.getSenderID();
+        String libraryID = message.getLibraryID();
 
         holder.content.setText(String.format("The user %s has sent you a library %s", sender, libraryID));
-        holder.customMessage.setText(content.getCustomMessage());
+        holder.customMessage.setText(message.getCustomMessage());
     }
 
     @Override
