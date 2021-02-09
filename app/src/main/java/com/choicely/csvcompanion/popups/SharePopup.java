@@ -82,7 +82,6 @@ public class SharePopup extends Dialog {
     }
 
     private void searchForUsers() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("users").child("feHvfGJ3Iwc8D565wQU7GHnH5hu2").child("name");
         Query userSearchQuery = FirebaseDatabase.getInstance().getReference().child("users").orderByChild("name").limitToFirst(20);
 
         userSearchQuery.addListenerForSingleValueEvent(new ValueEventListener() {
