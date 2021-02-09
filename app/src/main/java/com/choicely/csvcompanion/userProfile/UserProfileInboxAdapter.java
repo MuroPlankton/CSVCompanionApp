@@ -111,6 +111,7 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
                     myRef2.updateChildren(map2);
 
                     Log.d(TAG, "Check clicked ");
+
                 }
             }
         };
