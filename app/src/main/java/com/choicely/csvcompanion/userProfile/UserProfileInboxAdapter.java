@@ -129,6 +129,7 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
                 myRef2.updateChildren(map2);
 
                 Toast.makeText(itemView.getContext(), "Library has been added", Toast.LENGTH_SHORT).show();
+                }
             }
         }
 
