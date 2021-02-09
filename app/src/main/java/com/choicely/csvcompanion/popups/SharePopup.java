@@ -56,7 +56,9 @@ public class SharePopup extends Dialog {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            userSearchDelayer();
+            if (searchEditText.getText().length() > 2) {
+                userSearchDelayer();
+            }
         }
 
         @Override
@@ -82,7 +84,10 @@ public class SharePopup extends Dialog {
     }
 
     private void searchForUsers() {
-        Query userSearchQuery = FirebaseDatabase.getInstance().getReference().child("users").orderByChild("name").limitToFirst(20);
+        Query userSearchQuery = FirebaseDatabase.getInstance().getReference().
+                child("users").orderByValue()
+                .startAt(searchEditText.getText().toString())
+                .endAt(searchEditText.getText().toString() + "\\uf8ff").limitToFirst(10);
 
         userSearchQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -101,8 +106,10 @@ public class SharePopup extends Dialog {
 
     private void setUserNamesToPopup(Map<String, Object> matchingUsersMap) {
         userSuggestionAdapter.clear();
-        for (Object userName : matchingUsersMap.values()) {
-            userSuggestionAdapter.add(userName.toString());
+        if (matchingUsersMap != null && !matchingUsersMap.isEmpty()) {
+            for (Object userName : matchingUsersMap.values()) {
+                userSuggestionAdapter.add(userName.toString());
+            }
         }
 
         userSuggestionAdapter.notifyDataSetChanged();

@@ -5,17 +5,17 @@
 
     <item
         android:id="@+id/action_search_libraries"
-        android:icon="@drawable/ic_search_24px"
+        android:icon="@drawable/ic_search_24px__1_"
         android:title="@string/search"
-        app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="ifRoom"
         />
 
     <item
         android:id="@+id/action_user_profile"
-        android:icon="@drawable/ic_account_circle_24px"
+        android:icon="@drawable/ic_account_circle_white_24px"
         android:title="@string/profile"
-        app:showAsAction="ifRoom|collapseActionView"
+        app:showAsAction="ifRoom"
         />
 
 </menu>

@@ -13,7 +13,12 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="android:textColor">@color/black</item>
-        <item name="iconColor">@color/gray</item>
+        <item name="iconColor">@color/black</item>
+        <item name="secondaryTextColor">@color/dark_gray</item>
+    </style>
+
+    <style name="actionBarIconDayColor" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="iconColor">@color/white</item>
     </style>
 
     <style name="SplashScreenTheme" parent="Theme.AppCompat.NoActionBar">
