@@ -44,6 +44,7 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
     @Override
     public void onBindViewHolder(@NonNull UserProfileInboxViewHolder holder, int position) {
         InboxMessageData message = itemList.get(position);
+        holder.libraryID = message.getLibraryID();
 
         String sender = message.getSenderName();
         String libraryID = message.getLibraryID();
