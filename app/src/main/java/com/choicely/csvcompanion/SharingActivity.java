@@ -7,6 +7,8 @@ import android.widget.EditText;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.choicely.csvcompanion.data.LibraryData;
+import com.choicely.csvcompanion.db.RealmHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -14,6 +16,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import io.realm.Realm;
 
 public class SharingActivity extends AppCompatActivity {
 
@@ -36,6 +40,9 @@ public class SharingActivity extends AppCompatActivity {
 
         libraryID = getIntent().getStringExtra(IntentKeys.LIBRARY_ID);
 
+        Realm realm = RealmHelper.getInstance().getRealm();
+        LibraryData libraryData = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
+
         button.setOnClickListener(v -> {
             DatabaseReference myRef = ref.child("user_inbox/7TEd1NfrdxfyvVXhYB7FKmL6s5t1");
 
@@ -44,6 +51,7 @@ public class SharingActivity extends AppCompatActivity {
             Map<String, Object> sharedLibrary = new HashMap<>();
             Map<String, Object> sharedLibraryContent = new HashMap<>();
 
+            sharedLibraryContent.put("library_name", libraryData.getLibraryName());
             sharedLibraryContent.put("custom_message", customMessage);
             sharedLibraryContent.put("sender_name", user.getDisplayName());
 

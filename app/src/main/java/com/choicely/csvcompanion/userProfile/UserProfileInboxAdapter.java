@@ -43,6 +43,7 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
     public void onBindViewHolder(@NonNull UserProfileInboxViewHolder holder, int position) {
         InboxMessageData message = itemList.get(position);
         holder.libraryID = message.getLibraryID();
+        holder.libraryName = message.getLibraryName();
 
         String sender = message.getSenderName();
         String libraryID = message.getLibraryID();
@@ -69,6 +70,7 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
     public static class UserProfileInboxViewHolder extends RecyclerView.ViewHolder {
 
         public String libraryID;
+        public String libraryName;
         public TextView content;
         public TextView customMessage;
 
@@ -97,11 +99,12 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
                 if (v == close) {
                     Log.d(TAG, "Close clicked ");
                 } else if (v == check) {
+
                     DatabaseReference myRef = ref.child("user_libraries/" + user.getUid());
                     Map<String, Object> map = new HashMap<>();
-                    map.put(libraryID, "name");
+                    map.put(libraryID, libraryName);
                     myRef.updateChildren(map);
-                    
+
                     DatabaseReference myRef2 = ref.child("libraries/" + libraryID + "/users");
                     Map<String, Object> map2 = new HashMap<>();
                     map2.put(user.getUid(), user.getDisplayName());

@@ -9,6 +9,7 @@ public class InboxMessageData extends RealmObject {
     private String libraryID;
     private String customMessage;
     private String senderName;
+    private String libraryName;
 
     public String getLibraryID() {
         return libraryID;
@@ -34,4 +35,11 @@ public class InboxMessageData extends RealmObject {
         this.senderName = senderName;
     }
 
+    public String getLibraryName() {
+        return libraryName;
+    }
+
+    public void setLibraryName(String libraryName) {
+        this.libraryName = libraryName;
+    }
 }

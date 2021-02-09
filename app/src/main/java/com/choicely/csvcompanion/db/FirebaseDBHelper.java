@@ -296,6 +296,7 @@ public class FirebaseDBHelper {
                     Map<String, Object> messageMap = (Map<String, Object>) messageContent;
 
                     if (messageMap != null) {
+                        message.setLibraryName((String) messageMap.get("library_name"));
                         message.setCustomMessage((String) messageMap.get("custom_message"));
                         message.setSenderName((String) messageMap.get("sender_name"));
                     }
