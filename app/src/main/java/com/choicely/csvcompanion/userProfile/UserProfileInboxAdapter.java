@@ -44,8 +44,11 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
     public void onBindViewHolder(@NonNull UserProfileInboxViewHolder holder, int position) {
         InboxMessageData content = itemList.get(position);
 
-        holder.content.setText(content.getCustomMessage());
-//        holder.customMessage.setText(context.);
+        String sender = content.getSenderID();
+        String libraryID = content.getLibraryID();
+
+        holder.content.setText(String.format("The user %s has sent you a library %s", sender, libraryID));
+        holder.customMessage.setText(content.getCustomMessage());
     }
 
     @Override
@@ -66,6 +69,7 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
         public String libraryID;
         public TextView content;
         public TextView customMessage;
+
         public ImageButton close;
         public ImageButton check;
 
@@ -85,7 +89,7 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
             check.setOnClickListener(onClickListener);
         }
 
-        private View.OnClickListener onClickListener = new View.OnClickListener() {
+        private final View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (v == close) {
@@ -95,11 +99,10 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
 
                     DatabaseReference myRef = ref.child("user_libraries/" + user.getUid());
                     Map<String, Object> map = new HashMap<>();
-                    map.put(library, "71823bbd-ab9a-4397-b62e-479dd18e79bd");
+                    map.put(library, libraryID);
                     myRef.updateChildren(map);
 
                     Log.d(TAG, "Check clicked ");
-
                 }
             }
         };
