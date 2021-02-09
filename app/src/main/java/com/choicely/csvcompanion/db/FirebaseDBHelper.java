@@ -4,7 +4,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.choicely.csvcompanion.data.InboxData;
 import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.data.SingleTranslationData;
@@ -291,11 +290,11 @@ public class FirebaseDBHelper {
                 for(String key : userInboxMap.keySet()){
                     Object messageContent = userInboxMap.get(key);
 
-                    InboxData inboxData = new InboxData();
-                    inboxData.setMessageID(key);
-                    inboxData.setMessageContent((String) messageContent);
+//                    InboxData inboxData = new InboxData();
+//                    inboxData.setMessageID(key);
+//                    inboxData.setCustomMessage((String) messageContent);>
 
-                    realm.copyToRealmOrUpdate(inboxData);
+//                    realm.copyToRealmOrUpdate(inboxData);
                 }
             });
         }

@@ -63,6 +63,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
         startFireBaseListening();
         updateContent();
+
+
     }
 
     private void startFireBaseListening() {
