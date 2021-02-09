@@ -297,7 +297,7 @@ public class FirebaseDBHelper {
 
                     if (messageMap != null) {
                         message.setCustomMessage((String) messageMap.get("custom_message"));
-                        message.setSenderID((String) messageMap.get("sender_ID"));
+                        message.setSenderName((String) messageMap.get("sender_name"));
                     }
 
                     realm.copyToRealmOrUpdate(message);

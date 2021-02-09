@@ -45,7 +45,7 @@ public class SharingActivity extends AppCompatActivity {
             Map<String, Object> sharedLibraryContent = new HashMap<>();
 
             sharedLibraryContent.put("custom_message", customMessage);
-            sharedLibraryContent.put("sender_ID", user.getUid());
+            sharedLibraryContent.put("sender_name", user.getDisplayName());
 
             sharedLibrary.put(libraryID, sharedLibraryContent);
 
