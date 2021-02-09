@@ -2,10 +2,9 @@
     <!-- Base application theme. -->
     <style name="Theme.CSVCompanion" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#3C3C3C</item>
-        <item name="colorPrimaryVariant">#323232</item>
+        <item name="colorPrimary">#0277BD</item>
+        <item name="colorPrimaryVariant">#0D47A1</item>
         <item name="colorOnPrimary">#FFFFFF</item>
-        <item name="android:colorBackground">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
@@ -14,6 +13,8 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="iconColor">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="secondaryTextColor">@color/light_gray</item>
     </style>
 
     <style name="SplashScreenTheme" parent="Theme.AppCompat.NoActionBar">
@@ -23,5 +24,4 @@
     <style name="CardBackgroundNight" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="cardBackgroundColor">#3C3C3C</item>
     </style>
-
 </resources>

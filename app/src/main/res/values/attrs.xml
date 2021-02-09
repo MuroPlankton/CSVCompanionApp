@@ -2,4 +2,6 @@
 <resources>
     <attr name="descriptionColor" format="reference"/>
     <attr name="iconColor" format="reference"/>
+    <attr name="dayActionBarIconColor" format="reference"/>
+    <attr name="secondaryTextColor" format="reference"/>
 </resources>

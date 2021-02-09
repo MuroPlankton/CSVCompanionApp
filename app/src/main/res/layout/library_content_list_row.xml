@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="4"
-            android:textColor="@color/light_gray"
+            android:textColor="?secondaryTextColor"
             android:textSize="14sp"
             tools:text="description"
             />
