@@ -44,21 +44,22 @@ public class SharingActivity extends AppCompatActivity {
         LibraryData libraryData = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
 
         button.setOnClickListener(v -> {
-            DatabaseReference myRef = ref.child("user_inbox/7TEd1NfrdxfyvVXhYB7FKmL6s5t1");
+            DatabaseReference myRef = ref.child("user_inbox/feHvfGJ3Iwc8D565wQU7GHnH5hu2"); //7TEd1NfrdxfyvVXhYB7FKmL6s5t1   <-  riku
 
             String customMessage = customMessageEditText.getText().toString();
 
             Map<String, Object> sharedLibrary = new HashMap<>();
             Map<String, Object> sharedLibraryContent = new HashMap<>();
 
-            sharedLibraryContent.put("library_name", libraryData.getLibraryName());
-            sharedLibraryContent.put("custom_message", customMessage);
-            sharedLibraryContent.put("sender_name", user.getDisplayName());
+            if(libraryData != null) {
+                sharedLibraryContent.put("library_name", libraryData.getLibraryName());
+                sharedLibraryContent.put("custom_message", customMessage);
+                sharedLibraryContent.put("sender_name", user.getDisplayName());
 
-            sharedLibrary.put(libraryID, sharedLibraryContent);
+                sharedLibrary.put(libraryID, sharedLibraryContent);
 
-            myRef.updateChildren(sharedLibrary);
-
+                myRef.updateChildren(sharedLibrary);
+            }
         });
     }
 }
