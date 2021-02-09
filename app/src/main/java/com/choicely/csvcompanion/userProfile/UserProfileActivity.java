@@ -13,7 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.choicely.csvcompanion.IntentKeys;
 import com.choicely.csvcompanion.R;
-import com.choicely.csvcompanion.data.InboxData;
+import com.choicely.csvcompanion.data.InboxMessageData;
+import com.choicely.csvcompanion.db.FirebaseDBHelper;
 import com.choicely.csvcompanion.db.RealmHelper;
 import com.choicely.csvcompanion.popups.PopUpAlert;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,7 +61,14 @@ public class UserProfileActivity extends AppCompatActivity {
         adapter = new UserProfileInboxAdapter(this);
         inboxRecyclerView.setAdapter(adapter);
 
+        startFireBaseListening();
         updateContent();
+    }
+
+    private void startFireBaseListening() {
+        FirebaseDBHelper helper = FirebaseDBHelper.getInstance();
+        helper.setListener(this::updateContent);
+        helper.listenForUserInboxDataChange();
     }
 
     private void updateContent() {
@@ -69,9 +77,9 @@ public class UserProfileActivity extends AppCompatActivity {
         RealmHelper helper = RealmHelper.getInstance();
         Realm realm = helper.getRealm();
 
-        RealmResults<InboxData> inboxContent = realm.where(InboxData.class).findAll();
+        RealmResults<InboxMessageData> inboxContent = realm.where(InboxMessageData.class).findAll();
 
-        for (InboxData content : inboxContent) {
+        for (InboxMessageData content : inboxContent) {
             adapter.add(content);
         }
         adapter.notifyDataSetChanged();
@@ -104,19 +112,19 @@ public class UserProfileActivity extends AppCompatActivity {
 
         user.updateProfile(profileChangeRequest).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-
                 Map<String, Object> userNameMap = new HashMap<>();
                 userNameMap.put(user.getUid(), newUserName);
                 myRef.updateChildren(userNameMap);
 
                 Toast.makeText(UserProfileActivity.this, "Username changed to " + newUserName, Toast.LENGTH_SHORT).show();
-                updateUserNamesInAllLibraries();
+                updateUserNameInAllLibraries();
             }
         });
     }
 
-    private void updateUserNamesInAllLibraries() {
+    private void updateUserNameInAllLibraries() {
         ArrayList<String> libraryIDArrayList = getIntent().getStringArrayListExtra(IntentKeys.LIBRARY_LIST_ID);
+
         for (int i = 0; i < libraryIDArrayList.size(); i++) {
             String id = libraryIDArrayList.get(i);
             DatabaseReference myRef = ref.child("libraries/" + id + "/users");

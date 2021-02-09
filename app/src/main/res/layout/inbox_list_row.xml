@@ -5,9 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="#F7FEFF"
     >
-
 
     <TextView
         android:id="@+id/inbox_text_view"
@@ -15,8 +13,19 @@
         android:layout_height="wrap_content"
         android:maxLength="100"
         android:maxLines="4"
-        android:textSize="20sp"
-        tools:text="content"
+        android:textSize="16sp"
+        tools:text="User x has sent you a library Y"
+        android:layout_margin="8dp"
+        />
+
+    <TextView
+        android:id="@+id/inbox_text_view_custom_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLength="100"
+        android:maxLines="4"
+        android:textSize="14sp"
+        tools:text="User x has sent you a library Y"
         android:layout_margin="8dp"
         />
 
@@ -27,23 +36,21 @@
         >
 
         <ImageButton
-            android:id="@+id/inbox_close_image_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/fui_transparent"
-            android:src="@drawable/ic_outline_close_24"
-            android:onClick="onInboxButtonClicked"
-            />
-
-        <ImageButton
             android:id="@+id/inbox_check_image_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/fui_transparent"
             android:src="@drawable/ic_baseline_check_24"
-            android:onClick="onInbox"
-
             />
+
+        <ImageButton
+            android:id="@+id/inbox_close_image_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/fui_transparent"
+            android:src="@drawable/ic_outline_close_24"
+            />
+
     </LinearLayout>
 
 </LinearLayout>
