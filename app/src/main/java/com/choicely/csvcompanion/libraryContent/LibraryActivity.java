@@ -25,14 +25,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.choicely.csvcompanion.CSVWriter;
 import com.choicely.csvcompanion.EditTranslationActivity;
 import com.choicely.csvcompanion.IntentKeys;
-import com.choicely.csvcompanion.popups.PopUpAlert;
 import com.choicely.csvcompanion.R;
+import com.choicely.csvcompanion.SharingActivity;
 import com.choicely.csvcompanion.data.LanguageData;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.data.TextData;
 import com.choicely.csvcompanion.db.FirebaseDBHelper;
 import com.choicely.csvcompanion.db.RealmHelper;
-import com.choicely.csvcompanion.popups.SharePopup;
+import com.choicely.csvcompanion.popups.PopUpAlert;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -177,7 +177,10 @@ public class LibraryActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_share) {
-            new SharePopup(this, libraryID);
+//            new SharePopup(this, libraryID);
+            Intent intent = new Intent(this, SharingActivity.class);
+            intent.putExtra(IntentKeys.LIBRARY_ID, libraryID);
+            startActivity(intent);
             return true;
         } else if (item.getItemId() == R.id.action_export) {
             saveLibrary();

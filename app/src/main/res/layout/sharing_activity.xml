@@ -12,6 +12,13 @@
         android:textSize="100sp"
         />
 
+    <EditText
+        android:id="@+id/sharing_activity_custom_message_edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        />
+
     <Button
         android:id="@+id/send_library_to_jarno"
         android:layout_width="wrap_content"
