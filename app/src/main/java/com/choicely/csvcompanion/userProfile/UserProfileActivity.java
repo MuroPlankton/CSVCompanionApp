@@ -114,7 +114,6 @@ public class UserProfileActivity extends AppCompatActivity {
 
         user.updateProfile(profileChangeRequest).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-
                 Map<String, Object> userNameMap = new HashMap<>();
                 userNameMap.put(user.getUid(), newUserName);
                 myRef.updateChildren(userNameMap);
@@ -127,6 +126,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private void updateUserNamesInAllLibraries() {
         ArrayList<String> libraryIDArrayList = getIntent().getStringArrayListExtra(IntentKeys.LIBRARY_LIST_ID);
+
         for (int i = 0; i < libraryIDArrayList.size(); i++) {
             String id = libraryIDArrayList.get(i);
             DatabaseReference myRef = ref.child("libraries/" + id + "/users");
