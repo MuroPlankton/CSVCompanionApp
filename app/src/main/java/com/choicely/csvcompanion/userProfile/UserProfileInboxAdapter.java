@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,7 +28,7 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
 
     private final static String TAG = "InboxAdapter";
     private final Context context;
-    private final List<InboxMessageData> itemList = new ArrayList<>();
+    private final List<InboxMessageData> list = new ArrayList<>();
 
     public UserProfileInboxAdapter(Context context) {
         this.context = context;
@@ -41,7 +42,7 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
 
     @Override
     public void onBindViewHolder(@NonNull UserProfileInboxViewHolder holder, int position) {
-        InboxMessageData message = itemList.get(position);
+        InboxMessageData message = list.get(position);
         holder.libraryID = message.getLibraryID();
         holder.libraryName = message.getLibraryName();
 
@@ -52,68 +53,91 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
 
         holder.content.setText(String.format("The user %s has sent you a library %s", sender, libraryName));
         holder.customMessage.setText(message.getCustomMessage());
+
+        holder.decline.setOnClickListener(v -> {
+            removeAt(position);
+        });
     }
 
     @Override
     public int getItemCount() {
-        return itemList.size();
+        return list.size();
     }
 
     public void add(InboxMessageData content) {
-        itemList.add(content);
+        list.add(content);
     }
 
     public void clear() {
-        itemList.clear();
+        list.clear();
+    }
+
+    public void removeAt(int position) {
+        list.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, getItemCount());
     }
 
     public static class UserProfileInboxViewHolder extends RecyclerView.ViewHolder {
 
-        public String libraryID;
-        public String libraryName;
-        public TextView content;
-        public TextView customMessage;
-
-        public ImageButton close;
-        public ImageButton check;
-
         private final FirebaseDatabase database = FirebaseDatabase.getInstance();
         private final DatabaseReference ref = database.getReference();
         private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        public String libraryID;
+        public String libraryName;
+        public Context context;
+
+        public TextView content;
+        public TextView customMessage;
+        public ImageButton decline;
+        public ImageButton accept;
 
         public UserProfileInboxViewHolder(@NonNull View itemView) {
             super(itemView);
 
             content = itemView.findViewById(R.id.inbox_text_view);
             customMessage = itemView.findViewById(R.id.inbox_text_view_custom_message);
-            close = itemView.findViewById(R.id.inbox_close_image_button);
-            check = itemView.findViewById(R.id.inbox_check_image_button);
+            decline = itemView.findViewById(R.id.inbox_decline_image_button);
+            accept = itemView.findViewById(R.id.inbox_accept_image_button);
 
-            close.setOnClickListener(onClickListener);
-            check.setOnClickListener(onClickListener);
+//            decline.setOnClickListener(onClickListener);
+            accept.setOnClickListener(onClickListener);
         }
 
         private final View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (v == close) {
-                    Log.d(TAG, "Close clicked ");
-                } else if (v == check) {
-
-                    DatabaseReference myRef = ref.child("user_libraries/" + user.getUid());
-                    Map<String, Object> map = new HashMap<>();
-                    map.put(libraryID, libraryName);
-                    myRef.updateChildren(map);
-
-                    DatabaseReference libRef = ref.child("libraries/" + libraryID + "/users");
-                    Map<String, Object> libraryUpdateMap = new HashMap<>();
-                    libraryUpdateMap.put(user.getUid(), user.getDisplayName());
-                    libRef.updateChildren(libraryUpdateMap);
-
-                    Log.d(TAG, "Check clicked ");
-
+                /*if (v == decline) {
+                    //TODO: might call the interface here and make the callback in onBindViewHolder
+                } else*/
+                if (v == accept) {
+                    addSharedLibrary();
                 }
             }
         };
+
+        private void addSharedLibrary() {
+            if (user != null) {
+                DatabaseReference myRef = ref.child("user_libraries/" + user.getUid());
+                Map<String, Object> map = new HashMap<>();
+                map.put(libraryID, libraryName);
+                myRef.updateChildren(map);
+
+                DatabaseReference myRef2 = ref.child("libraries/" + libraryID + "/users");
+                Map<String, Object> map2 = new HashMap<>();
+                map2.put(user.getUid(), user.getDisplayName());
+                myRef2.updateChildren(map2);
+
+                Toast.makeText(itemView.getContext(), "Library has been added", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public interface onItemRemovedListener {
+        void onItemRemoved();
     }
 }
+
+
+
