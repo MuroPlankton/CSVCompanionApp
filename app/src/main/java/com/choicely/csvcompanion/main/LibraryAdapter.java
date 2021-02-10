@@ -1,5 +1,6 @@
 package com.choicely.csvcompanion.main;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -13,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.choicely.csvcompanion.IntentKeys;
 import com.choicely.csvcompanion.R;
-import com.choicely.csvcompanion.SharingActivity;
 import com.choicely.csvcompanion.data.LibraryData;
 import com.choicely.csvcompanion.libraryContent.LibraryActivity;
+import com.choicely.csvcompanion.popups.SharePopup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
     private static final String TAG = "LibraryAdapter";
     private final Context context;
     private final List<LibraryData> list = new ArrayList<>();
+    private Activity mainActivity;
 
     public LibraryAdapter(Context context) {
         this.context = context;
@@ -40,6 +42,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
     public void onBindViewHolder(@NonNull LibraryViewHolder holder, int position) {
         LibraryData library = list.get(position);
         holder.libraryID = library.getLibraryID();
+        holder.activity = mainActivity;
 
         if (library.getLibraryName() != null) {
             if (library.getLibraryName().isEmpty()) {
@@ -52,6 +55,10 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
 
     public void add(LibraryData library) {
         list.add(library);
+    }
+
+    public void addActivity(Activity activity){
+        this.mainActivity = activity;
     }
 
     @Override
@@ -68,6 +75,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
         public String libraryID;
         public TextView libraryName;
         public ImageButton shareButton;
+        public Activity activity;
 
         public LibraryViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -80,11 +88,8 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
         }
 
         private final View.OnClickListener onShareButtonClicked = view -> {
-//            new SharePopup(libraryName.getContext(), libraryID);
-            Context ctx = libraryName.getContext();
-            Intent intent = new Intent(ctx, SharingActivity.class);
-            intent.putExtra(IntentKeys.LIBRARY_ID, libraryID);
-            ctx.startActivity(intent);
+            new SharePopup(libraryName.getContext(), libraryID, activity);
+
         };
 
         private final View.OnClickListener onRowClick = view -> {

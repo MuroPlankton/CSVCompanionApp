@@ -1,8 +1,9 @@
 package com.choicely.csvcompanion.userProfile;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -33,9 +34,6 @@ import io.realm.RealmResults;
 public class UserProfileActivity extends AppCompatActivity {
 
     private final static String TAG = "UserProfileActivity";
-
-    private Button saveChangesButton;
-    private Button signOutButton;
     private EditText userNameEditText;
 
     private RecyclerView inboxRecyclerView;
@@ -51,8 +49,6 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_profile_activity);
 
-        saveChangesButton = findViewById(R.id.user_profile_activity_save_changes_button);
-        signOutButton = findViewById(R.id.user_profile_activity_sign_out_button);
         userNameEditText = findViewById(R.id.user_profile_activity_user_name_edit_text);
         setUserNameToEditText();
 
@@ -64,7 +60,25 @@ public class UserProfileActivity extends AppCompatActivity {
         startFireBaseListening();
         updateContent();
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.user_profile_menu, menu);
 
+        MenuItem signOut = menu.findItem(R.id.sign_out);
+        signOut.setOnMenuItemClickListener(item -> {
+            signUserOut();
+            return false;
+        });
+
+        MenuItem saveChangesButtom = menu.findItem(R.id.save_changes);
+        saveChangesButtom.setOnMenuItemClickListener(item -> {
+            saveChanges();
+            return false;
+        });
+
+        return super.onCreateOptionsMenu(menu);
+    }
     private void startFireBaseListening() {
         FirebaseDBHelper helper = FirebaseDBHelper.getInstance();
         helper.setListener(this::updateContent);
@@ -87,14 +101,6 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private void setUserNameToEditText() {
         userNameEditText.setText(user.getDisplayName());
-    }
-
-    public void onClick(View view) {
-        if (view == saveChangesButton) {
-            saveChanges();
-        } else if (view == signOutButton) {
-            signUserOut();
-        }
     }
 
     private void signUserOut() {

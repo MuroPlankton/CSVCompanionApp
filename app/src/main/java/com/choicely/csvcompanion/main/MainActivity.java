@@ -144,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
         Realm realm = helper.getRealm();
 
         RealmResults<LibraryData> libraries = realm.where(LibraryData.class).findAll();
+        adapter.addActivity(this);
 
         for (LibraryData library : libraries) {
             adapter.add(library);
