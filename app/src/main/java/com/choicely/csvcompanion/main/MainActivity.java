@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.SearchView;
 
 import androidx.annotation.Nullable;
@@ -137,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
         Realm realm = helper.getRealm();
 
         RealmResults<LibraryData> libraries = realm.where(LibraryData.class).findAll();
+        adapter.addActivity(this);
 
         for (LibraryData library : libraries) {
             adapter.add(library);

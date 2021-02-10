@@ -44,7 +44,7 @@ public class SharingActivity extends AppCompatActivity {
         LibraryData libraryData = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
 
         button.setOnClickListener(v -> {
-            DatabaseReference myRef = ref.child("user_inbox/upWG6zI5q8MfFrQrrJQhtPidp9C2");
+            DatabaseReference myRef = ref.child("user_inbox/7TEd1NfrdxfyvVXhYB7FKmL6s5t1");
 
             String customMessage = customMessageEditText.getText().toString();
 

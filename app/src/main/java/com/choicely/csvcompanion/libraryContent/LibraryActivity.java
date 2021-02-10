@@ -177,7 +177,7 @@ public class LibraryActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_share) {
-            new SharePopup(this, libraryID);
+            new SharePopup(this, libraryID, this);
             return true;
         } else if (item.getItemId() == R.id.action_export) {
             saveLibrary();

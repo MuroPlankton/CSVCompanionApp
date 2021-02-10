@@ -18,6 +18,7 @@
     <string name="pop_up_message_edit_translation_activity">A text needs to have at least one key, one translation, it\'s name and it\'s description.?</string>
     <string name="pop_up_message_library_activity">You have not added a name for to library. Do you want to continue?</string>
     <string name="pop_up_message_user_profile_activity">Are you sure you want to sign out?</string>
+    <string name="pop_up_message_share_pop_up">Do you want to share this library with this user?</string>
     <string name="share_library">Share library</string>
     <string name="export_library">Export library to csv</string>
     <string name="search_by_name">search by name…</string>
