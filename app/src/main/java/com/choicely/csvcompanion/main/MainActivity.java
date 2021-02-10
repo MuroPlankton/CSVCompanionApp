@@ -6,10 +6,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.SearchView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,10 +33,10 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private final ArrayList<String> libraryIdList = new ArrayList<>();
 
-    private Button newLibraryButton;
     private SearchView searchView;
-    private RecyclerView libraryRecycler;
     private LibraryAdapter adapter;
+
+    private boolean isStartingUp = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,22 +44,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_activity);
 
         Log.d(TAG, "onCreate: " + FirebaseInstallations.getInstance().getId());
-        newLibraryButton = findViewById(R.id.main_activity_new_library);
-        newLibraryButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, LibraryActivity.class);
-            startActivity(intent);
-        });
 
-        libraryRecycler = findViewById(R.id.main_activity_recycler);
+        RecyclerView libraryRecycler = findViewById(R.id.main_activity_recycler);
         libraryRecycler.setLayoutManager(new LinearLayoutManager(this));
         adapter = new LibraryAdapter(this);
         libraryRecycler.setAdapter(adapter);
+        updateContent();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        startFireBaseListening();
+        if (isStartingUp) {
+            isStartingUp = false;
+        } else {
+            startFireBaseListening();
+        }
     }
 
     private void startFireBaseListening() {
@@ -90,8 +89,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        MenuItem profileItem = menu.findItem(R.id.action_user_profile);
-        profileItem.setOnMenuItemClickListener(item -> {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_user_profile) {
             getLibraryIDs();
 
             Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);
@@ -99,9 +102,13 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
 
             return false;
-        });
-
-        return super.onCreateOptionsMenu(menu);
+        } else if (item.getItemId() == R.id.main_activity_actions_plus_lib) {
+            Intent intent = new Intent(this, LibraryActivity.class);
+            startActivity(intent);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     private void getLibraryIDs() {

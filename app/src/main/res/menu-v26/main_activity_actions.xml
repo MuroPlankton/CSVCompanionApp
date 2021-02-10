@@ -9,6 +9,13 @@
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="ifRoom"
         />
+
+    <item
+        android:id="@+id/main_activity_actions_plus_lib"
+        android:icon="@drawable/ic_outline_add_24"
+        android:title="@string/new_library"
+        app:showAsAction="ifRoom"
+        />
     <item
         android:id="@+id/action_user_profile"
         android:icon="@drawable/ic_account_circle_white_24px"

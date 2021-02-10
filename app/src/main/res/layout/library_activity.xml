@@ -36,37 +36,43 @@
         android:orientation="horizontal"
         >
 
-        <EditText
-            android:id="@+id/library_activity_language_code_field"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="4dp"
-            android:layout_weight="1"
-            android:hint="@string/type_lang_code"
-            android:maxLength="2"
-            android:maxLines="1"
-            />
+            android:orientation="vertical"
+            android:layout_weight="5"
+            android:layout_marginRight="16dp"
+            >
 
-        <EditText
-            android:id="@+id/library_activity_language_field"
+            <EditText
+                android:id="@+id/library_activity_language_code_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="4dp"
+                android:hint="@string/type_lang_code"
+                android:maxLength="2"
+                android:maxLines="1"
+                />
+
+            <EditText
+                android:id="@+id/library_activity_language_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="4dp"
+                android:hint="@string/type_lang"
+                android:maxLines="1"
+                android:textSize="20sp"
+                />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/library_activity_add_lang_icon"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="4dp"
-            android:layout_weight="2"
-            android:hint="@string/type_lang"
-            android:maxLines="1"
-            android:textSize="20sp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_language_24px"
+            android:layout_weight="1"
             />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/library_activity_language_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:onClick="onClick"
-        android:text="@string/add_lang"
-        />
 
     <TextView
         android:id="@+id/library_activity_language_count"
