@@ -48,7 +48,7 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
         String sender = message.getSenderName();
         String libraryName = message.getLibraryName();
 
-        holder.content.setText(String.format("The user %s has sent you a library %s", sender, libraryName));
+        holder.content.setText(String.format("The user '%s' has sent you a library '%s'", sender, libraryName));
         holder.customMessage.setText(message.getCustomMessage());
 
         holder.decline.setOnClickListener(v -> {

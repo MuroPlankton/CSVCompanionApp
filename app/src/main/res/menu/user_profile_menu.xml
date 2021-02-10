@@ -7,7 +7,6 @@
     <item
         android:id="@+id/sign_out"
         android:title="@string/sign_out"
-        android:icon="@drawable/ic_outline_exit_to_app_24"
         android:iconTint="@color/white"
         app:showAsAction="ifRoom"
         />
