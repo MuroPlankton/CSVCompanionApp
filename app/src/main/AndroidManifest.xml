@@ -5,17 +5,16 @@
     >
 
     <application
-
         android:name=".app.CSVCompanionApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.CSVCompanion">
-
+        android:theme="@style/Theme.CSVCompanion"
+        >
         <activity android:name=".main.MainActivity" android:label="@string/libraries"/>
-        <activity android:name=".libraryContent.LibraryActivity"/>
+        <activity android:name=".libraryContent.LibraryActivity" />
         <activity android:name=".EditTranslationActivity" android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".userProfile.UserProfileActivity" android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".SplashScreenActivity" android:theme="@style/SplashScreenTheme">

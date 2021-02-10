@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.choicely.csvcompanion.R;
 import com.firebase.ui.auth.AuthUI;
@@ -72,6 +73,8 @@ public class PopUpAlert extends DialogFragment {
         builder.setPositiveButton("Yes", (dialog, which) -> {
             String customMessage = input.getText().toString();
             shareLibraryToUser(userId, customMessage, libraryName, libraryID);
+
+            Toast.makeText(activity, "Library successfully sent", Toast.LENGTH_SHORT).show();
         });
         builder.setNegativeButton("No", (dialog, which) -> {
 

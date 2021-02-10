@@ -1,7 +1,6 @@
 package com.choicely.csvcompanion.userProfile;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,8 +47,6 @@ public class UserProfileInboxAdapter extends RecyclerView.Adapter<UserProfileInb
 
         String sender = message.getSenderName();
         String libraryName = message.getLibraryName();
-
-        Log.d(TAG, "onBindViewHolder: sender: " + sender);
 
         holder.content.setText(String.format("The user %s has sent you a library %s", sender, libraryName));
         holder.customMessage.setText(message.getCustomMessage());
