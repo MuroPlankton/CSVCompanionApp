@@ -85,7 +85,7 @@ public class LibraryActivity extends AppCompatActivity {
         languagePopupWindow = new ListPopupWindow(this);
         languagePopupWindow.setAdapter(new ArrayAdapter<>(this,
                 R.layout.language_text_layout, R.id.language_text_view,
-                new String[] {"en | English", "fi | Suomi", "sv | Svenska", "ee | Eestlane", "it | Italiano"}));
+                new String[]{"en | English", "fi | Suomi", "sv | Svenska", "ee | Eestlane", "it | Italiano"}));
         languagePopupWindow.setAnchorView(langCodeEditText);
         languagePopupWindow.setWidth(ListPopupWindow.MATCH_PARENT);
         languagePopupWindow.setHeight(ListPopupWindow.WRAP_CONTENT);
@@ -192,11 +192,11 @@ public class LibraryActivity extends AppCompatActivity {
 
     private void newLibrary() {
         libraryID = String.valueOf(UUID.randomUUID());
+
+        updateCurrentLibrary();
+
         Log.w(TAG, "newLibrary: " + libraryID);
         languageCountTextView.setText(String.format(Locale.getDefault(), "Amount of languages: %d", languageCount));
-
-        addUser();
-        saveLibrary();
     }
 
     private void loadLibrary() {
@@ -216,6 +216,7 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     private void saveLibrary() {
+
         addUser();
         DatabaseReference libRef = ref.child("libraries/" + libraryID);
 
@@ -277,6 +278,7 @@ public class LibraryActivity extends AppCompatActivity {
 
         firebaseDBHelper.listenForLibraryDataChange(libraryID);
         clearLanguageEditTexts();
+        saveLibrary();
     }
 
     private boolean checkIfLanguageAlreadyExists(String langCode) {
@@ -306,13 +308,15 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     public void newTranslation() {
-        saveLibrary();
-        firebaseDBHelper.listenForLibraryDataChange(libraryID);
         updateCurrentLibrary();
+        if (currentLibrary == null || currentLibrary.getLanguages().isEmpty()) {
 
-        if (currentLibrary != null && currentLibrary.getLanguages().size() == 0) {
-            Toast.makeText(this, "No languages", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No languages found", Toast.LENGTH_SHORT).show();
+
         } else {
+            saveLibrary();
+            firebaseDBHelper.listenForLibraryDataChange(libraryID);
+            
             Intent intent = new Intent(LibraryActivity.this, EditTranslationActivity.class);
             intent.putExtra(IntentKeys.LIBRARY_ID, libraryID);
             startActivity(intent);
@@ -321,6 +325,8 @@ public class LibraryActivity extends AppCompatActivity {
 
     private void updateCurrentLibrary() {
         currentLibrary = realm.where(LibraryData.class).equalTo("libraryID", libraryID).findFirst();
+
+        Log.d(TAG, "updateCurrentLibrary: " + currentLibrary);
     }
 
     private void updateLanguageTextCount() {
@@ -356,3 +362,4 @@ public class LibraryActivity extends AppCompatActivity {
         void onLanguageAdded();
     }
 }
+

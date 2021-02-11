@@ -41,6 +41,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
     @Override
     public void onBindViewHolder(@NonNull LibraryViewHolder holder, int position) {
         LibraryData library = list.get(position);
+
         holder.libraryID = library.getLibraryID();
         holder.activity = mainActivity;
 
@@ -57,7 +58,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
         list.add(library);
     }
 
-    public void addActivity(Activity activity){
+    public void addActivity(Activity activity) {
         this.mainActivity = activity;
     }
 
@@ -84,7 +85,6 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
             libraryName = itemView.findViewById(R.id.library_list_row_library_name);
             shareButton = itemView.findViewById(R.id.library_list_row_share_button);
             shareButton.setOnClickListener(onShareButtonClicked);
-
         }
 
         private final View.OnClickListener onShareButtonClicked = view -> {

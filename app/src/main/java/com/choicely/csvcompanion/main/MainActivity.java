@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         libraryRecycler.setLayoutManager(new LinearLayoutManager(this));
         adapter = new LibraryAdapter(this);
         libraryRecycler.setAdapter(adapter);
-        updateContent();
+
     }
 
     @Override
@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         if (isStartingUp) {
             isStartingUp = false;
+            updateContent();
         } else {
             startFireBaseListening();
         }
