@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,7 +61,7 @@ public class LibraryActivity extends AppCompatActivity {
     private EditText libraryNameEditText;
     private EditText langCodeEditText;
     private EditText langEditText;
-    private Button addLanguageButton;
+    private ImageView addLanguageIcon;
     private Button newTranslationButton;
     private TextView languageCountTextView;
 
@@ -91,7 +92,7 @@ public class LibraryActivity extends AppCompatActivity {
 
         libraryNameEditText = findViewById(R.id.library_activity_library_name);
         languageCountTextView = findViewById(R.id.library_activity_language_count);
-        addLanguageButton = findViewById(R.id.library_activity_language_button);
+        addLanguageIcon = findViewById(R.id.library_activity_add_lang_icon);
         newTranslationButton = findViewById(R.id.library_activity_new_translation_button);
         langCodeEditText = findViewById(R.id.library_activity_language_code_field);
         langEditText = findViewById(R.id.library_activity_language_field);
@@ -165,6 +166,14 @@ public class LibraryActivity extends AppCompatActivity {
             }
         }
     };
+
+    public void onClick(View v) {
+        if (v == addLanguageIcon) {
+            addLanguage();
+        } else if (v == newTranslationButton && !checkIfNameIsEmpty()) {
+            newTranslation();
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -296,14 +305,6 @@ public class LibraryActivity extends AppCompatActivity {
         Log.d(TAG, "user_id: " + user.getUid());
 
         libRef.updateChildren(userMap);
-    }
-
-    public void onClick(View v) {
-        if (v == addLanguageButton) {
-            addLanguage();
-        } else if (v == newTranslationButton && !checkIfNameIsEmpty()) {
-            newTranslation();
-        }
     }
 
     public void newTranslation() {

@@ -2,6 +2,9 @@ package com.choicely.csvcompanion;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -10,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -42,7 +46,6 @@ public class EditTranslationActivity extends AppCompatActivity {
     private EditText androidKey, iosKey, webKey;
     private Spinner langSpinner;
     private EditText translationValue;
-    private Button submitTranslationButton;
 
     private String currentLibraryKey;
     private String currentTextKey;
@@ -72,7 +75,6 @@ public class EditTranslationActivity extends AppCompatActivity {
         webKey = findViewById(R.id.edit_translation_act_web_key);
         langSpinner = findViewById(R.id.edit_translation_act_language_dropdown);
         translationValue = findViewById(R.id.edit_translation_act_write_translation);
-        submitTranslationButton = findViewById(R.id.edit_translation_act_submit_translation);
 
         if (currentTextKey != null) {
             FirebaseDBHelper.getInstance().setTextLoadListener(textLoadedListener);
@@ -84,7 +86,25 @@ public class EditTranslationActivity extends AppCompatActivity {
 
         translationValue.setText(translations.get(langKeys.get(langSpinner.getSelectedItemPosition())));
         langSpinner.setOnItemSelectedListener(langSelectedListener);
-        submitTranslationButton.setOnClickListener(buttonListener);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater =getMenuInflater();
+        inflater.inflate(R.menu.edit_translation_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.edit_translation_menu_save) {
+            saveCurrentText();
+            Toast.makeText(this, "Translation saved", Toast.LENGTH_SHORT).show();
+            clearAndCreateNew();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     private void putLanguagesIntoLists() {
@@ -136,14 +156,6 @@ public class EditTranslationActivity extends AppCompatActivity {
         }
     }
 
-    private final View.OnClickListener buttonListener = v -> {
-        if (!checkIfRowsAreEmpty()) {
-            saveCurrentText();
-            Toast.makeText(this, "Translation saved", Toast.LENGTH_SHORT).show();
-            clearAndCreateNew();
-        }
-    };
-
     @Override
     public void onBackPressed() {
         if (!checkIfRowsAreEmpty()) {
@@ -177,7 +189,7 @@ public class EditTranslationActivity extends AppCompatActivity {
                 || transLationDesc.getText().toString().isEmpty()
                 || (androidKey.getText().toString().isEmpty()
                 || iosKey.getText().toString().isEmpty()
-                || webKey.getText().toString().isEmpty()) || translations.size() > 0) {
+                || webKey.getText().toString().isEmpty()) || translations.size() < 1) {
             popUpAlert.alertPopUp(EditTranslationActivity.this, R.string.pop_up_message_edit_translation_activity, "Warning");
             return true;
         }

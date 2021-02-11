@@ -29,7 +29,6 @@ public class FirebaseDBHelper {
     private static FirebaseDBHelper instance;
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final Realm realm = RealmHelper.getInstance().getRealm();
-    private final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
     private onDatabaseUpdateListener listener;
     private onSingleTextLoadedListener textLoadedListener;
@@ -54,6 +53,7 @@ public class FirebaseDBHelper {
     }
 
     public void listenForUserLibraryDataChange() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             String currentUserString = currentUser.getUid();
             DatabaseReference myRef = database.getReference("user_libraries").child(currentUserString);
@@ -91,7 +91,10 @@ public class FirebaseDBHelper {
         }
 
         if (listener != null) {
+            Log.d(TAG, "updateUserLibraryData: listener isn't null");
             listener.onDatabaseUpdate();
+        } else {
+            Log.d(TAG, "updateUserLibraryData: listener is null");
         }
     }
 
@@ -264,6 +267,7 @@ public class FirebaseDBHelper {
     }
 
     public void listenForUserInboxDataChange() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             String currentUserString = currentUser.getUid();
             DatabaseReference ref = database.getReference("user_inbox").child(currentUserString);
