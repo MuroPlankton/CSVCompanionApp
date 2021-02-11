@@ -65,13 +65,18 @@
                 />
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/library_activity_add_lang_icon"
+        <ImageButton
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_language_24px"
             android:layout_weight="1"
+            android:layout_marginVertical="12dp"
+            android:theme="@style/Widget.MaterialComponents.Button"
+            android:src="@drawable/ic_language_24px"
+            android:id="@+id/library_activity_add_lang_button"
+            android:onClick="onClick"
             />
+
+
     </LinearLayout>
 
     <TextView

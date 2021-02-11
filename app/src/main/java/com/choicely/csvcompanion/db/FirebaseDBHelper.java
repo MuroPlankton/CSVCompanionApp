@@ -91,10 +91,7 @@ public class FirebaseDBHelper {
         }
 
         if (listener != null) {
-            Log.d(TAG, "updateUserLibraryData: listener isn't null");
             listener.onDatabaseUpdate();
-        } else {
-            Log.d(TAG, "updateUserLibraryData: listener is null");
         }
     }
 

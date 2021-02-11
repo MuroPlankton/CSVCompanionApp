@@ -27,12 +27,13 @@ public class PopUpAlert extends DialogFragment {
     private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String libraryID;
 
-    public void alertPopUp(Activity activity, int message, String title) {
+    public void alertPopUp(Activity activity, int message, String title,
+                           String positiveButtonText, String negativeButtonText) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setMessage(message)
-                .setNegativeButton(R.string.continue_editing_popup_text, (dialog, which) -> {
+                .setNegativeButton(negativeButtonText, (dialog, which) -> {
                 })
-                .setPositiveButton(R.string.dont_save_popup_text, (dialog, which) -> activity.finish());
+                .setPositiveButton(positiveButtonText, (dialog, which) -> activity.finish());
 
         AlertDialog alert = builder.create();
         alert.setTitle(title);

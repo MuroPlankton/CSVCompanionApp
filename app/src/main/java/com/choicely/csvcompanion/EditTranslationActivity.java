@@ -1,5 +1,6 @@
 package com.choicely.csvcompanion;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -190,7 +191,12 @@ public class EditTranslationActivity extends AppCompatActivity {
                 || (androidKey.getText().toString().isEmpty()
                 || iosKey.getText().toString().isEmpty()
                 || webKey.getText().toString().isEmpty()) || translations.size() < 1) {
-            popUpAlert.alertPopUp(EditTranslationActivity.this, R.string.pop_up_message_edit_translation_activity, "Warning");
+
+            popUpAlert.alertPopUp(EditTranslationActivity.this,
+                    R.string.pop_up_message_edit_translation_activity, "Warning",
+                    getResources().getString(R.string.dont_save_popup_text),
+                    getResources().getString(R.string.continue_editing_popup_text));
+
             return true;
         }
         return false;

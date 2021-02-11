@@ -12,7 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,7 +61,7 @@ public class LibraryActivity extends AppCompatActivity {
     private EditText libraryNameEditText;
     private EditText langCodeEditText;
     private EditText langEditText;
-    private ImageView addLanguageIcon;
+    private ImageButton addLanguageButton;
     private Button newTranslationButton;
     private TextView languageCountTextView;
 
@@ -92,7 +92,7 @@ public class LibraryActivity extends AppCompatActivity {
 
         libraryNameEditText = findViewById(R.id.library_activity_library_name);
         languageCountTextView = findViewById(R.id.library_activity_language_count);
-        addLanguageIcon = findViewById(R.id.library_activity_add_lang_icon);
+        addLanguageButton = findViewById(R.id.library_activity_add_lang_button);
         newTranslationButton = findViewById(R.id.library_activity_new_translation_button);
         langCodeEditText = findViewById(R.id.library_activity_language_code_field);
         langEditText = findViewById(R.id.library_activity_language_field);
@@ -168,7 +168,7 @@ public class LibraryActivity extends AppCompatActivity {
     };
 
     public void onClick(View v) {
-        if (v == addLanguageIcon) {
+        if (v == addLanguageButton) {
             addLanguage();
         } else if (v == newTranslationButton && !checkIfNameIsEmpty()) {
             newTranslation();
@@ -339,7 +339,8 @@ public class LibraryActivity extends AppCompatActivity {
 
     private boolean checkIfNameIsEmpty() {
         if (libraryNameEditText.getText().toString().isEmpty()) {
-            popUpAlert.alertPopUp(this, R.string.pop_up_message_library_activity, "Warning");
+            popUpAlert.alertPopUp(this, R.string.pop_up_message_library_activity,
+                    "Warning", "yes", "no");
             return true;
         }
         return false;
