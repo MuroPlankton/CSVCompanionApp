@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         libraryRecycler.setLayoutManager(new LinearLayoutManager(this));
         adapter = new LibraryAdapter(this);
         libraryRecycler.setAdapter(adapter);
+
     }
 
     @Override

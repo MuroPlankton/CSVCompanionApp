@@ -31,8 +31,11 @@ public class PopUpAlert extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setMessage(message)
                 .setNegativeButton(R.string.continue_editing_popup_text, (dialog, which) -> {
+
                 })
-                .setPositiveButton(R.string.dont_save_popup_text, (dialog, which) -> activity.finish());
+                .setPositiveButton(R.string.dont_save_popup_text, (dialog, which) -> {
+                    activity.finish();
+                });
 
         AlertDialog alert = builder.create();
         alert.setTitle(title);
