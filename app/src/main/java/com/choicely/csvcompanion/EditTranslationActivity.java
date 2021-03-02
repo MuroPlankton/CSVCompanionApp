@@ -1,6 +1,5 @@
 package com.choicely.csvcompanion;
 
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -9,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -43,8 +41,8 @@ public class EditTranslationActivity extends AppCompatActivity {
     private final PopUpAlert popUpAlert = new PopUpAlert();
     private static final String TAG = "EditTranslationActivity";
 
-    private EditText translationName, transLationDesc;
-    private EditText androidKey, iosKey, webKey;
+    private EditText translationName, translationDesc;
+    private EditText androidKey, iosKey, webAdminKey, webMainKey, webWidgetKey;
     private Spinner langSpinner;
     private EditText translationValue;
 
@@ -70,10 +68,12 @@ public class EditTranslationActivity extends AppCompatActivity {
         }
 
         translationName = findViewById(R.id.edit_translation_act_translation_name);
-        transLationDesc = findViewById(R.id.edit_translation_act_translation_desc);
+        translationDesc = findViewById(R.id.edit_translation_act_translation_desc);
         androidKey = findViewById(R.id.edit_translation_act_android_key);
         iosKey = findViewById(R.id.edit_translation_act_ios_key);
-        webKey = findViewById(R.id.edit_translation_act_web_key);
+        webAdminKey = findViewById(R.id.edit_translation_act_web_admin_key);
+        webMainKey = findViewById(R.id.edit_translation_act_web_main_key);
+        webWidgetKey = findViewById(R.id.edit_translation_act_web_widget_key);
         langSpinner = findViewById(R.id.edit_translation_act_language_dropdown);
         translationValue = findViewById(R.id.edit_translation_act_write_translation);
 
@@ -145,10 +145,12 @@ public class EditTranslationActivity extends AppCompatActivity {
                 .getTexts().where().equalTo("textKey", currentTextKey).findFirst();
 
         translationName.setText(currentText.getTranslationName());
-        transLationDesc.setText(currentText.getTranslationDesc());
+        translationDesc.setText(currentText.getTranslationDesc());
         androidKey.setText(currentText.getAndroidKey());
         iosKey.setText(currentText.getIosKey());
-        webKey.setText(currentText.getWebKey());
+        webAdminKey.setText(currentText.getWebAdminKey());
+        webMainKey.setText(currentText.getWebMainKey());
+        webWidgetKey.setText(currentText.getWebWidgetKey());
 
         Log.d(TAG, "current text: " + currentText);
 
@@ -170,10 +172,12 @@ public class EditTranslationActivity extends AppCompatActivity {
         Map<String, Object> textToSave = new HashMap<>();
 
         textToSave.put("name", translationName.getText().toString());
-        textToSave.put("description", transLationDesc.getText().toString());
+        textToSave.put("description", translationDesc.getText().toString());
         textToSave.put("android_key", androidKey.getText().toString());
         textToSave.put("ios_key", iosKey.getText().toString());
-        textToSave.put("web_key", webKey.getText().toString());
+        textToSave.put("web_admin_key", webAdminKey.getText().toString());
+        textToSave.put("web_key", webMainKey.getText().toString());
+        textToSave.put("web_widget_key", webWidgetKey.getText().toString());
         translations.put(currentSelectedLang, translationValue.getText().toString());
         textToSave.put("translations", translations);
 
@@ -187,10 +191,10 @@ public class EditTranslationActivity extends AppCompatActivity {
 
     private boolean checkIfRowsAreEmpty() {
         if (translationName.getText().toString().isEmpty()
-                || transLationDesc.getText().toString().isEmpty()
+                || translationDesc.getText().toString().isEmpty()
                 || (androidKey.getText().toString().isEmpty()
                 || iosKey.getText().toString().isEmpty()
-                || webKey.getText().toString().isEmpty()) || translations.size() < 1) {
+                || webMainKey.getText().toString().isEmpty()) || translations.size() < 1) {
 
             popUpAlert.alertPopUp(EditTranslationActivity.this,
                     R.string.pop_up_message_edit_translation_activity, "Warning",
@@ -204,10 +208,12 @@ public class EditTranslationActivity extends AppCompatActivity {
 
     private void clearAndCreateNew() {
         translationName.getText().clear();
-        transLationDesc.getText().clear();
+        translationDesc.getText().clear();
         androidKey.getText().clear();
         iosKey.getText().clear();
-        webKey.getText().clear();
+        webAdminKey.getText().clear();
+        webMainKey.getText().clear();
+        webWidgetKey.getText().clear();
         translationValue.getText().clear();
         translations.clear();
 
