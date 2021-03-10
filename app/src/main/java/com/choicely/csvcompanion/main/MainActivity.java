@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         RealmHelper helper = RealmHelper.getInstance();
         Realm realm = helper.getRealm();
 
-        RealmResults<LibraryData> libraryNames = realm.where(LibraryData.class).contains("libraryName", searchView.getQuery().toString()).findAll();
+        RealmResults<LibraryData> libraryNames = realm.where(LibraryData.class).contains("libraryName", searchView.getQuery().toString().toUpperCase()).findAll();
 
         for (LibraryData libraryName : libraryNames) {
             adapter.add(libraryName);

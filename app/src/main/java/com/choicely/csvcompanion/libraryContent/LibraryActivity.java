@@ -50,28 +50,28 @@ import java.util.UUID;
 import io.realm.Realm;
 
 public class LibraryActivity extends AppCompatActivity {
-
     private static final String TAG = "LibraryActivity";
+
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final DatabaseReference ref = database.getReference();
     private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private final FirebaseDBHelper firebaseDBHelper = FirebaseDBHelper.getInstance();
     private final Realm realm = RealmHelper.getInstance().getRealm();
-
     private EditText libraryNameEditText;
+
     private EditText langCodeEditText;
     private EditText langEditText;
     private ImageButton addLanguageButton;
     private Button newTranslationButton;
     private TextView languageCountTextView;
-
     private ListPopupWindow languagePopupWindow;
+
     private RecyclerView langContentRecycler;
     private final List<Pair<String, String>> sampleLanguageList = new ArrayList<>();
-
     private LibraryContentAdapter adapter;
 
     private LibraryData currentLibrary;
+
     private String libraryID;
     private int languageCount;
 
@@ -86,6 +86,7 @@ public class LibraryActivity extends AppCompatActivity {
         languagePopupWindow.setAdapter(new ArrayAdapter<>(this,
                 R.layout.language_text_layout, R.id.language_text_view,
                 new String[]{"en | English", "fi | Suomi", "sv | Svenska", "ee | Eestlane", "it | Italiano"}));
+
         languagePopupWindow.setAnchorView(langCodeEditText);
         languagePopupWindow.setWidth(ListPopupWindow.MATCH_PARENT);
         languagePopupWindow.setHeight(ListPopupWindow.WRAP_CONTENT);
@@ -126,13 +127,22 @@ public class LibraryActivity extends AppCompatActivity {
         });
     }
 
+    private LanguageAddedListener languageAddedListener;
+
+    public void setOnLanguageAddedListener(LanguageAddedListener listener) {
+        this.languageAddedListener = listener;
+    }
+
+    public interface LanguageAddedListener {
+        void onLanguageAdded();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.library_activity_actions, menu);
         return true;
     }
-
     private AdapterView.OnItemClickListener langPopupItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -141,6 +151,16 @@ public class LibraryActivity extends AppCompatActivity {
             languagePopupWindow.dismiss();
         }
     };
+
+    View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus && !languagePopupWindow.isShowing()) {
+                languagePopupWindow.show();
+            }
+        }
+    };
+
 
     @Override
     protected void onResume() {
@@ -157,15 +177,6 @@ public class LibraryActivity extends AppCompatActivity {
         firebaseDBHelper.setListener(this::updateContent);
         firebaseDBHelper.listenForLibraryDataChange(libraryID);
     }
-
-    View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
-        @Override
-        public void onFocusChange(View v, boolean hasFocus) {
-            if (hasFocus && !languagePopupWindow.isShowing()) {
-                languagePopupWindow.show();
-            }
-        }
-    };
 
     public void onClick(View v) {
         if (v == addLanguageButton) {
@@ -316,7 +327,7 @@ public class LibraryActivity extends AppCompatActivity {
         } else {
             saveLibrary();
             firebaseDBHelper.listenForLibraryDataChange(libraryID);
-            
+
             Intent intent = new Intent(LibraryActivity.this, EditTranslationActivity.class);
             intent.putExtra(IntentKeys.LIBRARY_ID, libraryID);
             startActivity(intent);
@@ -340,8 +351,8 @@ public class LibraryActivity extends AppCompatActivity {
         langCodeEditText.getText().clear();
         langEditText.getText().clear();
     }
-
     private final PopUpAlert popUpAlert = new PopUpAlert();
+
 
     private boolean checkIfNameIsEmpty() {
         if (libraryNameEditText.getText().toString().isEmpty()) {
@@ -350,16 +361,6 @@ public class LibraryActivity extends AppCompatActivity {
             return true;
         }
         return false;
-    }
-
-    private LanguageAddedListener languageAddedListener;
-
-    public void setOnLanguageAddedListener(LanguageAddedListener listener) {
-        this.languageAddedListener = listener;
-    }
-
-    public interface LanguageAddedListener {
-        void onLanguageAdded();
     }
 }
 
