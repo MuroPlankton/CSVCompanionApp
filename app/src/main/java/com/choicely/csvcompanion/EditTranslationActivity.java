@@ -91,7 +91,7 @@ public class EditTranslationActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater =getMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.edit_translation_menu, menu);
         return true;
     }
@@ -190,11 +190,10 @@ public class EditTranslationActivity extends AppCompatActivity {
     }
 
     private boolean checkIfRowsAreEmpty() {
+
         if (translationName.getText().toString().isEmpty()
                 || translationDesc.getText().toString().isEmpty()
-                || (androidKey.getText().toString().isEmpty()
-                || iosKey.getText().toString().isEmpty()
-                || webMainKey.getText().toString().isEmpty()) || translations.size() < 1) {
+                || hasAtLeastOneKey() || translations.size() < 1) {
 
             popUpAlert.alertPopUp(EditTranslationActivity.this,
                     R.string.pop_up_message_edit_translation_activity, "Warning",
@@ -204,6 +203,21 @@ public class EditTranslationActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+    private boolean hasAtLeastOneKey() {
+        List<String> keyFieldStrings = new ArrayList<>();
+        keyFieldStrings.add(androidKey.getText().toString());
+        keyFieldStrings.add(iosKey.getText().toString());
+        keyFieldStrings.add(webMainKey.getText().toString());
+        keyFieldStrings.add(webWidgetKey.getText().toString());
+        keyFieldStrings.add(webAdminKey.getText().toString());
+        for (String platformKey : keyFieldStrings) {
+            if (!platformKey.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void clearAndCreateNew() {

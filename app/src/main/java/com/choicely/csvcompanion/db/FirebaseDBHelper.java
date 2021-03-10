@@ -239,7 +239,7 @@ public class FirebaseDBHelper {
                 realm.beginTransaction();
                 text.setAndroidKey(textMap.get("android_key").toString());
                 text.setIosKey(textMap.get("ios_key").toString());
-                text.setWebMainKey(textMap.get("web_main_key").toString());
+                text.setWebMainKey(textMap.get("web_key").toString());
                 text.setWebAdminKey(textMap.get("web_admin_key").toString());
                 text.setWebWidgetKey(textMap.get("web_widget_key").toString());
 
