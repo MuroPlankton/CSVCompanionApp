@@ -1,7 +1,6 @@
 package com.choicely.csvcompanion.userProfile;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,22 +55,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxViewHol
         String sender = message.getSenderName();
         String libraryName = message.getLibraryName();
 
-        holder.content.setText(String.format("The user %s has sent you a library %s", sender, libraryName));
+        holder.content.setText(String.format("The user '%s' has sent you a library '%s'", sender, libraryName));
         holder.customMessage.setText(message.getCustomMessage());
-
-//        holder.decline.setOnClickListener(v -> {
-//            remove(position, holder.libraryID);
-//        });
-
-//        holder.accept.setOnClickListener(v -> {
-//            remove(position, holder.libraryID);
-//        });
-
-//        InboxViewHolder viewHolder = new InboxViewHolder(holder.itemView);
-
-//        viewHolder.setItemRemovedListener(() -> {
-//            remove(position, holder.libraryID);
-//        });
 
         InboxViewHolder.OnItemRemovedListener onItemRemovedListener = () -> remove(position, holder.libraryID);
 
@@ -147,11 +132,11 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxViewHol
             public void onClick(View v) {
                 if (v == accept) {
                     addSharedLibrary();
-                    if(listener != null){
+                    if (listener != null) {
                         listener.onItemRemoved();
                     }
-                } else if(v == decline){
-                    if(listener != null){
+                } else if (v == decline) {
+                    if (listener != null) {
                         listener.onItemRemoved();
                     }
                 }
@@ -174,14 +159,15 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxViewHol
             }
         }
 
-        public void setItemRemovedListener(OnItemRemovedListener listener){
+        public void setItemRemovedListener(OnItemRemovedListener listener) {
             this.listener = listener;
         }
 
-        public interface OnItemRemovedListener{
+        public interface OnItemRemovedListener {
             void onItemRemoved();
         }
     }
 }
+
 
 

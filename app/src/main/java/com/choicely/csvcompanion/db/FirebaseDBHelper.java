@@ -29,7 +29,6 @@ public class FirebaseDBHelper {
     private static FirebaseDBHelper instance;
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final Realm realm = RealmHelper.getInstance().getRealm();
-    private final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
     private onDatabaseUpdateListener listener;
     private onSingleTextLoadedListener textLoadedListener;
@@ -54,6 +53,7 @@ public class FirebaseDBHelper {
     }
 
     public void listenForUserLibraryDataChange() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             String currentUserString = currentUser.getUid();
             DatabaseReference myRef = database.getReference("user_libraries").child(currentUserString);
@@ -239,7 +239,9 @@ public class FirebaseDBHelper {
                 realm.beginTransaction();
                 text.setAndroidKey(textMap.get("android_key").toString());
                 text.setIosKey(textMap.get("ios_key").toString());
-                text.setWebKey(textMap.get("web_key").toString());
+                text.setWebMainKey(textMap.get("web_main_key").toString());
+                text.setWebAdminKey(textMap.get("web_admin_key").toString());
+                text.setWebWidgetKey(textMap.get("web_widget_key").toString());
 
                 if (textMap.get("translations") != null) {
                     Map<String, Object> translationsMap = (Map<String, Object>) textMap.get("translations");
@@ -264,6 +266,7 @@ public class FirebaseDBHelper {
     }
 
     public void listenForUserInboxDataChange() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             String currentUserString = currentUser.getUid();
             DatabaseReference ref = database.getReference("user_inbox").child(currentUserString);

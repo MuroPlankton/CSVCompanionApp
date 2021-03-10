@@ -2,14 +2,17 @@ package com.choicely.csvcompanion;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -38,11 +41,10 @@ public class EditTranslationActivity extends AppCompatActivity {
     private final PopUpAlert popUpAlert = new PopUpAlert();
     private static final String TAG = "EditTranslationActivity";
 
-    private EditText translationName, transLationDesc;
-    private EditText androidKey, iosKey, webKey;
+    private EditText translationName, translationDesc;
+    private EditText androidKey, iosKey, webAdminKey, webMainKey, webWidgetKey;
     private Spinner langSpinner;
     private EditText translationValue;
-    private Button submitTranslationButton;
 
     private String currentLibraryKey;
     private String currentTextKey;
@@ -66,13 +68,14 @@ public class EditTranslationActivity extends AppCompatActivity {
         }
 
         translationName = findViewById(R.id.edit_translation_act_translation_name);
-        transLationDesc = findViewById(R.id.edit_translation_act_translation_desc);
+        translationDesc = findViewById(R.id.edit_translation_act_translation_desc);
         androidKey = findViewById(R.id.edit_translation_act_android_key);
         iosKey = findViewById(R.id.edit_translation_act_ios_key);
-        webKey = findViewById(R.id.edit_translation_act_web_key);
+        webAdminKey = findViewById(R.id.edit_translation_act_web_admin_key);
+        webMainKey = findViewById(R.id.edit_translation_act_web_main_key);
+        webWidgetKey = findViewById(R.id.edit_translation_act_web_widget_key);
         langSpinner = findViewById(R.id.edit_translation_act_language_dropdown);
         translationValue = findViewById(R.id.edit_translation_act_write_translation);
-        submitTranslationButton = findViewById(R.id.edit_translation_act_submit_translation);
 
         if (currentTextKey != null) {
             FirebaseDBHelper.getInstance().setTextLoadListener(textLoadedListener);
@@ -84,7 +87,25 @@ public class EditTranslationActivity extends AppCompatActivity {
 
         translationValue.setText(translations.get(langKeys.get(langSpinner.getSelectedItemPosition())));
         langSpinner.setOnItemSelectedListener(langSelectedListener);
-        submitTranslationButton.setOnClickListener(buttonListener);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater =getMenuInflater();
+        inflater.inflate(R.menu.edit_translation_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.edit_translation_menu_save) {
+            saveCurrentText();
+            Toast.makeText(this, "Translation saved", Toast.LENGTH_SHORT).show();
+            clearAndCreateNew();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     private void putLanguagesIntoLists() {
@@ -124,10 +145,12 @@ public class EditTranslationActivity extends AppCompatActivity {
                 .getTexts().where().equalTo("textKey", currentTextKey).findFirst();
 
         translationName.setText(currentText.getTranslationName());
-        transLationDesc.setText(currentText.getTranslationDesc());
+        translationDesc.setText(currentText.getTranslationDesc());
         androidKey.setText(currentText.getAndroidKey());
         iosKey.setText(currentText.getIosKey());
-        webKey.setText(currentText.getWebKey());
+        webAdminKey.setText(currentText.getWebAdminKey());
+        webMainKey.setText(currentText.getWebMainKey());
+        webWidgetKey.setText(currentText.getWebWidgetKey());
 
         Log.d(TAG, "current text: " + currentText);
 
@@ -135,14 +158,6 @@ public class EditTranslationActivity extends AppCompatActivity {
             translations.put(translationData.getLangKey(), translationData.getTranslation());
         }
     }
-
-    private final View.OnClickListener buttonListener = v -> {
-        if (!checkIfRowsAreEmpty()) {
-            saveCurrentText();
-            Toast.makeText(this, "Translation saved", Toast.LENGTH_SHORT).show();
-            clearAndCreateNew();
-        }
-    };
 
     @Override
     public void onBackPressed() {
@@ -157,10 +172,12 @@ public class EditTranslationActivity extends AppCompatActivity {
         Map<String, Object> textToSave = new HashMap<>();
 
         textToSave.put("name", translationName.getText().toString());
-        textToSave.put("description", transLationDesc.getText().toString());
+        textToSave.put("description", translationDesc.getText().toString());
         textToSave.put("android_key", androidKey.getText().toString());
         textToSave.put("ios_key", iosKey.getText().toString());
-        textToSave.put("web_key", webKey.getText().toString());
+        textToSave.put("web_admin_key", webAdminKey.getText().toString());
+        textToSave.put("web_key", webMainKey.getText().toString());
+        textToSave.put("web_widget_key", webWidgetKey.getText().toString());
         translations.put(currentSelectedLang, translationValue.getText().toString());
         textToSave.put("translations", translations);
 
@@ -174,11 +191,16 @@ public class EditTranslationActivity extends AppCompatActivity {
 
     private boolean checkIfRowsAreEmpty() {
         if (translationName.getText().toString().isEmpty()
-                || transLationDesc.getText().toString().isEmpty()
+                || translationDesc.getText().toString().isEmpty()
                 || (androidKey.getText().toString().isEmpty()
                 || iosKey.getText().toString().isEmpty()
-                || webKey.getText().toString().isEmpty()) || translations.size() > 0) {
-            popUpAlert.alertPopUp(EditTranslationActivity.this, R.string.pop_up_message_edit_translation_activity, "Warning");
+                || webMainKey.getText().toString().isEmpty()) || translations.size() < 1) {
+
+            popUpAlert.alertPopUp(EditTranslationActivity.this,
+                    R.string.pop_up_message_edit_translation_activity, "Warning",
+                    getResources().getString(R.string.dont_save_popup_text),
+                    getResources().getString(R.string.continue_editing_popup_text));
+
             return true;
         }
         return false;
@@ -186,10 +208,12 @@ public class EditTranslationActivity extends AppCompatActivity {
 
     private void clearAndCreateNew() {
         translationName.getText().clear();
-        transLationDesc.getText().clear();
+        translationDesc.getText().clear();
         androidKey.getText().clear();
         iosKey.getText().clear();
-        webKey.getText().clear();
+        webAdminKey.getText().clear();
+        webMainKey.getText().clear();
+        webWidgetKey.getText().clear();
         translationValue.getText().clear();
         translations.clear();
 

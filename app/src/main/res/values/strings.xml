@@ -8,7 +8,7 @@
     <string name="add_another_translation">Add another text</string>
     <string name="android_key">android key</string>
     <string name="ios_key">ios key</string>
-    <string name="web_key">web key</string>
+    <string name="web_main_key">main web key</string>
     <string name="submit_translation">Save</string>
     <string name="translation">Translation</string>
     <string name="translation_name">Translation name</string>
@@ -18,12 +18,13 @@
     <string name="pop_up_message_edit_translation_activity">A text needs to have at least one key, one translation, it\'s name and it\'s description.?</string>
     <string name="pop_up_message_library_activity">You have not added a name for to library. Do you want to continue?</string>
     <string name="pop_up_message_user_profile_activity">Are you sure you want to sign out?</string>
+    <string name="pop_up_message_share_pop_up">Do you want to share this library with this user?</string>
     <string name="share_library">Share library</string>
     <string name="export_library">Export library to csv</string>
     <string name="search_by_name">search by name…</string>
     <string name="search">Search</string>
     <string name="backspace">backspace</string>
-    <string name="save_changes">Save changes</string>
+    <string name="save_changes">Save</string>
     <string name="user_name">User name</string>
     <string name="sign_out">Sign out</string>
     <string name="profile">Profile</string>
@@ -31,4 +32,6 @@
     <string name="dont_save_popup_text">Don\'t save</string>
     <string name="continue_editing_popup_text">Continue editing</string>
     <string name="default_notification_channel_id">default_channel_id</string>
+    <string name="web_admin_key">web admin key</string>
+    <string name="web_widget_key">web widget key</string>
 </resources>

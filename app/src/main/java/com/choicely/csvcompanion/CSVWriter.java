@@ -76,7 +76,9 @@ public class CSVWriter {
         List<String> columns = new ArrayList<>();
         columns.add("android,");
         columns.add("ios,");
-        columns.add("web,");
+        columns.add("web admin,");
+        columns.add("web main,");
+        columns.add("web widget,");
 
         List<LanguageData> languageDataList = libraryData.getLanguages();
         for (int index = 0; index < languageDataList.size() - 1; index++) {
@@ -95,9 +97,16 @@ public class CSVWriter {
         List<TextData> textDataList = libraryData.getTexts();
         for (TextData textData : textDataList) {
             Log.d(TAG, "Text to be written: " + textData);
-            line += (textData.getAndroidKey() == null || textData.getAndroidKey() == "") ? "," : textData.getAndroidKey() + ",";
-            line += (textData.getIosKey() == null || textData.getIosKey() == "") ? "," : textData.getIosKey() + ",";
-            line += (textData.getWebKey() == null || textData.getWebKey() == "") ? "," : textData.getWebKey() + ",";
+            line += (textData.getAndroidKey() == null || textData.getAndroidKey() == "")
+                    ? "," : textData.getAndroidKey() + ",";
+            line += (textData.getIosKey() == null || textData.getIosKey() == "")
+                    ? "," : textData.getIosKey() + ",";
+            line += (textData.getWebAdminKey() == null || textData.getWebAdminKey() == "")
+                    ? "," : textData.getWebAdminKey() + ",";
+            line += (textData.getWebMainKey() == null || textData.getWebMainKey() == "")
+                    ? "," : textData.getWebMainKey() + ",";
+            line += (textData.getWebWidgetKey() == null || textData.getWebWidgetKey() == "")
+                    ? "," : textData.getWebWidgetKey() + ",";
 
             Map<String, String> translations = new HashMap<>();
             List<SingleTranslationData> singleTranslationDataList = textData.getTranslations();
