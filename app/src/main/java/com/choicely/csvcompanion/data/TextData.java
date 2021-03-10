@@ -9,7 +9,7 @@ public class TextData extends RealmObject {
     @PrimaryKey
     private String textKey;
     private String translationName, translationDesc;
-    private String androidKey, iosKey, webKey;
+    private String androidKey, iosKey, webAdminKey, webMainKey, webWidgetKey;
     private RealmList<SingleTranslationData> translations = new RealmList<>();
 
     public String getTextKey() {
@@ -52,12 +52,28 @@ public class TextData extends RealmObject {
         this.iosKey = iosKey;
     }
 
-    public String getWebKey() {
-        return webKey;
+    public String getWebAdminKey() {
+        return webAdminKey;
     }
 
-    public void setWebKey(String webKey) {
-        this.webKey = webKey;
+    public void setWebAdminKey(String webAdminKey) {
+        this.webAdminKey = webAdminKey;
+    }
+
+    public String getWebMainKey() {
+        return webMainKey;
+    }
+
+    public void setWebMainKey(String webMainKey) {
+        this.webMainKey = webMainKey;
+    }
+
+    public String getWebWidgetKey() {
+        return webWidgetKey;
+    }
+
+    public void setWebWidgetKey(String webWidgetKey) {
+        this.webWidgetKey = webWidgetKey;
     }
 
     public RealmList<SingleTranslationData> getTranslations() {
