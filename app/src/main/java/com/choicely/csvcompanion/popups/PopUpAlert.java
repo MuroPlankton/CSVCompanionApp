@@ -34,12 +34,7 @@ public class PopUpAlert {
 
             AuthUI.getInstance()
                     .signOut(activity)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Log.d(TAG, "onComplete: signed out");
-                        }
-                    });
+                    .addOnCompleteListener(task -> Log.d(TAG, "onComplete: signed out"));
         });
         builder.setNegativeButton("No", (dialog, which) -> {
 

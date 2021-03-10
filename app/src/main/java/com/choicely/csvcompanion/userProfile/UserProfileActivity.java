@@ -39,7 +39,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private EditText userNameEditText;
 
     private RecyclerView inboxRecyclerView;
-    private UserProfileInboxAdapter adapter;
+    private InboxAdapter adapter;
 
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final DatabaseReference ref = database.getReference();
@@ -58,7 +58,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         inboxRecyclerView = findViewById(R.id.user_profile_recycler_view);
         inboxRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new UserProfileInboxAdapter(this);
+        adapter = new InboxAdapter(this);
         inboxRecyclerView.setAdapter(adapter);
 
         startFireBaseListening();
