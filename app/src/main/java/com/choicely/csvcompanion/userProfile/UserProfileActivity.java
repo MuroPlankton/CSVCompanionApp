@@ -71,8 +71,8 @@ public class UserProfileActivity extends AppCompatActivity {
             return false;
         });
 
-        MenuItem saveChangesButtom = menu.findItem(R.id.save_changes);
-        saveChangesButtom.setOnMenuItemClickListener(item -> {
+        MenuItem saveChangesButton = menu.findItem(R.id.save_changes);
+        saveChangesButton.setOnMenuItemClickListener(item -> {
             saveChanges();
             return false;
         });

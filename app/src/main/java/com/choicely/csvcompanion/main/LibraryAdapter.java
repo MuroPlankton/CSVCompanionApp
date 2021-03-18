@@ -89,7 +89,6 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
 
         private final View.OnClickListener onShareButtonClicked = view -> {
             new SharePopup(libraryName.getContext(), libraryID, activity);
-
         };
 
         private final View.OnClickListener onRowClick = view -> {

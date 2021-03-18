@@ -25,7 +25,7 @@
     <string name="search">Search</string>
     <string name="backspace">backspace</string>
     <string name="save_changes">Save</string>
-    <string name="user_name">Username</string>
+    <string name="user_name">Save username</string>
     <string name="sign_out">Sign out</string>
     <string name="profile">Profile</string>
     <string name="search_users">Search for users to share with</string>

@@ -141,7 +141,7 @@ public class SharePopup extends Dialog {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Log.d(TAG, "onItemClick: userID: " + userID);
-            popUpAlert.shareLibraryPopUp(activity, R.string.pop_up_message_share_pop_up, "Sharing is caring",
+            popUpAlert.shareLibraryPopUp(activity, R.string.pop_up_message_share_pop_up, "Share a library",
                     userID, getLibraryName(), libraryID);
         }
     };
