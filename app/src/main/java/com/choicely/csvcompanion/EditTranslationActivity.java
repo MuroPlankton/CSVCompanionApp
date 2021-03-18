@@ -100,7 +100,6 @@ public class EditTranslationActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.edit_translation_menu_save) {
             saveCurrentText();
-            Toast.makeText(this, "Translation saved", Toast.LENGTH_SHORT).show();
             clearAndCreateNew();
             return true;
         } else {
@@ -187,6 +186,8 @@ public class EditTranslationActivity extends AppCompatActivity {
                 .child("texts")
                 .child(currentTextKey)
                 .updateChildren(textToSave);
+
+        Toast.makeText(this, "Translation saved", Toast.LENGTH_SHORT).show();
     }
 
     private boolean checkIfRowsAreEmpty() {
